@@ -13,6 +13,8 @@ const expected = ['Cloud Media Shrinker','Beckon','AI-billboard','Gate Opener Wi
     assert.deepEqual(await page.locator('.project h3').allTextContents(), expected);
     assert.doesNotMatch(await page.locator('body').innerText(), /MimiBot|Photo Review/i);
     assert.equal(await page.locator('.identity').innerText(), 'Daniel.');
+    assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
+    assert.ok(await page.locator('.project-icon').evaluateAll(images=>images.length===10 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.equal(await page.locator('.project-link').count(),9);
     assert.equal(await page.locator('.project a[href*="ai-billboard"]').count(),0);
     await page.getByRole('link',{name:'Explore selected work'}).click();

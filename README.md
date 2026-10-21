@@ -2,6 +2,8 @@
 
 A static portfolio hosted on GitHub Pages. The site uses plain HTML and CSS, with no build step or external runtime dependencies.
 
+Line icons are from Tabler Icons. Their MIT license is included in `assets/icons/LICENSE`.
+
 ## Preview
 
 Run `python3 -m http.server 4173` from the repository and open `http://localhost:4173`.
