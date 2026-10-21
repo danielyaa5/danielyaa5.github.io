@@ -9,6 +9,9 @@ const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Gate Open
   try {
     const page = await browser.newPage({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
     const errors=[]; page.on('pageerror', e=>errors.push(e.message));
+    const failedAssets=[]; page.on('response', response=>{
+      if(response.url().startsWith(base) && response.status()>=400) failedAssets.push(response.url());
+    });
     await page.goto(base, {waitUntil:'networkidle'});
     assert.deepEqual(await page.locator('.project h2').allTextContents(), expected);
     assert.doesNotMatch(await page.content(), /MimiBot|Photo Review|Yakobian/i);
@@ -22,12 +25,21 @@ const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Gate Open
     await page.getByRole('link',{name:'Explore the projects'}).click();
     await page.waitForURL('**/#work');
     assert.ok(await page.locator('#work').evaluate(el=>el.getBoundingClientRect().top<80));
-    await page.getByRole('link',{name:'About',exact:true}).click();
-    await page.waitForURL('**/#about');
+    const aboutButton = page.getByRole('button',{name:'About',exact:true});
+    await aboutButton.click();
+    const aboutDialog = page.getByRole('dialog',{name:'Hi, I’m Daniel.'});
+    await aboutDialog.waitFor({state:'visible'});
+    assert.match(await aboutDialog.innerText(),/I build software/);
+    await page.keyboard.press('Escape');
+    await aboutDialog.waitFor({state:'hidden'});
+    assert.ok(await aboutButton.evaluate(el=>el===document.activeElement));
+    await aboutButton.click();
+    await page.getByRole('button',{name:'Close About'}).click();
+    await aboutDialog.waitFor({state:'hidden'});
     await page.getByRole('link',{name:'Back to top'}).click();
     await page.waitForURL('**/#top');
     await fs.mkdir('test-results',{recursive:true});
-    for (const width of [1440,1123,768,390,320]) {
+    for (const width of [1440,1123,768,621,620,390,320]) {
       await page.setViewportSize({width,height:1000});
       const layout = await page.evaluate(()=>({
         fits:document.documentElement.scrollWidth<=innerWidth,
@@ -36,11 +48,21 @@ const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Gate Open
           name:parseFloat(getComputedStyle(card.querySelector('h2')).fontSize),
           detail:parseFloat(getComputedStyle(card.querySelector('.category')).fontSize),
           inside:[...card.querySelectorAll('*')].every(el=>el.getBoundingClientRect().right<=card.getBoundingClientRect().right+1),
-          artBesideCopy:card.querySelector('.project-art').getBoundingClientRect().right<=card.querySelector('.project-copy').getBoundingClientRect().left
+          artBesideCopy:card.querySelector('.project-art').getBoundingClientRect().right<=card.querySelector('.project-copy').getBoundingClientRect().left,
+          linkSize:card.querySelector('.project-link') ? parseFloat(getComputedStyle(card.querySelector('.project-link')).fontSize) : 12,
+          linkHeight:card.querySelector('.project-link')?.getBoundingClientRect().height ?? 44
         }))
       }));
       assert.ok(layout.fits,`Page overflows at ${width}px`);
       assert.ok(layout.cards.every(c=>c.benefit>c.name && c.name>c.detail && c.inside && c.artBesideCopy),`Card typography/fit at ${width}px`);
+      assert.ok(layout.cards.every(c=>c.detail>=12 && c.linkSize>=12 && c.linkHeight>=44),`Readable labels and usable project links at ${width}px`);
+      await aboutButton.click();
+      await aboutDialog.waitFor({state:'visible'});
+      assert.ok(await aboutDialog.evaluate(el=>{
+        const rect=el.getBoundingClientRect();
+        return rect.left>=0 && rect.right<=innerWidth && rect.top>=0 && rect.bottom<=innerHeight;
+      }),`About dialog fits at ${width}px`);
+      await page.keyboard.press('Escape');
       if(width===1440 || width===1123 || width===390) {
         const pageHeight = await page.evaluate(()=>document.documentElement.scrollHeight);
         await page.setViewportSize({width,height:pageHeight});
@@ -49,6 +71,9 @@ const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Gate Open
       report.checks.push({width,passed:true});
     }
     assert.deepEqual(errors,[]);
+    assert.deepEqual(failedAssets,[]);
+    const iconURL=await page.locator('link[rel="icon"]').getAttribute('href');
+    assert.equal((await page.request.get(new URL(iconURL,base).href)).status(),200);
     report.passed=true;
     await fs.writeFile('test-results/report.json',JSON.stringify(report,null,2));
     console.log(JSON.stringify(report));

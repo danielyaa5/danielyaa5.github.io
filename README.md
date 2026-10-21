@@ -1,6 +1,6 @@
 # Daniel’s portfolio
 
-A static portfolio hosted on GitHub Pages. The site uses plain HTML and CSS, with no build step or external runtime dependencies.
+A static portfolio hosted on GitHub Pages. The site uses HTML, CSS, and a small script for the About dialog, with no build step or external runtime dependencies.
 
 The cream and green layout and illustrations follow the selected Quiet Utility mockup. Illustration files are stored locally in `assets/illustrations/` so the published page does not depend on temporary Canva links.
 
