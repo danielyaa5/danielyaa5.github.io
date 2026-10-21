@@ -2,7 +2,7 @@
 
 A static portfolio hosted on GitHub Pages. The site uses plain HTML and CSS, with no build step or external runtime dependencies.
 
-Line icons are from Tabler Icons. Their MIT license is included in `assets/icons/LICENSE`.
+The cream and green layout and illustrations follow the selected Quiet Utility mockup. Illustration files are stored locally in `assets/illustrations/` so the published page does not depend on temporary Canva links.
 
 ## Preview
 
