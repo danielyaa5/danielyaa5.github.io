@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How I use a second macOS account to give an AI agent its own desktop for app testing while I keep working.">
+  <meta name="theme-color" content="#fdfaf3">
+  <meta property="og:title" content="Giving my AI agent its own Mac account for QA">
+  <meta property="og:description" content="How I use a second macOS account to give an AI agent its own desktop for app testing while I keep working.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://danielyaa5.github.io/blog/agent-qa-separate-macos-account.html">
+  <title>Giving my AI agent its own Mac account for QA | Daniel</title>
+  <link rel="canonical" href="https://danielyaa5.github.io/blog/agent-qa-separate-macos-account.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=2">
+</head>
+<body class="blog-page" id="top">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="page-frame">
+    <header class="site-header"><a class="identity" href="../" aria-label="Daniel, home">Daniel</a><nav aria-label="Main navigation"><a href="../#work">Work</a><a href="./" aria-current="page">Blog</a><a href="https://github.com/danielyaa5">GitHub</a></nav></header>
+    <main id="content"><article class="blog-article"><header class="article-header"><p class="eyebrow">Notes on building software</p><h1>Giving my AI agent its own Mac account for QA</h1><p class="article-meta">Daniel · <time datetime="2026-10-22">October 22, 2026</time></p></header><div class="article-body"><p>I want an agent to test my apps while I keep using my computer. That gets awkward when we both need the same desktop.</p>
+<figure class="qa-figure" id="diagram-sessions" aria-labelledby="sessions-caption">
+<div class="qa-diagram mac-diagram">
+  <div class="diagram-kicker">One physical Mac</div>
+  <div class="session-grid">
+    <div class="session-card"><h3>My main account</h3><div class="desktop-box"><div class="window-bar" aria-hidden="true"><i></i><i></i><i></i></div><strong>My desktop</strong><span>My apps, typing and pointer</span></div><p class="session-action">I keep working</p></div>
+    <div class="session-card qa-session"><h3>QA account</h3><div class="desktop-box"><div class="window-bar" aria-hidden="true"><i></i><i></i><i></i></div><strong>QA desktop</strong><span>Agent + app under test</span></div><p class="session-action">Capture + control here</p></div>
+  </div>
+  <div class="shared-hardware">Shared CPU · memory · disk · network</div>
+</div>
+<figcaption id="sessions-caption">Two desktop sessions on one Mac. The automation targets the QA session.</figcaption>
+</figure>
+<p>The agent opens a window. I switch to something else. It clicks where a button used to be. Now neither of us is having a productive afternoon.</p>
+<p>I&#x27;ve been using another macOS user account on the same computer for agent QA testing. I stay in my main account, and the agent works in the other account&#x27;s desktop session. It gives the testing somewhere to happen without taking over the desktop I&#x27;m using.</p>
+<h2>Why I wanted a separate desktop</h2>
+<p>A lot of useful testing can happen in the background: builds, unit tests, API checks, and browser tests that run without a visible window.</p>
+<p>But I also build Mac apps. Eventually, I want to know whether a window opens correctly, a menu is usable, or a permission prompt appears where a person can actually deal with it. A successful build doesn&#x27;t answer those questions.</p>
+<p>Running that kind of QA in my everyday desktop makes me part of the test environment. My typing, window switching, and mouse movements can interfere with the agent. The agent can interrupt me in exactly the same ways.</p>
+<p>Giving it another user session removes a lot of that friction.</p>
+<h2>One computer, two user sessions</h2>
+<p>The setup has three parts:</p>
+<ol><li>My main macOS account, where I keep working.</li><li>A second local account, where the agent and the app under test run.</li><li>A way to inspect and control that account&#x27;s desktop, with the automation pointed at that session.</li></ol>
+
+<p>Screen Sharing is useful for inspecting the other desktop. The important detail is connecting to the other account&#x27;s session. Sharing my current display would put us back in the same workspace.</p>
+<p>Apple describes this distinction in its <a href="https://support.apple.com/guide/remote-desktop/choose-how-to-control-and-observe-apd4f46319e/mac">Remote Desktop documentation</a>: connecting to another account&#x27;s virtual display lets you open apps without interrupting the person using the logged-in desktop. That&#x27;s the underlying idea. The exact connection and automation setup still needs to work with the tools you&#x27;re using.</p>
+<h2>Shared instructions, separate sessions</h2>
+<p>I want both accounts&#x27; agents to understand the same projects and working rules. I don&#x27;t want to maintain two copies of that information.</p>
+<p>My setup shares selected instructions, project notes, and skills from one canonical folder. The second account can read that context, while my primary account remains the writer. Project files need their own access arrangements; being able to read a note about a repository doesn&#x27;t grant access to it.</p>
+<p>The accounts keep their own agent configuration, sign-ins, sessions, and computer-use permissions. I don&#x27;t share an entire agent home directory between them.</p>
+<p>That gives me consistent instructions without making both accounts write to the same session files or treating one account&#x27;s permissions as proof that the other is ready.</p>
+<figure class="qa-figure" id="diagram-context" aria-labelledby="context-caption">
+<div class="qa-diagram context-diagram">
+  <div class="context-source"><span class="diagram-kicker">One canonical folder</span><strong>Shared context</strong><span>Instructions · project notes · skills</span></div>
+  <div class="context-grid">
+    <div class="context-branch"><div class="context-arrow"><span aria-hidden="true">↕</span><b>Read + write</b></div><div class="account-box"><h3>Primary account</h3><p>Own configuration<br>Own sign-ins and sessions<br>Own computer-use permissions</p></div></div>
+    <div class="context-branch"><div class="context-arrow"><span aria-hidden="true">↓</span><b>Read only</b></div><div class="account-box"><h3>QA account</h3><p>Own configuration<br>Own sign-ins and sessions<br>Own computer-use permissions</p></div></div>
+  </div>
+</div>
+<figcaption id="context-caption">Shared context has one writer. Sign-ins, sessions, and computer-use permissions stay separate.</figcaption>
+</figure>
+<h2>What I still have to check</h2>
+<p>The second account needs a working desktop session and whatever permissions the test requires. The capture and control tools also need to reach that session. An SSH connection alone doesn&#x27;t prove the agent can see a window or click a button.</p>
+<p>Before relying on a test route, I want it to capture the intended desktop, interact with the app there, and show the result. Otherwise, I could have a very convincing report about the wrong screen.</p>
+<p>The accounts also share the same CPU, memory, disk, and network. A heavy build can still slow down my work. And changes to shared files or an app in a shared installation location can affect both accounts.</p>
+<p>I use this to separate desktop activity. I don&#x27;t treat it as a security sandbox or a replacement for testing in my normal account when a feature depends on my actual data, devices, or settings.</p>
+<h2>Why I&#x27;m keeping it</h2>
+<p>The benefit is being able to keep working while the agent does the clicking, opening, and checking that visible app testing requires.</p>
+<p>I still want evidence of what happened: the app state, the action taken, and the result on screen. The separate account gives that work its own space. My main desktop gets to remain useful, and my cursor gets one boss at a time.</p></div><p class="article-back"><a href="./">← All posts</a></p></article></main>
+    <footer class="site-footer"><p><a href="../">Daniel</a> / Built to be useful.</p><a href="./">All posts</a></footer>
+  </div>
+</body>
+</html>
