@@ -22,9 +22,10 @@ const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Gate Open
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
     assert.equal(await page.locator('.project-link').count(),9);
     assert.equal(await page.locator('.project a[href*="ai-billboard"]').count(),0);
-    await page.getByRole('link',{name:'Explore the projects'}).click();
-    await page.waitForURL('**/#work');
-    assert.ok(await page.locator('#work').evaluate(el=>el.getBoundingClientRect().top<80));
+    await page.locator('.hero-actions').getByRole('link',{name:'Writing',exact:true}).click();
+    await page.waitForURL('**/#writing');
+    // The section sits near the page's end, so it scrolls into view rather than to the top.
+    await page.waitForFunction(()=>{const r=document.querySelector('#writing').getBoundingClientRect(); return r.top>=0 && r.top<innerHeight;});
     const aboutButton = page.getByRole('button',{name:'About',exact:true});
     await aboutButton.click();
     const aboutDialog = page.getByRole('dialog',{name:'Hi, I’m Daniel.'});
