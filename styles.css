@@ -18,14 +18,15 @@ a:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
 .skip-link { position: fixed; left: 20px; top: -100px; z-index: 10; padding: 12px 20px; background: var(--green); color: white; }
 .skip-link:focus { top: 16px; }
 .page-frame { position: relative; max-width: 1067px; margin: 24px auto; padding: 0 36px; border: 1px solid #789182; background: radial-gradient(ellipse at 40% 20%, #fffefa 0, #fdfbf5 60%, #f9f8ee 100%); box-shadow: 0 0 0 2px #e8e9df; }
-.site-header { display: flex; align-items: center; justify-content: space-between; min-height: 63px; margin-right: 44px; border-bottom: 1px solid #a7b2a5; }
+.site-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 63px; margin-right: 44px; border-bottom: 1px solid #a7b2a5; }
 .identity { font-size: 18px; font-weight: 700; }
 nav { display: flex; align-items: center; gap: 24px; padding-right: 80px; font-size: 17px; }
 nav a, .nav-about { padding: 10px 0; }
 .nav-about { border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 .nav-about:hover { color: var(--green); }
 button:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
-.page-frame::before { content: ""; position: absolute; right: 41px; top: 68px; height: 344px; border-left: 1px solid #789182; pointer-events: none; }
+/* The vertical line under the tree runs beside the hero only, so the grid below never crosses it. */
+.hero::after { content: ""; position: absolute; right: 5px; top: 4px; bottom: 0; border-left: 1px solid #789182; pointer-events: none; }
 .pine { position: absolute; top: 14px; right: 11px; width: 62px; height: 57px; object-fit: contain; }
 .hero { position: relative; display: grid; grid-template-columns: 56.5% 43.5%; align-items: center; padding: 39px 0 35px; }
 /* Below this width the illustration fills its column, so keep it clear of the frame's vertical line. */
@@ -89,7 +90,7 @@ dialog form { display: flex; justify-content: flex-end; }
   .site-header { margin-right: 40px; min-height: 60px; }
   nav { padding-right: 30px; gap: 20px; font-size: 15px; }
   .pine { right: 4px; width: 52px; height: 48px; top: 11px; }
-  .page-frame::before { right: 29px; top: 56px; height: 280px; }
+  .hero::after { top: -5px; }
   .hero { padding: 34px 24px 34px 0; grid-template-columns: 61% 39%; }
   h1 { font-size: 43px; letter-spacing: -1.7px; margin-bottom: 20px; }
   .hero-description { font-size: 16px; }
@@ -112,7 +113,7 @@ dialog form { display: flex; justify-content: flex-end; }
   .identity { font-size: 16px; }
   nav { gap: 15px; padding-right: 12px; font-size: 12px; }
   .pine { top: 12px; width: 37px; height: 34px; right: 1px; }
-  .page-frame::before { display: none; }
+  .hero::after { display: none; }
   .hero { display: flex; flex-direction: column; align-items: stretch; padding: 30px 0 25px; }
   h1 { font-size: clamp(32px, 8.8vw, 49px); letter-spacing: -1.5px; }
   .hero-description { max-width: 420px; font-size: 16px; }
@@ -129,12 +130,18 @@ dialog form { display: flex; justify-content: flex-end; }
   .project-link { font-size: 12px; }
   .site-footer { align-items: flex-start; flex-direction: column; gap: 9px; font-size: 12px; padding: 15px 0 18px; }
 }
+@media (max-width: 420px) {
+  nav { gap: 10px; padding-right: 6px; }
+}
 @media (max-width: 360px) {
   .page-frame { padding: 0 13px; }
-  nav { gap: 10px; font-size: 11px; }
+  .site-header { margin-right: 26px; }
+  nav { gap: 7px; padding-right: 2px; font-size: 11px; }
+  .identity { font-size: 15px; }
   h1 { font-size: 30px; }
   .hero-actions { gap: 10px; }
   .button { font-size: 12px; padding: 9px 10px; }
+  .button-outline { min-width: 74px; }
   .project .project-main, .project:nth-child(even) .project-main, .project.featured .project-main { gap: 12px; grid-template-columns: 25% minmax(0,1fr); }
   .project-benefit, .featured .project-benefit { font-size: 18px; }
   .project h2, .featured h2 { font-size: 16px; }
