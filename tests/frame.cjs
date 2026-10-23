@@ -8,12 +8,13 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 768, 600, 414, 375, 320];
 // line under the tree must stay left of it. Full-page screenshots go to
 // test-results/ for a visual pass.
 (async () => {
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel: process.env.PLAYWRIGHT_CHANNEL} : {}) });
   const report = { url: base, checks: [] };
   try {
     for (const width of widths) {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
       await page.goto(base, { waitUntil: 'networkidle' });
+      await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(img => img.loading !== 'lazy').map(img => img.decode())); });
       const result = await page.evaluate(() => {
         const frame = document.querySelector('.page-frame').getBoundingClientRect();
         const hero = document.querySelector('.hero');
@@ -41,7 +42,7 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 768, 600, 414, 375, 320];
         return { lineShown, overflow: document.documentElement.scrollWidth > innerWidth, problems };
       });
       // Lazy images don't load in a full-page capture; load them first.
-      await page.evaluate(() => Promise.all([...document.images].map(img => { img.loading = 'eager'; return img.decode().catch(() => {}); })));
+      await page.evaluate(() => Promise.all([...document.images].map(img => { img.loading = 'eager'; return img.decode(); })));
       await fs.mkdir('test-results', { recursive: true });
       await page.screenshot({ path: `test-results/frame-${width}.png`, fullPage: true });
       report.checks.push({ width, ...result });
