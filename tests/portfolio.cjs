@@ -22,7 +22,7 @@ const expected = ['puml-for-markdown','Cloud Media Shrinker','Beckon','Print Pro
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
     assert.equal(await page.locator('.project-link').count(),8);
     assert.equal(await page.locator('.project a[href*="ai-billboard"]').count(),0);
-    await page.locator('.hero-actions').getByRole('link',{name:'Writing',exact:true}).click();
+    await page.locator('.hero-actions').getByRole('link',{name:'Writings',exact:true}).click();
     await page.waitForURL('**/#writing');
     // The section sits near the page's end, so it scrolls into view rather than to the top.
     await page.waitForFunction(()=>{const r=document.querySelector('#writing').getBoundingClientRect(); return r.top>=0 && r.top<innerHeight;});
