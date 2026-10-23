@@ -141,10 +141,12 @@ dialog form { display: flex; justify-content: flex-end; }
 
 .writing { margin: 42px 0 30px; }
 .writing > h2 { margin: 0 0 20px; font-size: 27px; letter-spacing: -.6px; }
-.writing-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-.writing-card { min-width: 0; padding: 24px; border: 1px solid #d0d4b9; border-radius: 6px; background: var(--card); }
-.writing-card h3 { margin: 0 0 14px; font-size: 23px; line-height: 1.25; letter-spacing: -.4px; }
-.writing-card p { margin: 0 0 16px; font-size: 17px; line-height: 1.6; }
+.writing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .writing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.writing-card { display: flex; flex-direction: column; min-width: 0; padding: 24px; border: 1px solid #d0d4b9; border-radius: 6px; background: var(--card); }
+.writing-card h3 { margin: 0 0 14px; font-size: 21px; line-height: 1.25; letter-spacing: -.4px; }
+.writing-card p { flex: 1; margin: 0 0 16px; font-size: 17px; line-height: 1.6; }
 .writing-card a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.writing-thumb { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin: 0 0 6px; border: 1px solid #d0d4b9; border-radius: 6px; background: #f1f3e8; }
 .writing-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--green); font-size: 15px; font-weight: 700; }
 @media (max-width: 620px) { .writing-grid { grid-template-columns: 1fr; } .writing-card { padding: 22px 18px; } }

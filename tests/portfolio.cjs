@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Gate Opener Widget','Print Progress','AI-billboard','TagTracker','H2D Custom Dashboard','Buy or Rent','qtfaststart2'];
+const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Print Progress','AI-billboard','TagTracker','H2D Custom Dashboard','Buy or Rent','qtfaststart2'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -18,9 +18,9 @@ const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Gate Open
     assert.equal(await page.locator('.identity').innerText(), 'Daniel');
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
-    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===10 && images.every(img=>img.complete && img.naturalWidth>0)));
+    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===9 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
-    assert.equal(await page.locator('.project-link').count(),9);
+    assert.equal(await page.locator('.project-link').count(),8);
     assert.equal(await page.locator('.project a[href*="ai-billboard"]').count(),0);
     await page.locator('.hero-actions').getByRole('link',{name:'Writing',exact:true}).click();
     await page.waitForURL('**/#writing');
