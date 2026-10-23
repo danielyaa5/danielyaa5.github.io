@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="My K1 Max has a chamber sensor but no chamber heater. A smart plug, a Fingerbot and a few Klipper macros now let each ASA print heat and hold its own chamber.">
+  <meta name="theme-color" content="#fdfaf3">
+  <meta property="og:title" content="Teaching my K1 Max to turn on its own chamber heater">
+  <meta property="og:description" content="My K1 Max has a chamber sensor but no chamber heater. A smart plug, a Fingerbot and a few Klipper macros now let each ASA print heat and hold its own chamber.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://danielyaa5.github.io/blog/k1-max-chamber-heater.html">
+  <meta property="og:image" content="https://danielyaa5.github.io/assets/writing/k1-max-chamber-heater.webp">
+  <title>Teaching my K1 Max to turn on its own chamber heater | Daniel</title>
+  <link rel="canonical" href="https://danielyaa5.github.io/blog/k1-max-chamber-heater.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css?v=blog-1">
+  <link rel="stylesheet" href="blog.css?v=3">
+</head>
+<body class="blog-page" id="top">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="page-frame">
+    <header class="site-header"><a class="identity" href="../" aria-label="Daniel, home">Daniel</a><nav aria-label="Main navigation"><a href="../#work">Work</a><a href="./" aria-current="page">Blog</a><a href="https://github.com/danielyaa5">GitHub</a></nav></header>
+    <main id="content"><article class="blog-article"><header class="article-header"><p class="eyebrow">Notes on 3D printing</p><h1>Teaching my K1 Max to turn on its own chamber heater</h1><p class="article-meta">Daniel · <time datetime="2026-10-23">October 23, 2026</time></p></header><div class="article-body"><p>ASA wants a warm chamber. My Creality K1 Max has an enclosure, a chamber temperature sensor and a chamber fan, but no chamber heater. Left to the bed, the air warms up slowly. So I added a heater.</p>
+<figure class="article-figure">
+<img src="../assets/writing/k1-max-chamber-heater.webp" width="1600" height="900" alt="Illustration of an enclosed 3D printer with a heater inside, a small controller on its side with a button-pressing robot, and a smart plug in the wall">
+<figcaption>The setup, more or less. The real Fingerbot doesn't have a face.</figcaption>
+</figure>
+<p>The heater was the easy part. The hard part was its start button, because my printer doesn't have fingers.</p>
+<h2>A heater with its own opinions</h2>
+<p>I use Creality&#x27;s Chamber Heater, a standalone heater with a separate controller, which sits in a printed cradle (<a href="https://www.printables.com/model/1755205-creality-chamber-heater-control-mount">Squeemeister&#x27;s remix on Printables</a>). The controller has its own thermostat, but it goes by the heater&#x27;s own sensor, which reads very differently from the printer&#x27;s chamber sensor. The printer&#x27;s sensor is the one my prints care about, so I wanted it in charge.</p>
+<p>The heater stays on its max setting, and the printer decides when it runs. Turning it off is easy: it&#x27;s plugged into a Shelly smart plug that Moonraker, Klipper&#x27;s API server, can switch. Turning it on is not. When power comes back, the heater remembers its settings but waits in standby until someone presses start.</p>
+<p>That someone is a Fingerbot, a small button-pushing gadget that connects through a Tuya hub. It pokes the start button with a little arm when asked.</p>
+<h2>One heater start, step by step</h2>
+<p>My K1 Max is rooted and runs Fluidd, so a Klipper macro can reach other things on my network through the G-Code Shell Command extension. The Fingerbot side is a small Python bridge on a Mac at home that talks to the hub on the local network.</p>
+<figure class="qa-figure" id="diagram-start" aria-labelledby="start-caption">
+<div class="qa-diagram">
+  <div class="diagram-kicker">One heater start</div>
+  <ol class="flow-steps">
+    <li><strong>Print starts</strong><span>The start G-code turns on Klipper&#x27;s chamber thermostat.</span></li>
+    <li><strong>Klipper</strong><span>The chamber is cold, so a shell command sends a signed request to the bridge.</span></li>
+    <li><strong>Bridge on a Mac</strong><span>Checks the printer isn&#x27;t paused, then turns the smart plug off for a second and back on.</span></li>
+    <li><strong>Heater</strong><span>Comes back in standby with its settings intact.</span></li>
+    <li><strong>Fingerbot</strong><span>Presses start. The bridge reads its state back to confirm the press.</span></li>
+  </ol>
+</div>
+<figcaption id="start-caption">Every start runs the same way, whether the print is just beginning or already halfway done.</figcaption>
+</figure>
+<p>The power cycle is the important part. The start button toggles, so pressing it on a heater that&#x27;s already running would turn it off. Cutting power first puts the heater in a known state, so one press always means start.</p>
+<p>The bridge only accepts signed, timestamped requests, refuses a request it has already seen, runs one operation at a time, and isn&#x27;t reachable from outside my network. It presses a real button on a heater, so I wanted it boring.</p>
+<h2>The printer is the thermostat</h2>
+<p>The first version, in September, was a preset button in Fluidd that started the heater and left the rest to the heater&#x27;s own thermostat. In October I moved the thermostat into Klipper. A macro checks the printer&#x27;s chamber sensor every 15 seconds. For ASA, with a 50&nbsp;°C target:</p>
+<figure class="qa-figure" id="diagram-thermostat" aria-labelledby="thermostat-caption">
+<div class="qa-diagram">
+  <div class="diagram-kicker">Printer chamber sensor, ASA target 50&nbsp;°C</div>
+  <ul class="temp-scale">
+    <li class="temp-limit"><b>65&nbsp;°C</b><i aria-hidden="true"></i><span>Too hot: heater off, thermostat stops</span></li>
+    <li class="temp-band band-top"><b>51&nbsp;°C</b><i aria-hidden="true"></i><span>Heater off at the smart plug</span></li>
+    <li class="temp-band temp-target"><b>50&nbsp;°C</b><i aria-hidden="true"></i><span>Target</span></li>
+    <li class="temp-band band-bottom"><b>48.5&nbsp;°C</b><i aria-hidden="true"></i><span>Heater on: power cycle, then press</span></li>
+    <li><b>44&nbsp;°C</b><i aria-hidden="true"></i><span>Warm enough for the print to start</span></li>
+  </ul>
+</div>
+<figcaption id="thermostat-caption">The heater cycles between 48.5 and 51&nbsp;°C on the printer&#x27;s own sensor.</figcaption>
+</figure>
+<p>After switching off, it waits at least two minutes before starting the heater again. If the chamber hasn&#x27;t warmed after five minutes on, it tries the press once more and warns me in the console. When the heater restarts mid-print, the bridge call runs in the background, so the toolhead never waits on it.</p>
+<p>Stopping happens in a lot of places. <code>END_PRINT</code> and <code>CANCEL_PRINT</code> set the target to 0, and so does a print error. Fluidd&#x27;s Heaters off button runs <code>TURN_OFF_HEATERS</code>, so I overrode that macro to stop the thermostat and cut the plug too, which also covers Klipper&#x27;s idle timeout. If Klipper shuts down, Moonraker turns the plug off.</p>
+<p>In a live test the plug drew about 550&nbsp;W right after the press, settling to about 265&nbsp;W, and dropped to 0&nbsp;W when the thermostat switched it off. A start in the middle of a print had the heater running within about 12 seconds.</p>
+<h2>Each print opts in</h2>
+<p>Only prints that ask for heat get it. These are the relevant lines from the start G-code in my OrcaSlicer printer profile for ASA:</p>
+<pre><code>; Exhaust only above 58 C so the chamber fan doesn't fight the heater
+M141 S58
+; Hold the filament profile's chamber temperature (50 C for ASA)
+CHAMBER_HEATER_START TARGET={chamber_temperature[initial_no_support_extruder]}
+; Heat the bed now (no wait) so it helps warm the chamber
+M140 S[bed_temperature_initial_layer_single]
+; Keep the nozzle below where ASA oozes
+M104 S160
+; Wait for the chamber BEFORE START_PRINT
+TEMPERATURE_WAIT SENSOR="temperature_sensor chamber_temp" MINIMUM=44
+START_PRINT EXTRUDER_TEMP=... BED_TEMP=...</code></pre>
+<p>The target comes from the filament profile&#x27;s Chamber temperature field. Profiles that shouldn&#x27;t heat the chamber leave the line out, so a PLA print never knows any of this exists.</p>
+<p>The chamber wait sits before <code>START_PRINT</code> on purpose. During <code>START_PRINT</code> the K1 Max wipes its hot nozzle near the chamber sensor, which bumps the reading about 8&nbsp;°C for around three minutes. A wait placed after that can pass while the chamber is still cold.</p>
+<h2>Things I learned the hard way</h2>
+<ul>
+<li><strong>Sending a command isn&#x27;t pressing a button.</strong> In click mode, the Fingerbot presses when its switch value changes. My first version always sent "on", and when the Fingerbot already reported "on", nothing moved. Now the bridge reads the current value, sends the opposite, and checks the change on a fresh connection.</li>
+<li><strong>The cloud can&#x27;t see the arm.</strong> For about a day, when my hub stopped answering on the local network, I sent commands through Tuya&#x27;s cloud. The reported switch value changed, but that didn&#x27;t confirm the arm moved. When the hub answered locally again, I went back to local control.</li>
+<li><strong>Never retry a press.</strong> If a reply gets lost, the press may still have happened, and a second press would turn the heater back off. On a failure the bridge cuts power and redoes the whole power cycle, once. The power cycle is what makes that retry safe.</li>
+</ul>
+<h2>Where it ended up</h2>
+<p>An ASA print now turns on its own heater, waits for a warm chamber, holds 50&nbsp;°C on the printer&#x27;s own sensor, and shuts everything off when it ends.</p>
+<p>My printer still doesn&#x27;t have fingers. It just borrows one.</p></div><p class="article-back"><a href="./">← All posts</a></p></article></main>
+    <footer class="site-footer"><p><a href="../">Daniel</a> / Built to be useful.</p><a href="./">All posts</a></footer>
+  </div>
+</body>
+</html>
