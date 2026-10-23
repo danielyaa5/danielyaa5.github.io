@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+<!-- Source for assets/writing/screen-sharing-recursion.webp: a generated illustration, not a real capture. Render at 1600x900 (e.g. Playwright screenshot) and save as WebP. -->
+#root{width:100%;height:100%}
+html,body{margin:0;width:1600px;height:900px;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif}
+.desk{position:relative;width:100%;height:100%;background:linear-gradient(160deg,#9fb8a3 0%,#5f8070 55%,#3d5a4c 100%);overflow:hidden}
+.menubar{height:26px;background:rgba(255,255,255,.55);backdrop-filter:blur(8px);display:flex;align-items:center;gap:18px;padding:0 14px;font-size:13px;color:#1d1d1f}
+.menubar b{font-weight:600}
+.win{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:78%;height:78%;border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.18);background:#ececec;display:flex;flex-direction:column}
+.bar{height:34px;flex:none;display:flex;align-items:center;padding:0 12px;background:#e8e6e3;border-bottom:1px solid #cfcdca;font-size:13px;color:#444}
+.dots{display:flex;gap:8px;margin-right:14px}.dots i{width:12px;height:12px;border-radius:50%;display:block}
+.dots i:nth-child(1){background:#ff5f57}.dots i:nth-child(2){background:#febc2e}.dots i:nth-child(3){background:#28c840}
+.title{flex:1;text-align:center;margin-right:60px;font-weight:600}
+.screen{position:relative;flex:1}
+.screen .desk{position:absolute;inset:0}
+</style></head><body><div id="root"></div><script>
+const titles=["Screen Sharing — QA account","Screen Sharing — Main account","Screen Sharing — QA account","Screen Sharing — Main account","Screen Sharing — QA account","Screen Sharing — Main account","Screen Sharing — QA account"];
+function level(n){const d=document.createElement('div');d.className='desk';
+ d.innerHTML='<div class="menubar"><b>Screen Sharing</b><span>File</span><span>Edit</span><span>View</span><span>Window</span></div>';
+ if(n<titles.length){const w=document.createElement('div');w.className='win';
+  w.innerHTML='<div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">'+titles[n]+'</span></div>';
+  const s=document.createElement('div');s.className='screen';s.appendChild(level(n+1));w.appendChild(s);d.appendChild(w);}
+ return d;}
+document.getElementById('root').appendChild(level(0));
+// Scale text with each level so nested windows stay proportional.
+document.querySelectorAll('.screen').forEach((s,i)=>{const k=Math.pow(.78,i+1);s.querySelectorAll(':scope > .desk > .menubar').forEach(m=>{m.style.height=26*k+'px';m.style.fontSize=13*k+'px';m.style.gap=18*k+'px';m.style.padding='0 '+14*k+'px'});});
+document.querySelectorAll('.win').forEach((w,i)=>{const k=Math.pow(.78,i);const b=w.querySelector('.bar');b.style.height=34*k+'px';b.style.fontSize=13*k+'px';b.style.padding='0 '+12*k+'px';w.style.borderRadius=12*k+'px';b.querySelectorAll('i').forEach(x=>{x.style.width=x.style.height=12*k+'px'});b.querySelector('.dots').style.gap=8*k+'px';b.querySelector('.dots').style.marginRight=14*k+'px';b.querySelector('.title').style.marginRight=60*k+'px'});
+</script></body></html>
