@@ -66,6 +66,7 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
 .site-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 17px 0 18px; margin-top: 15px; border-top: 1px solid #a7b2a5; font-size: 16px; }
 .site-footer p { margin: 0; }
 .profile-link { display: inline-flex; gap: 6px; align-items: center; }
+.profile-links { display: flex; flex-wrap: wrap; gap: 8px 18px; }
 dialog { width: min(480px, calc(100% - 40px)); padding: 30px; border: 1px solid #789182; border-radius: 6px; color: var(--ink); background: var(--paper); }
 dialog::backdrop { background: #18291db3; }
 dialog h2 { margin: 12px 0 18px; font-size: 30px; line-height: 1.15; }

@@ -14,7 +14,7 @@ const expected = ['Cloud Media Shrinker','Beckon','puml-for-markdown','Gate Open
     });
     await page.goto(base, {waitUntil:'networkidle'});
     assert.deepEqual(await page.locator('.project h2').allTextContents(), expected);
-    assert.doesNotMatch(await page.content(), /MimiBot|Photo Review|Yakobian/i);
+    assert.doesNotMatch(await page.content(), /MimiBot|Photo Review/i);
     assert.equal(await page.locator('.identity').innerText(), 'Daniel');
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
