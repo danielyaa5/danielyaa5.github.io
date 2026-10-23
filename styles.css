@@ -159,3 +159,10 @@ dialog form { display: flex; justify-content: flex-end; }
 .writing-thumb { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin: 0 0 6px; border: 1px solid #d0d4b9; border-radius: 6px; background: #f1f3e8; }
 .writing-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--green); font-size: 15px; font-weight: 700; }
 @media (max-width: 620px) { .writing-grid { grid-template-columns: 1fr; } .writing-card { padding: 22px 18px; } }
+
+/* Keep the content below the hero right-aligned with the header rule, so the
+   vertical line under the tree sits in its own gutter at every width. */
+:root { --rail: 44px; }
+@media (max-width: 850px) { :root { --rail: 40px; } }
+@media (max-width: 620px) { :root { --rail: 0px; } }
+body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blog-page) .site-footer { margin-right: var(--rail); }

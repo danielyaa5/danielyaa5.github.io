@@ -30,6 +30,8 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 768, 600, 414, 375, 320];
           const name = `${el.className.split(' ')[0]}${el.querySelector('h2, h3') ? ` (${el.querySelector('h2, h3').textContent})` : ''}`;
           if (r.left < frame.left - 1 || r.right > frame.right + 1) problems.push(`${name} outside the frame`);
           if (lineShown && r.bottom > lineTop && r.top < lineBottom && r.right > lineX - 4) problems.push(`${name} touches the vertical line`);
+          // Below the hero, blocks stay left of the line's column too, aligned with the header rule.
+          if (lineShown && r.top >= lineBottom && r.right > lineX - 4) problems.push(`${name} extends past the vertical line's column`);
         }
         const name = document.querySelector('.identity').getBoundingClientRect();
         const nav = document.querySelector('.site-header nav').getBoundingClientRect();
