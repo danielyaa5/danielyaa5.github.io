@@ -64,7 +64,10 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   const vercel = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
   const hosts = vercel.redirects.map(rule => rule.has[0].value);
   assert.deepEqual(hosts, ['www.danielyakobian.com', 'danielyakobian-com.vercel.app']);
-  assert.ok(vercel.redirects.every(rule => rule.permanent && rule.destination === `${site}/:path*`));
+  // `/:path*` would not match `/` or paths ending in `/`, so the redirects capture the whole path.
+  assert.ok(vercel.redirects.every(rule => rule.permanent && rule.source === '/:path(.*)' && rule.destination === `${site}/:path`));
+  // Like GitHub Pages, send /blog to /blog/ so the page's relative links resolve.
+  assert.equal(vercel.trailingSlash, true);
 
   console.log(JSON.stringify({ passed: true, pages, projects: projects.length }));
 })().catch(error => { console.error(error); process.exitCode = 1; });
