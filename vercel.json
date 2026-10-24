@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.danielyakobian.com" }],
+      "destination": "https://danielyakobian.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "danielyakobian-com.vercel.app" }],
+      "destination": "https://danielyakobian.com/:path*",
+      "permanent": true
+    }
+  ]
+}

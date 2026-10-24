@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Project sites that GitHub Pages serves from each project's own repository under danielyaa5.github.io.
+     A sitemap may only list URLs on its own host, so this file is the one to submit for danielyaa5.github.io. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://danielyaa5.github.io/beckon/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://danielyaa5.github.io/photo-review/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://danielyaa5.github.io/3d-printer-widget/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://danielyaa5.github.io/tagtracker/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://danielyaa5.github.io/gate-opener-widget/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://danielyaa5.github.io/h2d-custom-dashboard/</loc><lastmod>2026-10-24</lastmod></url>
+  <url><loc>https://danielyaa5.github.io/buy-or-rent-web/</loc><lastmod>2026-10-24</lastmod></url>
+</urlset>

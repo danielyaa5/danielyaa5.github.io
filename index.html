@@ -3,17 +3,75 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Small frustrations. Useful software. Mac apps, everyday tools, and experiments by Daniel.">
+  <meta name="description" content="Free Mac apps and developer tools by Daniel Yakobian, including Beckon, Cloud Media Shrinker, Print Progress, TagTracker and puml-for-markdown.">
+  <meta name="author" content="Daniel Yakobian">
   <meta name="theme-color" content="#fdfaf3">
-  <meta property="og:title" content="Daniel — Small frustrations. Useful software.">
+  <meta property="og:site_name" content="Daniel Yakobian">
+  <meta property="og:title" content="Daniel Yakobian — Small frustrations. Useful software.">
   <meta property="og:description" content="Mac apps, everyday tools, and experiments that turn small frustrations into useful software.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://danielyaa5.github.io/">
-  <title>Daniel — Small frustrations. Useful software.</title>
+  <meta property="og:url" content="https://danielyakobian.com/">
+  <meta property="og:image" content="https://danielyakobian.com/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Daniel Yakobian: Small frustrations. Useful software.">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Daniel Yakobian — Mac apps, developer tools and experiments</title>
   <link rel="icon" type="image/png" sizes="128x128" href="assets/favicon.png">
-  <link rel="canonical" href="https://danielyaa5.github.io/">
+  <!-- danielyakobian.com is the primary address; danielyaa5.github.io serves the same files. -->
+  <link rel="canonical" href="https://danielyakobian.com/">
   <script src="script.js?v=stars-1" defer></script>
-  <link rel="stylesheet" href="styles.css?v=writing-2">
+  <link rel="stylesheet" href="styles.css?v=seo-1">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://danielyakobian.com/#website",
+        "url": "https://danielyakobian.com/",
+        "name": "Daniel Yakobian",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://danielyakobian.com/#person" }
+      },
+      {
+        "@type": "ProfilePage",
+        "@id": "https://danielyakobian.com/#profile",
+        "url": "https://danielyakobian.com/",
+        "name": "Daniel Yakobian — Mac apps, developer tools and experiments",
+        "isPartOf": { "@id": "https://danielyakobian.com/#website" },
+        "mainEntity": { "@id": "https://danielyakobian.com/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://danielyakobian.com/#person",
+        "name": "Daniel Yakobian",
+        "url": "https://danielyakobian.com/",
+        "email": "support@danielyakobian.com",
+        "description": "Independent developer of Mac apps, developer tools and 3D printing tools.",
+        "sameAs": [
+          "https://github.com/danielyaa5",
+          "https://www.linkedin.com/in/danielyakobian/"
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "name": "Projects by Daniel Yakobian",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "item": { "@type": "SoftwareApplication", "name": "puml-for-markdown", "description": "Put interactive PlantUML diagrams into GitHub Markdown, from a command-line tool or a GitHub Action.", "url": "https://github.com/danielyaa5/puml-for-markdown", "sameAs": ["https://www.npmjs.com/package/puml-for-markdown"], "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Windows, Linux", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 2, "item": { "@type": "SoftwareApplication", "name": "Cloud Media Shrinker", "description": "Find what’s filling iCloud Photos, then shrink big videos or clear what you don’t need. Keeps HDR.", "url": "https://danielyaa5.github.io/photo-review/", "sameAs": ["https://github.com/danielyaa5/photo-review"], "applicationCategory": "UtilitiesApplication", "operatingSystem": "macOS", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 3, "item": { "@type": "SoftwareApplication", "name": "Beckon", "description": "Ring your Apple devices from your Mac menu bar, widgets, or a keyboard shortcut.", "url": "https://danielyaa5.github.io/beckon/", "sameAs": ["https://github.com/danielyaa5/beckon"], "applicationCategory": "UtilitiesApplication", "operatingSystem": "macOS", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 4, "item": { "@type": "SoftwareApplication", "name": "Print Progress", "description": "Monitor 3D printer progress from Mac and iPhone widgets.", "url": "https://danielyaa5.github.io/3d-printer-widget/", "sameAs": ["https://github.com/danielyaa5/3d-printer-widget"], "applicationCategory": "UtilitiesApplication", "operatingSystem": "macOS, iOS, iPadOS", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 5, "item": { "@type": "SoftwareApplication", "name": "TagTracker", "description": "Explore local AirTag location history with maps on your Mac.", "url": "https://danielyaa5.github.io/tagtracker/", "sameAs": ["https://github.com/danielyaa5/tagtracker"], "applicationCategory": "UtilitiesApplication", "operatingSystem": "macOS", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 6, "item": { "@type": "SoftwareSourceCode", "name": "H2D Custom Dashboard", "description": "Local status monitoring and optional exhaust control for the Bambu H2D.", "url": "https://danielyaa5.github.io/h2d-custom-dashboard/", "codeRepository": "https://github.com/danielyaa5/h2d-custom-dashboard", "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 7, "item": { "@type": "WebApplication", "name": "Buy or Rent", "description": "Compare the long-term numbers behind buying a home versus renting.", "url": "https://buy-or-rent-web.vercel.app/", "sameAs": ["https://github.com/danielyaa5/buy-or-rent-web"], "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 8, "item": { "@type": "SoftwareApplication", "name": "qtfaststart2", "description": "Move MP4 metadata to the front for faster streaming starts without re-encoding.", "url": "https://github.com/danielyaa5/qtfaststart2", "sameAs": ["https://pypi.org/project/qtfaststart2/"], "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Windows, Linux", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 9, "item": { "@type": "SoftwareApplication", "name": "Netflix PiP Fixer", "description": "Keep Netflix picture-in-picture available while you browse.", "url": "https://github.com/danielyaa5/netflix-pip-fixer", "applicationCategory": "BrowserApplication", "operatingSystem": "Chrome", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body id="top">
   <a class="skip-link" href="#work">Skip to projects</a>
@@ -49,7 +107,7 @@
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/puml-for-markdown.webp" width="1421" height="1107" style="--art-width: 130px" alt=""></div>
               <div class="project-copy">
                 <div class="project-title">
-                  <h2>puml-for-markdown</h2>
+                  <h2><a class="project-name" href="https://github.com/danielyaa5/puml-for-markdown">puml-for-markdown</a></h2>
                   <a class="star-count" href="https://github.com/danielyaa5/puml-for-markdown/stargazers" data-github-stars="danielyaa5/puml-for-markdown" aria-label="343 GitHub stars" title="GitHub stars, checked October 22, 2026"><span aria-hidden="true">★</span> <span data-star-number>343</span></a>
                 </div>
                 <p class="project-benefit">Put interactive PlantUML diagrams into GitHub Markdown.</p>
@@ -62,7 +120,7 @@
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/cloud-media-shrinker.webp" width="1220" height="1289" style="--art-width: 152px" alt=""></div>
               <div class="project-copy">
-                <h2>Cloud Media Shrinker</h2>
+                <h2><a class="project-name" href="https://danielyaa5.github.io/photo-review/">Cloud Media Shrinker</a></h2>
                 <p class="project-benefit">Find what’s filling iCloud Photos, then shrink big videos or clear what you don’t need. Keeps HDR.</p>
                 <span class="category">Mac app</span>
               </div>
@@ -73,7 +131,7 @@
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/beckon.webp" width="1234" height="1274" style="--art-width: 174px" alt=""></div>
               <div class="project-copy">
-                <h2>Beckon</h2>
+                <h2><a class="project-name" href="https://danielyaa5.github.io/beckon/">Beckon</a></h2>
                 <p class="project-benefit">Ring your Apple devices from your Mac menu bar, widgets, or a keyboard shortcut.</p>
                 <span class="category">Mac app</span>
               </div>
@@ -84,7 +142,7 @@
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/print-progress.webp" width="1306" height="1204" style="--art-width: 109px" alt=""></div>
               <div class="project-copy">
-                <h2>Print Progress</h2>
+                <h2><a class="project-name" href="https://danielyaa5.github.io/3d-printer-widget/">Print Progress</a></h2>
                 <p class="project-benefit">Monitor 3D printer progress from Mac and iPhone widgets.</p>
                 <span class="category">3D printing</span>
               </div>
@@ -106,7 +164,7 @@
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/tagtracker.webp" width="1192" height="1320" style="--art-width: 109px" alt=""></div>
               <div class="project-copy">
-                <h2>TagTracker</h2>
+                <h2><a class="project-name" href="https://danielyaa5.github.io/tagtracker/">TagTracker</a></h2>
                 <p class="project-benefit">Explore local AirTag location history with maps on your Mac.</p>
                 <span class="category">Experimental Mac app</span>
               </div>
@@ -117,7 +175,7 @@
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/h2d-dashboard.webp" width="1309" height="1202" style="--art-width: 131px" alt=""></div>
               <div class="project-copy">
-                <h2>H2D Custom Dashboard</h2>
+                <h2><a class="project-name" href="https://danielyaa5.github.io/h2d-custom-dashboard/">H2D Custom Dashboard</a></h2>
                 <p class="project-benefit">Local status monitoring and optional exhaust control for the Bambu H2D.</p>
                 <span class="category">3D printing</span>
               </div>
@@ -128,7 +186,7 @@
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/buy-or-rent.webp" width="200" height="200" style="--art-width: 156px; mix-blend-mode: multiply" alt=""></div>
               <div class="project-copy">
-                <h2>Buy or Rent</h2>
+                <h2><a class="project-name" href="https://buy-or-rent-web.vercel.app/">Buy or Rent</a></h2>
                 <p class="project-benefit">Compare the long-term numbers behind buying a home versus renting.</p>
                 <span class="category">Web calculator</span>
               </div>
@@ -139,7 +197,7 @@
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/qtfaststart2.webp" width="1203" height="1308" style="--art-width: 110px" alt=""></div>
               <div class="project-copy">
-                <h2>qtfaststart2</h2>
+                <h2><a class="project-name" href="https://github.com/danielyaa5/qtfaststart2">qtfaststart2</a></h2>
                 <p class="project-benefit">Move MP4 metadata to the front for faster streaming starts without re-encoding.</p>
                 <span class="category">Developer tool</span>
               </div>
@@ -150,7 +208,7 @@
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/netflix-pip-fixer.webp" width="200" height="200" style="--art-width: 156px; mix-blend-mode: multiply" alt=""></div>
               <div class="project-copy">
-                <h2>Netflix PiP Fixer</h2>
+                <h2><a class="project-name" href="https://github.com/danielyaa5/netflix-pip-fixer">Netflix PiP Fixer</a></h2>
                 <p class="project-benefit">Keep Netflix picture-in-picture available while you browse.</p>
                 <span class="category">Chrome extension</span>
               </div>
@@ -165,15 +223,15 @@
           <article class="writing-card"><h3><a href="blog/k1-max-chamber-heater.html">Teaching my K1 Max to turn on its own chamber heater</a></h3><p>How a smart plug, a Fingerbot and a few Klipper macros let my K1 Max heat and hold its own chamber for ASA prints.</p><img class="writing-thumb" src="assets/writing/k1-max-chamber-heater.webp" width="1600" height="900" alt="Illustration of an enclosed 3D printer with a heater inside, a small robot holding the end of a power cable, and a smart plug with a Wi-Fi signal" loading="lazy"><a class="writing-link" href="blog/k1-max-chamber-heater.html">Read article →</a></article>
           <article class="writing-card"><h3><a href="https://github.com/danielyaa5/ai-trader-writeup">Building an AI Trader With Deterministic Risk Controls</a></h3><p>I built an experimental trading system that uses one model to propose trades, two others to review them, and Python to enforce the rules between those steps.</p><img class="writing-thumb" src="assets/writing/ai-trader.webp" width="1600" height="900" alt="Illustration of three small robots at a stock chart: one proposes a trade, two review it, and a shield with a padlock stands for fixed rules" loading="lazy"><a class="writing-link" href="https://github.com/danielyaa5/ai-trader-writeup">Read article →</a></article>
           <article class="writing-card"><h3><a href="blog/agent-qa-separate-macos-account.html">Giving my AI agent its own Mac account for QA</a></h3><p>How I use a second macOS account to give an AI agent its own desktop for app testing while I keep working.</p><img class="writing-thumb" src="assets/writing/screen-sharing-recursion.webp" width="1600" height="900" alt="Illustration of Screen Sharing windows nested inside each other, switching between the main and QA accounts" loading="lazy"><a class="writing-link" href="blog/agent-qa-separate-macos-account.html">Read article →</a></article>
-          <article class="writing-card"><h3><a href="https://github.com/danielyaa5/gate-opener-widget">A widget for my gate</a></h3><p>Build notes on turning a broken 30-year-old gate into a smart gate I can open from Mac and iPhone widgets, with a camera that checks whether it's open.</p><img class="writing-thumb" src="assets/writing/gate-opener-widget.webp" width="1600" height="900" alt="Illustration of a Mac desktop with a menu bar, desktop icons and the Gate Opener widget showing Closed and an Open Gate button, with simulated data" loading="lazy"><a class="writing-link" href="https://github.com/danielyaa5/gate-opener-widget">Read article →</a></article>
+          <article class="writing-card"><h3><a href="https://danielyaa5.github.io/gate-opener-widget/">A widget for my gate</a></h3><p>Build notes on turning a broken 30-year-old gate into a smart gate I can open from Mac and iPhone widgets, with a camera that checks whether it's open.</p><img class="writing-thumb" src="assets/writing/gate-opener-widget.webp" width="1600" height="900" alt="Illustration of a Mac desktop with a menu bar, desktop icons and the Gate Opener widget showing Closed and an Open Gate button, with simulated data" loading="lazy"><a class="writing-link" href="https://danielyaa5.github.io/gate-opener-widget/">Read article →</a></article>
         </div>
       </section>
     </main>
     <footer class="site-footer">
       <p><a href="#top" aria-label="Back to top">Daniel</a> / Built to be useful.</p>
       <div class="profile-links">
-        <a class="profile-link" href="https://github.com/danielyaa5"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5</span></a>
-        <a class="profile-link" href="https://www.linkedin.com/in/danielyakobian/"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>linkedin.com/in/danielyakobian</span></a>
+        <a class="profile-link" rel="me" href="https://github.com/danielyaa5"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5</span></a>
+        <a class="profile-link" rel="me" href="https://www.linkedin.com/in/danielyakobian/"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>linkedin.com/in/danielyakobian</span></a>
         <a class="profile-link" href="mailto:support@danielyakobian.com"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>support@danielyakobian.com</span></a>
       </div>
     </footer>
