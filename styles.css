@@ -168,3 +168,32 @@ dialog form { display: flex; justify-content: flex-end; }
 @media (max-width: 850px) { :root { --rail: 40px; } }
 @media (max-width: 620px) { :root { --rail: 0px; } }
 body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blog-page) .site-footer { margin-right: var(--rail); }
+
+/* Project discovery */
+[hidden] { display: none !important; }
+.section-title { margin: 0 0 18px; font-size: 27px; letter-spacing: -.6px; }
+.featured-projects, .all-projects-title, .project-filters, .filter-count { margin-right: var(--rail); }
+.featured-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.featured-pick { display: flex; flex-direction: column; padding: 22px; border: 1px solid #a7b2a5; border-radius: 6px; background: #edf1e3; }
+.featured-pick:hover { background: #e5ecd9; }
+.featured-pick img { width: 76px; height: 76px; object-fit: contain; margin-bottom: 18px; }
+.featured-pick h3 { font-size: 18px; margin: 0 0 8px; overflow-wrap: anywhere; }
+.featured-pick p { margin: 0 0 18px; font-size: 16px; flex: 1; }
+.featured-pick > span { font-size: 13px; font-weight: 700; color: var(--green); }
+.all-projects-title { margin-top: 36px; }
+.project-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.project-filters button { min-height: 44px; padding: 9px 14px; border: 1px solid #a7b2a5; border-radius: 5px; background: transparent; color: var(--green); font: inherit; font-size: 14px; cursor: pointer; }
+.project-filters button:hover { background: #e9efdf; }
+.project-filters button[aria-pressed="true"] { color: white; background: var(--green); border-color: var(--green); }
+.filter-count { margin-top: 0; margin-bottom: 16px; font-size: 13px; color: #516047; }
+.project-status { display: inline-block; padding: 3px 7px; border: 1px solid #b7beaa; border-radius: 4px; font-size: 12px; line-height: 1.2; color: #455f3d; margin-top: 5px; }
+.all-writing { display: inline-flex; align-items: center; min-height: 44px; margin-top: 16px; font-weight: 700; color: var(--green); }
+.all-writing:hover { text-decoration: underline; }
+@media (max-width: 620px) {
+  .featured-grid { grid-template-columns: 1fr; gap: 10px; }
+  .featured-pick { display: grid; grid-template-columns: 58px minmax(0, 1fr); column-gap: 16px; padding: 18px; }
+  .featured-pick img { width: 58px; height: 58px; grid-row: 1 / 4; margin: 0; }
+  .featured-pick h3 { font-size: 17px; }
+  .featured-pick p { font-size: 15px; margin-bottom: 12px; }
+  .project-filters button { font-size: 13px; padding: 9px 11px; }
+}

@@ -20,8 +20,8 @@
   <link rel="icon" type="image/png" sizes="128x128" href="assets/favicon.png">
   <!-- danielyakobian.com is the primary address; danielyaa5.github.io serves the same files. -->
   <link rel="canonical" href="https://danielyakobian.com/">
-  <script src="script.js?v=stars-1" defer></script>
-  <link rel="stylesheet" href="styles.css?v=seo-1">
+  <script src="script.js?v=project-filters-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=project-filters-1">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -100,9 +100,26 @@
         </div>
         <img class="hero-illustration" src="assets/illustrations/hero.webp" width="1482" height="1061" alt="A laptop connected to photos, video, cloud storage, and a notification bell.">
       </header>
-      <section class="work" id="work" aria-label="Selected projects">
-        <div class="project-grid">
-          <article class="project">
+      <section class="work" id="work" aria-label="Projects">
+        <section class="featured-projects" aria-labelledby="featured-title">
+          <h2 class="section-title" id="featured-title">Featured projects</h2>
+          <div class="featured-grid">
+            <a class="featured-pick" href="https://github.com/danielyaa5/photo-review"><img src="assets/illustrations/cloud-media-shrinker.webp" width="1220" height="1289" alt=""><h3>Cloud Media Shrinker</h3><p>Make room in iCloud Photos.</p><span>Explore project →</span></a>
+            <a class="featured-pick" href="https://github.com/danielyaa5/puml-for-markdown"><img src="assets/illustrations/puml-for-markdown.webp" width="1421" height="1107" alt=""><h3>puml-for-markdown</h3><p>Bring diagrams into GitHub Markdown.</p><span>Explore project →</span></a>
+            <a class="featured-pick" href="https://github.com/danielyaa5/beckon"><img src="assets/illustrations/beckon.webp" width="1234" height="1274" alt=""><h3>Beckon</h3><p>Find your Apple devices with a ring.</p><span>Explore project →</span></a>
+          </div>
+        </section>
+        <h2 class="section-title all-projects-title" id="all-projects-title">All projects</h2>
+        <div class="project-filters" role="group" aria-label="Filter projects" hidden>
+          <button type="button" data-filter="all" aria-pressed="true" aria-controls="project-list">All</button>
+          <button type="button" data-filter="mac" aria-pressed="false" aria-controls="project-list">Mac apps</button>
+          <button type="button" data-filter="web" aria-pressed="false" aria-controls="project-list">Browser &amp; web</button>
+          <button type="button" data-filter="developer" aria-pressed="false" aria-controls="project-list">Developer tools</button>
+          <button type="button" data-filter="printing" aria-pressed="false" aria-controls="project-list">3D printing</button>
+        </div>
+        <p class="filter-count" role="status" aria-live="polite" hidden>10 projects</p>
+        <div class="project-grid" id="project-list" aria-labelledby="all-projects-title">
+          <article class="project" data-category="developer">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/puml-for-markdown.webp" width="1421" height="1107" style="--art-width: 130px" alt=""></div>
               <div class="project-copy">
@@ -116,7 +133,7 @@
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/puml-for-markdown" aria-label="puml-for-markdown on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/puml-for-markdown</span></a></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="mac">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/cloud-media-shrinker.webp" width="1220" height="1289" style="--art-width: 152px" alt=""></div>
               <div class="project-copy">
@@ -127,7 +144,7 @@
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/photo-review" aria-label="Cloud Media Shrinker on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/photo-review</span></a></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="mac">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/beckon.webp" width="1234" height="1274" style="--art-width: 174px" alt=""></div>
               <div class="project-copy">
@@ -138,7 +155,7 @@
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/beckon" aria-label="Beckon on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/beckon</span></a></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="printing">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/print-progress.webp" width="1306" height="1204" style="--art-width: 109px" alt=""></div>
               <div class="project-copy">
@@ -149,29 +166,29 @@
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/3d-printer-widget" aria-label="Print Progress on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/3d-printer-widget</span></a></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="mac">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/ai-billboard.webp" width="1305" height="1205" style="--art-width: 152px" alt=""></div>
               <div class="project-copy">
                 <h2>AI-billboard</h2>
                 <p class="project-benefit">Turn local Markdown files into native Mac widgets for daily briefs, checklists, and small dashboards.</p>
-                <span class="category">Mac app</span>
+                <span class="category">Mac app</span> <span class="project-status">Preview</span>
               </div>
             </div>
             <div class="project-footer"><span class="project-preview">Project preview</span></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="mac">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/tagtracker.webp" width="1192" height="1320" style="--art-width: 109px" alt=""></div>
               <div class="project-copy">
                 <h2><a class="project-name" href="https://danielyaa5.github.io/tagtracker/">TagTracker</a></h2>
                 <p class="project-benefit">Explore local AirTag location history with maps on your Mac.</p>
-                <span class="category">Experimental Mac app</span>
+                <span class="category">Mac app</span> <span class="project-status">Experimental</span>
               </div>
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/tagtracker" aria-label="TagTracker on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/tagtracker</span></a></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="printing">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/h2d-dashboard.webp" width="1309" height="1202" style="--art-width: 131px" alt=""></div>
               <div class="project-copy">
@@ -182,7 +199,7 @@
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/h2d-custom-dashboard" aria-label="H2D Custom Dashboard on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/h2d-custom-dashboard</span></a></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="web">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/buy-or-rent.webp" width="200" height="200" style="--art-width: 156px; mix-blend-mode: multiply" alt=""></div>
               <div class="project-copy">
@@ -193,7 +210,7 @@
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/buy-or-rent-web" aria-label="Buy or Rent on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/buy-or-rent-web</span></a></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="developer">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/qtfaststart2.webp" width="1203" height="1308" style="--art-width: 110px" alt=""></div>
               <div class="project-copy">
@@ -204,7 +221,7 @@
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/qtfaststart2" aria-label="qtfaststart2 on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/qtfaststart2</span></a></div>
           </article>
-          <article class="project">
+          <article class="project" data-category="web">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/netflix-pip-fixer.webp" width="200" height="200" style="--art-width: 156px; mix-blend-mode: multiply" alt=""></div>
               <div class="project-copy">
@@ -221,10 +238,9 @@
         <h2 id="writing-title">Writings</h2>
         <div class="writing-grid">
           <article class="writing-card"><h3><a href="blog/k1-max-chamber-heater.html">Teaching my K1 Max to turn on its own chamber heater</a></h3><p>How a smart plug, a Fingerbot and a few Klipper macros let my K1 Max heat and hold its own chamber for ASA prints.</p><img class="writing-thumb" src="assets/writing/k1-max-chamber-heater.webp" width="1600" height="900" alt="Illustration of an enclosed 3D printer with a heater inside, a small robot holding the end of a power cable, and a smart plug with a Wi-Fi signal" loading="lazy"><a class="writing-link" href="blog/k1-max-chamber-heater.html">Read article →</a></article>
-          <article class="writing-card"><h3><a href="https://github.com/danielyaa5/ai-trader-writeup">Building an AI Trader With Deterministic Risk Controls</a></h3><p>I built an experimental trading system that uses one model to propose trades, two others to review them, and Python to enforce the rules between those steps.</p><img class="writing-thumb" src="assets/writing/ai-trader.webp" width="1600" height="900" alt="Illustration of three small robots at a stock chart: one proposes a trade, two review it, and a shield with a padlock stands for fixed rules" loading="lazy"><a class="writing-link" href="https://github.com/danielyaa5/ai-trader-writeup">Read article →</a></article>
           <article class="writing-card"><h3><a href="blog/agent-qa-separate-macos-account.html">Giving my AI agent its own Mac account for QA</a></h3><p>How I use a second macOS account to give an AI agent its own desktop for app testing while I keep working.</p><img class="writing-thumb" src="assets/writing/screen-sharing-recursion.webp" width="1600" height="900" alt="Illustration of Screen Sharing windows nested inside each other, switching between the main and QA accounts" loading="lazy"><a class="writing-link" href="blog/agent-qa-separate-macos-account.html">Read article →</a></article>
-          <article class="writing-card"><h3><a href="https://danielyaa5.github.io/gate-opener-widget/">A widget for my gate</a></h3><p>Build notes on turning a broken 30-year-old gate into a smart gate I can open from Mac and iPhone widgets, with a camera that checks whether it's open.</p><img class="writing-thumb" src="assets/writing/gate-opener-widget.webp" width="1600" height="900" alt="Illustration of a Mac desktop with a menu bar, desktop icons and the Gate Opener widget showing Closed and an Open Gate button, with simulated data" loading="lazy"><a class="writing-link" href="https://danielyaa5.github.io/gate-opener-widget/">Read article →</a></article>
         </div>
+        <a class="all-writing" href="blog/">All writing →</a>
       </section>
     </main>
     <footer class="site-footer">

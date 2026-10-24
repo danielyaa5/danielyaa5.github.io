@@ -22,6 +22,30 @@ const expected = ['puml-for-markdown','Cloud Media Shrinker','Beckon','Print Pro
     assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===10 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
     assert.equal(await page.locator('.project-link').count(),9);
+    assert.equal(await page.locator('.featured-pick').count(),3);
+    assert.equal(await page.locator('.writing-card').count(),2);
+    assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
+    const groups = {
+      mac: ['Cloud Media Shrinker','Beckon','AI-billboard','TagTracker'],
+      web: ['Buy or Rent','Netflix PiP Fixer'],
+      developer: ['puml-for-markdown','qtfaststart2'],
+      printing: ['Print Progress','H2D Custom Dashboard']
+    };
+    for (const width of [1440,320]) {
+      await page.setViewportSize({width,height:1000});
+      for (const [category,names] of Object.entries(groups)) {
+        await page.locator(`[data-filter="${category}"]`).click();
+        assert.deepEqual(await page.locator('.project:visible h2').allTextContents(),names);
+        assert.equal(await page.locator('[aria-pressed="true"]').count(),1);
+        assert.match(await page.locator('.filter-count').innerText(),new RegExp(`^${names.length} projects`));
+        assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+      }
+      await page.locator('[data-filter="all"]').focus();
+      await page.keyboard.press('Enter');
+      assert.deepEqual(await page.locator('.project:visible h2').allTextContents(),expected);
+    }
+    await page.setViewportSize({width:1440,height:1000});
+
     assert.equal(await page.locator('.project a[href*="ai-billboard"]').count(),0);
     await page.locator('.hero-actions').getByRole('link',{name:'Writings',exact:true}).click();
     await page.waitForURL('**/#writing');

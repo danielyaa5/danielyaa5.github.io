@@ -19,3 +19,25 @@ document.querySelectorAll('[data-github-stars]').forEach(async badge => {
     // Keep the verified count if GitHub is unavailable or rate-limited.
   }
 });
+
+
+const filters = document.querySelector('.project-filters');
+if (filters) {
+  const projects = [...document.querySelectorAll('#project-list .project')];
+  const count = document.querySelector('.filter-count');
+  filters.hidden = false;
+  count.hidden = false;
+  filters.addEventListener('click', event => {
+    const button = event.target.closest('[data-filter]');
+    if (!button) return;
+    const category = button.dataset.filter;
+    filters.querySelectorAll('button').forEach(item => {
+      item.setAttribute('aria-pressed', String(item === button));
+    });
+    projects.forEach(project => {
+      project.hidden = category !== 'all' && project.dataset.category !== category;
+    });
+    const visible = projects.filter(project => !project.hidden).length;
+    count.textContent = `${visible} ${visible === 1 ? 'project' : 'projects'}${category === 'all' ? '' : ` in ${button.textContent}`}`;
+  });
+}

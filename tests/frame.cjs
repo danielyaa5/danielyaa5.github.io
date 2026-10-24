@@ -24,7 +24,7 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 768, 600, 414, 375, 320];
         const lineX = heroBox.right - parseFloat(line.right);
         const lineTop = heroBox.top + parseFloat(line.top);
         const lineBottom = heroBox.bottom;
-        const selector = '.hero-copy, .hero-illustration, .hero-actions .button, .project, .writing-card, .writing-thumb, .site-footer, .site-header';
+        const selector = '.featured-pick, .section-title, .project-filters, .filter-count, .all-writing, .hero-copy, .hero-illustration, .hero-actions .button, .project, .writing-card, .writing-thumb, .site-footer, .site-header';
         const problems = [];
         for (const el of document.querySelectorAll(selector)) {
           const r = el.getBoundingClientRect();
