@@ -36,7 +36,9 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 768, 600, 414, 375, 320];
         }
         const name = document.querySelector('.identity').getBoundingClientRect();
         const nav = document.querySelector('.site-header nav').getBoundingClientRect();
-        if (nav.left - name.right < 8) problems.push('navigation crowds the name');
+        const sameRow = Math.min(nav.bottom, name.bottom) > Math.max(nav.top, name.top);
+        if (sameRow && nav.left - name.right < 8) problems.push('navigation crowds the name');
+        if (!sameRow && nav.top - name.bottom < 4) problems.push('stacked navigation crowds the name');
         const rows = new Set([...document.querySelectorAll('.hero-actions .button')].map(b => Math.round(b.getBoundingClientRect().top)));
         if (rows.size > 1) problems.push('hero buttons wrap');
         return { lineShown, overflow: document.documentElement.scrollWidth > innerWidth, problems };

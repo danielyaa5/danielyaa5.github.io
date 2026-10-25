@@ -86,3 +86,8 @@ Scope: the chain icon and illustration sharpness. This is a focused visual check
 - Final: high-resolution redraws and a balanced vector chain were installed, then captured and compared on desktop and mobile. The focused resolution, alignment, load, fit, favicon, and page-error checks passed.
 
 final result: passed
+
+
+## Mobile navigation and touch targets follow-up
+
+The mobile QA findings from production `65fd0ed` are resolved locally: phone navigation uses 15-pixel, single-line labels in its own responsive row/grid, and the star link, identity, navigation and footer links have 44-pixel hit targets. The visible star pill and footer typography retain their scale. Regression checks verify target edge hit-testing as well as dimensions. Mobile (ten configurations), frame (eleven widths), portfolio, star and SEO checks passed; details and the pre-existing Buy or Rent 2× asset-resolution limitation are recorded in `mobile-qa.md`.

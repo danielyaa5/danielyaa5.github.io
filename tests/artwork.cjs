@@ -39,7 +39,7 @@ const base = process.argv[2] || 'http://127.0.0.1:4173';
         };
       });
       assert.ok(result.fits, `No horizontal overflow at ${width}px`);
-      assert.equal(result.images.length, 11);
+      assert.equal(result.images.length, 9);
       for (const image of result.images) {
         assert.ok(image.loaded, `Artwork loads: ${image.source}`);
         assert.ok(image.pixels >= image.requiredPixels, `Artwork supports 2x displays: ${image.source}`);

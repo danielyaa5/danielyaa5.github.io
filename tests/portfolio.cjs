@@ -36,7 +36,8 @@ const expected = ['3D prints for sale','Print Progress','AI-billboard','TagTrack
     assert.equal(await page.locator('.featured-pick a a').count(), 0);
     assert.ok(await page.locator('.star-count').evaluate(badge=>{
       const title=badge.closest('.featured-heading').querySelector('h3').getBoundingClientRect();
-      return Math.abs(title.top-badge.getBoundingClientRect().top)<5;
+      const target=badge.getBoundingClientRect();
+      return Math.abs(title.top+title.height/2-target.top-target.height/2)<1;
     }), 'Desktop star badge stays beside the PUML title');
     assert.ok(await page.locator('.featured-pick img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth >= image.clientWidth * 2)));
 
