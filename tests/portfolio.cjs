@@ -19,7 +19,7 @@ const expected = ['3D prints for sale','Print Progress','AI-billboard','TagTrack
     assert.equal(await page.locator('.identity').innerText(), 'Daniel');
     assert.deepEqual(await page.locator('.hero-description strong').allTextContents(), ['Snapchat','Clutter','Tinder']);
     assert.equal(await page.locator('.hero-description').innerText(), 'Software engineer since 2016; Snapchat, Clutter, Tinder. In my free time I make apps, dev tools, 3D prints and work on my motorcycles and car.');
-    assert.equal(await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'3D Prints Shop',exact:true}).getAttribute('href'), 'https://www.etsy.com/shop/UrbanTechGoods');
+    assert.equal(await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'3D Print Shop',exact:true}).getAttribute('href'), 'https://www.etsy.com/shop/UrbanTechGoods');
     assert.equal(await page.locator('.project-shop .project-name').getAttribute('href'), 'https://www.etsy.com/shop/UrbanTechGoods');
 
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');

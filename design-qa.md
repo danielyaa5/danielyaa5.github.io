@@ -36,7 +36,7 @@ Scope: the selected split layout, with Cloud Media Shrinker in the large left ti
 ## Etsy tile and introduction follow-up
 
 - Updated the hero introduction with the owner-provided wording and bold company names: Snapchat, Clutter and Tinder.
-- Header navigation now says 3D Prints Shop and points to UrbanTechGoods on Etsy. The hero GitHub button remains available.
+- Header navigation now says 3D Print Shop and points to UrbanTechGoods on Etsy. The hero GitHub button remains available.
 - Added a transparent Canva illustration and a 3D prints for sale tile in the printing category. The title, footer and tile surface link to the shop. Printing now contains three entries; All contains eight.
 - Portfolio checks passed at seven widths and frame checks at eleven widths after these changes. SEO checks passed with the Store entry in structured data.
 - In the in-app browser, inspected the bold names, selected 3D printing, confirmed three entries and followed the new shop title. It reached the correct Etsy shop URL; Etsy displayed a device check in the in-app browser. The shop itself was separately inspected in the signed-in browser.
