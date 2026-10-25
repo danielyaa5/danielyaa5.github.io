@@ -161,6 +161,12 @@ dialog form { display: flex; justify-content: flex-end; }
 .writing-thumb { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin: 0 0 6px; border: 1px solid #d0d4b9; border-radius: 6px; background: #f1f3e8; }
 .writing-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--green); font-size: 15px; font-weight: 700; }
 @media (max-width: 620px) { .writing-grid { grid-template-columns: 1fr; } .writing-card { padding: 22px 18px; } }
+/* A third card spans both columns, with its picture beside the text. */
+@media (min-width: 621px) {
+  .writing-card-wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); grid-template-rows: auto 1fr auto; column-gap: 28px; }
+  .writing-card-wide h3, .writing-card-wide p, .writing-card-wide .writing-link { grid-column: 1; }
+  .writing-card-wide .writing-thumb { grid-column: 2; grid-row: 1 / span 3; align-self: center; margin: 0; }
+}
 
 /* Keep the content below the hero right-aligned with the header rule, so the
    vertical line under the tree sits in its own gutter at every width. */

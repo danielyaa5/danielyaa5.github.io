@@ -23,7 +23,7 @@ const expected = ['puml-for-markdown','Cloud Media Shrinker','Beckon','Print Pro
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
     assert.equal(await page.locator('.project-link').count(),9);
     assert.equal(await page.locator('.featured-pick').count(),3);
-    assert.equal(await page.locator('.writing-card').count(),2);
+    assert.equal(await page.locator('.writing-card').count(),3);
     assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
     const groups = {
       mac: ['Cloud Media Shrinker','Beckon','AI-billboard','TagTracker'],
