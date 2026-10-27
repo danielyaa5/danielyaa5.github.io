@@ -67,7 +67,8 @@
           { "@type": "ListItem", "position": 7, "item": { "@type": "SoftwareSourceCode", "name": "H2D Custom Dashboard", "description": "Local status monitoring and optional exhaust control for the Bambu H2D.", "url": "https://danielyaa5.github.io/h2d-custom-dashboard/", "codeRepository": "https://github.com/danielyaa5/h2d-custom-dashboard", "author": { "@id": "https://danielyakobian.com/#person" } } },
           { "@type": "ListItem", "position": 8, "item": { "@type": "WebApplication", "name": "Buy or Rent", "description": "Compare the long-term numbers behind buying a home versus renting.", "url": "https://buy-or-rent-web.vercel.app/", "sameAs": ["https://github.com/danielyaa5/buy-or-rent-web"], "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
           { "@type": "ListItem", "position": 9, "item": { "@type": "SoftwareApplication", "name": "qtfaststart2", "description": "Move MP4 metadata to the front for faster streaming starts without re-encoding.", "url": "https://github.com/danielyaa5/qtfaststart2", "sameAs": ["https://pypi.org/project/qtfaststart2/"], "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Windows, Linux", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
-          { "@type": "ListItem", "position": 10, "item": { "@type": "SoftwareApplication", "name": "Netflix PiP Fixer", "description": "Keep Netflix picture-in-picture available while you browse.", "url": "https://github.com/danielyaa5/netflix-pip-fixer", "applicationCategory": "BrowserApplication", "operatingSystem": "Chrome", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } }
+          { "@type": "ListItem", "position": 10, "item": { "@type": "SoftwareApplication", "name": "Netflix PiP Fixer", "description": "Keep Netflix picture-in-picture available while you browse.", "url": "https://github.com/danielyaa5/netflix-pip-fixer", "applicationCategory": "BrowserApplication", "operatingSystem": "Chrome", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } },
+          { "@type": "ListItem", "position": 11, "item": { "@type": "SoftwareApplication", "name": "bambu-headless", "description": "Run a Bambu H2D from a macOS terminal while keeping Handy enabled and Developer Mode off.", "url": "https://github.com/danielyaa5/bambu-headless", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS", "isAccessibleForFree": true, "author": { "@id": "https://danielyakobian.com/#person" } } }
         ]
       }
     ]
@@ -142,7 +143,7 @@
           <button type="button" data-filter="developer" aria-pressed="false" aria-controls="project-list">Developer tools</button>
           <button type="button" data-filter="printing" aria-pressed="false" aria-controls="project-list">3D printing</button>
         </div>
-        <p class="filter-count" role="status" aria-live="polite" hidden>8 projects</p>
+        <p class="filter-count" role="status" aria-live="polite" hidden>9 projects</p>
         <div class="project-grid" id="project-list" aria-labelledby="other-projects-title">
           <article class="project project-shop" data-category="printing">
             <div class="project-main">
@@ -232,12 +233,23 @@
             </div>
             <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/netflix-pip-fixer" aria-label="Netflix PiP Fixer on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/netflix-pip-fixer</span></a></div>
           </article>
+          <article class="project" data-category="printing">
+            <div class="project-main">
+              <div class="project-art"><img class="project-illustration" src="assets/illustrations/bambu-headless.webp" width="1475" height="778" style="--art-width: 145px" alt=""></div>
+              <div class="project-copy">
+                <h2><a class="project-name" href="https://github.com/danielyaa5/bambu-headless">bambu-headless</a></h2>
+                <p class="project-benefit">Run a Bambu H2D from a macOS terminal while keeping Handy enabled and Developer Mode off.</p>
+                <span class="category">3D printing</span>
+              </div>
+            </div>
+            <div class="project-footer"><a class="project-link" href="https://github.com/danielyaa5/bambu-headless" aria-label="bambu-headless on GitHub"><img class="link-icon" src="assets/illustrations/link.svg" width="14" height="14" alt=""><span>github.com/danielyaa5/bambu-headless</span></a></div>
+          </article>
         </div>
       </section>
       <section class="writing" id="writing" aria-labelledby="writing-title">
         <h2 id="writing-title">Writings</h2>
         <div class="writing-grid">
-          <article class="writing-card"><h3><a href="blog/bambu-headless-cli.html">Running my Bambu H2D from the command line</a></h3><p>A macOS CLI for checking my Bambu H2D, managing sliced files and starting a print while keeping Handy enabled and Developer Mode off.</p><img class="writing-thumb" src="assets/writing/bambu-headless-cli.webp" width="1600" height="900" alt="Illustration of a terminal window sending commands wirelessly to an enclosed dual-nozzle 3D printer" loading="lazy"><a class="writing-link" href="blog/bambu-headless-cli.html">Read article →</a></article>
+          <article class="writing-card"><h3><a href="blog/bambu-headless-cli.html">Bypassing Bambu’s MQTT signature check by masquerading as Bambu Studio</a></h3><p>How a <code>dyld</code> executable-path shim and a C++ bridge let a Python CLI sign H2D print commands using Studio’s own closed-source networking dylib.</p><img class="writing-thumb" src="assets/writing/bambu-headless-cli.webp" width="1600" height="900" alt="Illustration of a terminal window holding a disguise mask to pass a signature checkpoint and reach an enclosed dual-nozzle 3D printer" loading="lazy"><a class="writing-link" href="blog/bambu-headless-cli.html">Read article →</a></article>
           <article class="writing-card"><h3><a href="blog/agent-qa-separate-macos-account.html">Giving my AI agent its own Mac account for QA</a></h3><p>How I use a second macOS account to give an AI agent its own desktop for app testing while I keep working.</p><img class="writing-thumb" src="assets/writing/screen-sharing-recursion.webp" width="1600" height="900" alt="Illustration of Screen Sharing windows nested inside each other, switching between the main and QA accounts" loading="lazy"><a class="writing-link" href="blog/agent-qa-separate-macos-account.html">Read article →</a></article>
           <article class="writing-card writing-card-wide"><h3><a href="https://github.com/danielyaa5/ai-trader-writeup">Building an AI Trader With Deterministic Risk Controls</a></h3><p>I built an experimental trading system that uses one model to propose trades, two others to review them, and Python to enforce the rules between those steps.</p><img class="writing-thumb" src="assets/writing/ai-trader.webp" width="1600" height="900" alt="AI Trader dashboard charts with fictional demo data: account equity per run, a decision funnel, reviewer verdicts, top veto reasons and exit contract ladders" loading="lazy"><a class="writing-link" href="https://github.com/danielyaa5/ai-trader-writeup">Read article →</a></article>
         </div>

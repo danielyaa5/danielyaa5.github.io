@@ -55,7 +55,7 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   assert.deepEqual(person.sameAs, ['https://github.com/danielyaa5', 'https://www.linkedin.com/in/danielyakobian/']);
   const listed = graph.find(node => node['@type'] === 'ItemList').itemListElement.map(entry => entry.item);
   const cards = [...home.matchAll(/<a class="project-name" href="([^"]+)">([^<]+)<\/a>/g)].map(m => ({ url: m[1], name: m[2] }));
-  assert.equal(cards.length, 10);
+  assert.equal(cards.length, 11);
   assert.deepEqual(listed.map(item => ({ url: item.url, name: item.name })), cards, 'structured data matches the project cards');
   for (const card of cards.filter(card => card.url.startsWith('https://danielyaa5.github.io/'))) {
     assert.ok(projects.includes(card.url), `${card.url} is in sitemap-projects.xml`);
