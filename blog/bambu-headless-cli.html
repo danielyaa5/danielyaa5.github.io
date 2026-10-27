@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A macOS CLI for checking my Bambu H2D, managing sliced files and starting a print while keeping Handy enabled and Developer Mode off.">
+  <meta name="author" content="Daniel Yakobian">
+  <meta name="theme-color" content="#fdfaf3">
+  <meta property="og:site_name" content="Daniel Yakobian">
+  <meta property="og:title" content="Running my Bambu H2D from the command line">
+  <meta property="og:description" content="A macOS CLI for checking my Bambu H2D, managing sliced files and starting a print while keeping Handy enabled and Developer Mode off.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://danielyakobian.com/blog/bambu-headless-cli.html">
+  <meta property="og:image" content="https://danielyakobian.com/assets/writing/bambu-headless-cli.jpg">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="900">
+  <meta property="article:published_time" content="2026-10-26">
+  <meta property="article:author" content="https://danielyakobian.com/">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Running my Bambu H2D from the command line | Daniel Yakobian</title>
+  <link rel="canonical" href="https://danielyakobian.com/blog/bambu-headless-cli.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css?v=mobile-touch-1">
+  <link rel="stylesheet" href="blog.css?v=4">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Running my Bambu H2D from the command line",
+    "description": "A macOS CLI for checking my Bambu H2D, managing sliced files and starting a print while keeping Handy enabled and Developer Mode off.",
+    "url": "https://danielyakobian.com/blog/bambu-headless-cli.html",
+    "mainEntityOfPage": "https://danielyakobian.com/blog/bambu-headless-cli.html",
+    "image": "https://danielyakobian.com/assets/writing/bambu-headless-cli.jpg",
+    "datePublished": "2026-10-26",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
+    "publisher": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
+    "isPartOf": { "@type": "Blog", "@id": "https://danielyakobian.com/blog/#blog", "url": "https://danielyakobian.com/blog/" }
+  }
+  </script>
+</head>
+<body class="blog-page" id="top">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="page-frame">
+    <header class="site-header"><a class="identity" href="../" aria-label="Daniel, home">Daniel</a><nav aria-label="Main navigation"><a href="../#work">Work</a><a href="./" aria-current="page">Blog</a><a href="https://github.com/danielyaa5">GitHub</a></nav></header>
+    <main id="content">
+      <article class="blog-article">
+        <header class="article-header"><p class="eyebrow">Notes on 3D printing</p><h1>Running my Bambu H2D from the command line</h1><p class="article-meta"><a href="../" rel="author">Daniel Yakobian</a> · <time datetime="2026-10-26">October 26, 2026</time></p></header>
+        <div class="article-body">
+          <p>I wanted to send an already sliced print to my Bambu H2D from a terminal, without opening Bambu Studio or giving up Handy. That became <a href="https://github.com/danielyaa5/bambu-headless">bambu-headless</a>: a small macOS CLI for checking the printer, managing its files and starting a job.</p>
+          <figure class="article-figure"><img src="../assets/writing/bambu-headless-cli.webp" width="1600" height="900" alt="Illustration of a terminal window sending commands wirelessly to an enclosed dual-nozzle 3D printer"><figcaption>Sending print and file commands from a macOS terminal to the enclosed H2D.</figcaption></figure>
+          <p>The printer keeps its cloud connection, Developer Mode stays off, and Studio can stay closed. The less obvious part is that the tool still depends on Studio's installed networking plugin.</p>
+
+          <h2>Connecting was the easy part</h2>
+          <p>The H2D accepted a local MQTT connection, but rejected an unsigned print command with <code>84033543</code>: <code>mqtt message verify failed</code>. Being able to read the printer's status did not mean I could start a print.</p>
+          <p>Bambu Studio's public source exposes the interface to its networking plugin. A small native helper loads the installed plugin and uses its certificate, signing and encryption machinery. Python handles the sliced file, transfer checks and command-line interface.</p>
+          <p>The plugin also checks its host application's identity. A process-local shim changes the executable-path lookup to return the installed Studio executable's path. That deliberately works around the plugin's host check. It does not modify Studio's files or the printer's modes.</p>
+          <p>This is an experimental, version-sensitive wrapper around a proprietary dependency. The plugin comes from the user's own Studio installation, and certificate refresh still needs internet access. The <a href="https://github.com/danielyaa5/bambu-headless/blob/main/docs/how-it-works.md">implementation notes</a> explain the mechanism and credit the existing public ABI and protocol research it builds on.</p>
+
+          <h2>A print gets several checks before it gets a start command</h2>
+          <p>The CLI accepts an already sliced <code>.gcode.3mf</code>. Slicing still happens elsewhere. Before submitting a job, it follows this sequence:</p>
+          <figure class="qa-figure" aria-labelledby="submission-caption">
+            <div class="qa-diagram"><div class="diagram-kicker">One print submission</div><ol class="flow-steps">
+              <li><strong>Inspect the slice</strong><span>Check the archive, embedded G-code checksum, selected plate and supported printer, nozzle and filament mapping.</span></li>
+              <li><strong>Read the printer</strong><span>Require a fresh idle state and matching AMS material and nozzle diameter.</span></li>
+              <li><strong>Verify the transfer</strong><span>Upload over certificate-validated FTPS, then download the full file and compare its size and MD5.</span></li>
+              <li><strong>Record and submit once</strong><span>Save a local receipt before asking the networking plugin to dispatch the print command.</span></li>
+              <li><strong>Look for the requested job</strong><span>Require matching telemetry in PREPARE or RUNNING before reporting a confirmed start.</span></li>
+            </ol></div>
+            <figcaption id="submission-caption">A command acknowledgment alone does not establish that the requested job started.</figcaption>
+          </figure>
+          <p>The receipt matters when a reply gets lost. A timeout leaves the outcome uncertain, so the sender blocks an automatic repeat. I would rather check the printer than discover that a retry was a second print request.</p>
+          <p>These checks have physical limits: telemetry cannot establish that the plate is clear or that the spool actually contains the material named in AMS. The local lock also cannot stop Handy or another computer from submitting a job.</p>
+
+          <h2>It grew into a small printer CLI</h2>
+          <p>The first version sent a print. The expanded CLI adds saved-printer discovery, fresh status, job monitoring, and file listing, upload, download, rename and deletion. Uploading is a separate operation, so a file can be transferred and checked without starting the machine.</p>
+          <pre><code>export BAMBU_HOST=printer.example
+python3 bambu.py status
+python3 bambu.py inspect part.gcode.3mf
+python3 bambu.py check part.gcode.3mf
+python3 bambu.py upload part.gcode.3mf</code></pre>
+          <p><code>printer.example</code> stands for the printer's LAN address. Credentials come from the existing signed-in Studio configuration. Different files already stored under the same name are not overwritten.</p>
+          <p>After checking the physical plate and loaded material, this command uploads and starts the print:</p>
+          <pre><code>python3 bambu.py print part.gcode.3mf</code></pre>
+          <p>The tested defaults are plate 1, the right 0.4 mm nozzle and AMS A2. Once the job is active, I can follow it with:</p>
+          <pre><code>python3 bambu.py watch --until-done --json</code></pre>
+          <p>Monitoring emits JSON Lines for scripts and checks the job identity so another job's completion cannot silently stand in for the one being followed. The <a href="https://github.com/danielyaa5/bambu-headless/blob/main/docs/commands.md">command guide</a> covers selection options, reports and exit codes.</p>
+
+          <h2>What has actually been tested</h2>
+          <p>A single-material PLA job on my H2D's right 0.4 mm nozzle reached <code>PREPARE</code>. A separate logger observed <code>RUNNING</code> and later <code>FINISH</code> at 100%. That establishes firmware-reported completion; I have not inspected the printed parts for quality or fit.</p>
+          <p>The expanded CLI also passed live status and monitoring checks, plus a temporary-file cycle covering upload, full read-back, reuse, download, rename and deletion. Those storage tests restored the original directory contents without starting another print.</p>
+          <p>There are 43 automated tests, including a compiled native helper running against a fake networking plugin. Pause, resume and cancel are implemented with explicit confirmation and an exact job name, but their state transitions have only been exercised with that offline fixture. They have not been tested on a physical print.</p>
+          <p>The hardware evidence is limited to Apple silicon macOS, Studio <code>02.08.02.61</code>, plugin <code>02.08.02.60</code>, and the H2D configuration above. Other printers, Intel Macs, dual-material prints and other nozzle sizes remain unverified. The <a href="https://github.com/danielyaa5/bambu-headless/blob/main/docs/validation.md">validation notes</a> keep those boundaries explicit.</p>
+
+          <h2>Where it ended up</h2>
+          <p>I now have a terminal interface for the parts of the workflow that scripts can handle: inspect a slice, check the printer, verify a transfer and follow the intended job. Handy stays available, and starting a print remains a deliberate command.</p>
+          <p>The wrapper is <a href="https://github.com/danielyaa5/bambu-headless">open source under AGPL v3</a>. Bambu's networking plugin is supplied separately. The project is unaffiliated with Bambu Lab.</p>
+        </div>
+        <p class="article-back"><a href="./">← All posts</a></p>
+      </article>
+    </main>
+    <footer class="site-footer"><p><a href="../">Daniel</a> / Built to be useful.</p><a href="./">All posts</a></footer>
+  </div>
+</body>
+</html>

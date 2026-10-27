@@ -111,8 +111,11 @@ async function layout(page) {
       await check('blogAndArticle',async()=>{
         await page.getByRole('navigation').getByRole('link',{name:'Blog',exact:true}).tap();
         await page.waitForURL('**/blog/');
+        await page.evaluate(()=>Promise.all([...document.images].map(i=>{i.loading='eager';return i.decode();})));
+        assert.equal(await page.locator('.post-card .writing-thumb').count(),6);
         result.blogLayout=await layout(page);
         assert.equal(result.blogLayout.sideways,false);
+        assert.deepEqual(result.blogLayout.images,[]);
         assert.ok(result.blogLayout.nav.every(n=>n.font>=14&&n.width>=44&&n.height>=44),'Blog navigation keeps readable touch targets');
         const article=page.getByRole('link',{name:'Teaching my K1 Max to turn on its own chamber heater',exact:true});
         await article.tap();

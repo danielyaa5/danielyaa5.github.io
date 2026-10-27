@@ -18,7 +18,8 @@
 .post-card { margin-top: 32px; padding: 28px; border: 1px solid #d0d4b9; border-radius: 6px; background: var(--card); }
 .post-card h2 { margin: 16px 0; font-size: 29px; line-height: 1.2; letter-spacing: -.6px; }
 .post-card h2 a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.post-card > p:not(.article-meta) { font-size: 18px; line-height: 1.6; }
+.post-card > p:not(.article-meta) { margin: 0 0 18px; font-size: 18px; line-height: 1.6; }
+.post-card .writing-thumb { margin: 0 0 10px; }
 @media (max-width: 620px) {
  .blog-article, .blog-index { padding-top: 34px; }
  .blog-page h1 { font-size: 35px; letter-spacing: -1.1px; }
