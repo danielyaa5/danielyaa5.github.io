@@ -73,23 +73,27 @@
           <p>These checks have physical limits: telemetry cannot establish that the plate is clear or that the spool actually contains the material named in AMS. The local lock also cannot stop Handy or another computer from submitting a job.</p>
 
           <h2>It grew into a small printer CLI</h2>
-          <p>The first version sent a print. The expanded CLI adds saved-printer discovery, fresh status, job monitoring, and file listing, upload, download, rename and deletion. Uploading is a separate operation, so a file can be transferred and checked without starting the machine.</p>
+          <p>The first version only sent a print. The expanded <code>bambu.py</code> CLI now covers saved-printer discovery, live status, job monitoring, printer storage management (list, upload, download, rename and delete), target bed temperature control, and guarded job controls (pause, resume and cancel). Uploading is a separate operation, so a file can be transferred and verified without starting the machine.</p>
           <pre><code>export BAMBU_HOST=printer.example
+python3 bambu.py printers
 python3 bambu.py status
 python3 bambu.py inspect part.gcode.3mf
 python3 bambu.py check part.gcode.3mf
-python3 bambu.py upload part.gcode.3mf</code></pre>
-          <p><code>printer.example</code> stands for the printer's LAN address. Credentials come from the existing signed-in Studio configuration. Different files already stored under the same name are not overwritten.</p>
+python3 bambu.py upload part.gcode.3mf
+python3 bambu.py files list
+python3 bambu.py bed-temp 55</code></pre>
+          <p><code>printer.example</code> stands for the printer's LAN address. <code>printers</code> lists Studio's saved printer serials without exposing access codes or scanning the LAN. Storage mutations require an idle printer, and different files already stored under the same name are never overwritten. <code>bed-temp</code> sends a single <code>M140 S&lt;temp&gt;</code> command (<code>0..120</code> °C) and waits for telemetry to confirm that <code>bed_target_temper</code> matches the requested target before returning.</p>
           <p>After checking the physical plate and loaded material, this command uploads and starts the print:</p>
           <pre><code>python3 bambu.py print part.gcode.3mf</code></pre>
-          <p>The tested defaults are plate 1, the right 0.4 mm nozzle and AMS A2. Once the job is active, I can follow it with:</p>
-          <pre><code>python3 bambu.py watch --until-done --json</code></pre>
-          <p>Monitoring emits JSON Lines for scripts and checks the job identity so another job's completion cannot silently stand in for the one being followed. The <a href="https://github.com/danielyaa5/bambu-headless/blob/main/docs/commands.md">command guide</a> covers selection options, reports and exit codes.</p>
+          <p>The tested defaults are plate 1, the right 0.4 mm nozzle and AMS A2. Once the job is active, I can follow it or send a guarded control command:</p>
+          <pre><code>python3 bambu.py watch --until-done --json
+python3 bambu.py pause --job part.gcode --yes</code></pre>
+          <p>Monitoring emits JSON Lines for scripts and checks the job identity so another job's completion cannot silently stand in for the one being followed. Job controls (<code>pause</code>, <code>resume</code>, <code>cancel</code>) require <code>--yes</code> and the exact <code>--job</code> name, recheck printer state after certificate initialization, and wait for post-dispatch telemetry rather than trusting a publish acknowledgment alone. The <a href="https://github.com/danielyaa5/bambu-headless/blob/main/docs/commands.md">command guide</a> covers selection options, reports and exit codes.</p>
 
           <h2>What has actually been tested</h2>
           <p>A single-material PLA job on my H2D's right 0.4 mm nozzle reached <code>PREPARE</code>. A separate logger observed <code>RUNNING</code> and later <code>FINISH</code> at 100%. That establishes firmware-reported completion; I have not inspected the printed parts for quality or fit.</p>
           <p>The expanded CLI also passed live status and monitoring checks, plus a temporary-file cycle covering upload, full read-back, reuse, download, rename and deletion. Those storage tests restored the original directory contents without starting another print.</p>
-          <p>There are 43 automated tests, including a compiled native helper running against a fake networking plugin. Pause, resume and cancel are implemented with explicit confirmation and an exact job name, but their state transitions have only been exercised with that offline fixture. They have not been tested on a physical print.</p>
+          <p>There are 45 automated tests, including a compiled native helper running against a fake networking plugin that exercises print start, target bed temperature confirmation, and pause, resume and cancel transitions. Physical pause, resume and cancel transitions have only been exercised with that offline fixture and have not yet been tested on an active print.</p>
           <p>The hardware evidence is limited to Apple silicon macOS, Studio <code>02.08.02.61</code>, plugin <code>02.08.02.60</code>, and the H2D configuration above. Other printers, Intel Macs, dual-material prints and other nozzle sizes remain unverified. The <a href="https://github.com/danielyaa5/bambu-headless/blob/main/docs/validation.md">validation notes</a> keep those boundaries explicit.</p>
 
           <h2>Where it ended up</h2>
