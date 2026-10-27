@@ -56,11 +56,27 @@ const expected = ['3D prints for sale','Print Progress','AI-billboard','TagTrack
         assert.deepEqual(await page.locator('.project:visible h2').allTextContents(),names);
         assert.equal(await page.locator('[aria-pressed="true"]').count(),1);
         assert.match(await page.locator('.filter-count').innerText(),new RegExp(`^${names.length} ${names.length === 1 ? 'project' : 'projects'}`));
+        if (width >= 621 && names.length % 2 === 1) {
+          assert.ok(await page.evaluate(() => {
+            const grid = document.querySelector('#project-list').getBoundingClientRect();
+            const visible = [...document.querySelectorAll('#project-list .project:not([hidden])')];
+            const last = visible.at(-1).getBoundingClientRect();
+            return Math.abs(last.width - grid.width) <= 2;
+          }), `Single tile in final row expands to full grid width for ${category} at ${width}px`);
+        }
         assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
       }
       await page.locator('[data-filter="all"]').focus();
       await page.keyboard.press('Enter');
       assert.deepEqual(await page.locator('.project:visible h2').allTextContents(),expected);
+      if (width >= 621 && expected.length % 2 === 1) {
+        assert.ok(await page.evaluate(() => {
+          const grid = document.querySelector('#project-list').getBoundingClientRect();
+          const visible = [...document.querySelectorAll('#project-list .project:not([hidden])')];
+          const last = visible.at(-1).getBoundingClientRect();
+          return Math.abs(last.width - grid.width) <= 2;
+        }), `Single tile in final row expands to full grid width for all at ${width}px`);
+      }
     }
     await page.setViewportSize({width:1440,height:1000});
 
