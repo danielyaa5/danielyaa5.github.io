@@ -13,6 +13,16 @@
       "has": [{ "type": "host", "value": "danielyakobian-com.vercel.app" }],
       "destination": "https://danielyakobian.com/:path",
       "permanent": true
+    },
+    {
+      "source": "/m2",
+      "destination": "https://m2.danielyakobian.com/",
+      "permanent": false
+    },
+    {
+      "source": "/m2/",
+      "destination": "https://m2.danielyakobian.com/",
+      "permanent": false
     }
   ]
 }
