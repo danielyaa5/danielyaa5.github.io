@@ -21,7 +21,7 @@
   <link rel="canonical" href="https://danielyakobian.com/blog/k1-max-chamber-heater.html">
   <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png">
   <link rel="stylesheet" href="../styles.css?v=no-about-1">
-  <link rel="stylesheet" href="blog.css?v=4">
+  <link rel="stylesheet" href="blog.css?v=5">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -53,6 +53,10 @@
 <p>I use Creality&#x27;s Chamber Heater, a standalone heater with a separate controller, which sits in a printed cradle (<a href="https://www.printables.com/model/1755205-creality-chamber-heater-control-mount">Squeemeister&#x27;s remix on Printables</a>). The controller has its own thermostat, but it goes by the heater&#x27;s own sensor, which reads very differently from the printer&#x27;s chamber sensor. The printer&#x27;s sensor is the one my prints care about, so I wanted it in charge.</p>
 <p>The heater stays on its max setting, and the printer decides when it runs. Turning it off is easy: it&#x27;s plugged into a Shelly smart plug that Moonraker, Klipper&#x27;s API server, can switch. Turning it on is not. When power comes back, the heater remembers its settings but waits in standby until someone presses start.</p>
 <p>That someone is a Fingerbot, a small button-pushing gadget that connects through a Tuya hub. It pokes the start button with a little arm when asked.</p>
+<figure class="article-figure">
+<video src="../assets/writing/k1-max-chamber-heater-fingerbot.mp4" poster="../assets/writing/k1-max-chamber-heater-fingerbot.jpg" width="720" height="1280" controls muted loop playsinline preload="metadata" aria-label="A white Fingerbot on the chamber heater's controller presses its button, and the green temperature readout switches off and back on"></video>
+<figcaption>The real Fingerbot at work, pressing the heater controller's button.</figcaption>
+</figure>
 <h2>One heater start, step by step</h2>
 <p>My K1 Max is rooted and runs Fluidd, so a Klipper macro can reach other things on my network through the G-Code Shell Command extension. The Fingerbot side is a small Python bridge on a Mac at home that talks to the hub on the local network.</p>
 <figure class="qa-figure" id="diagram-start" aria-labelledby="start-caption">

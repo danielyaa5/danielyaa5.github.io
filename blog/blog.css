@@ -68,6 +68,7 @@
 /* Chamber heater post: cover figure, code, a start sequence and a temperature scale. */
 .article-figure { margin: 0 0 30px; }
 .article-figure img { display: block; width: 100%; height: auto; border: 1px solid #d0d4b9; border-radius: 8px; background: #f1f3e8; }
+.article-figure video { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; border: 1px solid #d0d4b9; border-radius: 8px; background: #f1f3e8; }
 .article-figure figcaption { margin-top: 12px; font-size: 14px; line-height: 1.6; color: #52604d; }
 .article-body ul { padding-left: 24px; margin: 0 0 24px; }
 .article-body code { padding: 1px 5px; border-radius: 4px; background: #edf0e5; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .84em; overflow-wrap: anywhere; }
