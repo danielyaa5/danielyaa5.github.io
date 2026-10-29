@@ -20,9 +20,9 @@ async function layout(page) {
     const rect = e => { const r=e.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom}; };
     const controls = [...document.querySelectorAll('a,button')].filter(visible).filter(e=>!e.closest('dialog'));
     const small = controls.map(e=>({label:(e.getAttribute('aria-label')||e.textContent).trim().replace(/\s+/g,' ').slice(0,75),...rect(e)})).filter(r=>r.width<24||r.height<24);
-    const nav=[...document.querySelectorAll('nav a,nav button')].map(e=>({label:e.textContent.trim(),...rect(e),font:parseFloat(getComputedStyle(e).fontSize)}));
+    const nav=[...document.querySelectorAll('nav a,nav button')].filter(visible).map(e=>({label:e.textContent.trim(),...rect(e),font:parseFloat(getComputedStyle(e).fontSize)}));
     const collisions=[];
-    const items=[document.querySelector('.identity'),...document.querySelectorAll('nav a,nav button')].filter(Boolean);
+    const items=[document.querySelector('.identity'),...document.querySelectorAll('nav a,nav button')].filter(Boolean).filter(visible);
     for(let i=0;i<items.length;i++) for(let j=i+1;j<items.length;j++) {
       const a=rect(items[i]),b=rect(items[j]);
       if(Math.min(a.right,b.right)-Math.max(a.x,b.x)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y)>1) collisions.push([items[i].textContent.trim(),items[j].textContent.trim()]);
@@ -50,6 +50,18 @@ async function layout(page) {
       await page.locator('.featured-projects').screenshot({path:path.join(output,`featured-${width}x${height}.png`)});
       await page.locator('.site-footer').screenshot({path:path.join(output,`footer-${width}x${height}.png`)});
       await check('homeFits',async()=>{assert.equal(result.layout.sideways,false);assert.deepEqual(result.layout.collisions,[]);assert.deepEqual(result.layout.images,[]);});
+      await check('phoneDock',async()=>{
+        if(width>620) return;
+        const dock=await page.locator('.site-header nav').evaluate(n=>{const r=n.getBoundingClientRect();const items=[...n.querySelectorAll('a')].filter(e=>e.getClientRects().length).map(e=>e.getBoundingClientRect());return {position:getComputedStyle(n).position,left:r.left,right:r.right,bottom:r.bottom,oneRow:items.every(i=>Math.abs(i.top-items[0].top)<1),icons:[...n.querySelectorAll('a')].every(e=>getComputedStyle(e,'::before').maskImage!=='none'||getComputedStyle(e,'::before').webkitMaskImage!=='none')};});
+        assert.equal(dock.position,'fixed','Phone navigation is a fixed bottom dock');
+        assert.ok(dock.left>=4&&dock.right<=width-4&&dock.bottom<=height,'Dock fits the screen');
+        assert.ok(dock.oneRow,'Dock links stay on one row');
+        assert.ok(dock.icons,'Every dock link has an icon');
+        await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));
+        const covered=await page.evaluate(()=>{const d=document.querySelector('.site-header nav').getBoundingClientRect();return [...document.querySelectorAll('.site-footer a')].some(a=>{const r=a.getBoundingClientRect();return r.bottom>d.top&&r.top<d.bottom&&r.right>d.left&&r.left<d.right;});});
+        assert.equal(covered,false,'Dock does not cover footer links at the end of the page');
+        await page.evaluate(()=>scrollTo(0,0));
+      });
       await check('readableNavigation',async()=>{
         assert.ok(result.layout.nav.every(n=>n.font>=14),'Phone navigation stays readable');
         const lines=await page.locator('nav a,nav button').evaluateAll(links=>links.map(e=>{
@@ -60,7 +72,7 @@ async function layout(page) {
       });
       await check('secondaryTouchTargets',async()=>{
         result.touchTargets=[];
-        for(const target of await page.locator('.identity,nav a,nav button,.star-count,.site-footer a').all()) {
+        for(const target of await page.locator('.identity,nav a,nav button,.star-count,.site-footer a').filter({visible:true}).all()) {
           await target.scrollIntoViewIfNeeded();
           const metrics=await target.evaluate(e=>{
             const r=e.getBoundingClientRect();
@@ -91,7 +103,10 @@ async function layout(page) {
         await page.locator('[data-filter="all"]').tap();
       });
       await check('aboutTouchClose',async()=>{
-        await page.getByRole('button',{name:'About',exact:true}).tap();
+        const aboutButton=page.getByRole('button',{name:'About',exact:true});
+        // Phones (620px and below) use the bottom dock, which has no About entry.
+        if(width<=620){assert.equal(await aboutButton.isVisible(),false,'Phone dock leaves out About');return;}
+        await aboutButton.tap();
         const dialog=page.locator('#about');
         await dialog.waitFor({state:'visible'});
         result.dialog=await dialog.evaluate(e=>{const r=e.getBoundingClientRect();return{top:r.top,bottom:r.bottom,left:r.left,right:r.right,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight,overflow:getComputedStyle(e).overflowY};});

@@ -124,13 +124,17 @@ const expected = ['3D prints for sale','Print Progress','AI Usage','Price Watch'
       assert.ok(layout.featured.every(card=>card.inside && card.iconWidth>=84),`Featured artwork and content fit at ${width}px`);
       assert.ok(layout.cards.every(c=>c.benefit>c.name && c.name>c.detail && c.inside && c.artBesideCopy),`Card typography/fit at ${width}px`);
       assert.ok(layout.cards.every(c=>c.detail>=12 && c.linkSize>=12 && c.linkHeight>=44),`Readable labels and usable project links at ${width}px`);
-      await aboutButton.click();
-      await aboutDialog.waitFor({state:'visible'});
-      assert.ok(await aboutDialog.evaluate(el=>{
-        const rect=el.getBoundingClientRect();
-        return rect.left>=0 && rect.right<=innerWidth && rect.top>=0 && rect.bottom<=innerHeight;
-      }),`About dialog fits at ${width}px`);
-      await page.keyboard.press('Escape');
+      // Phones get the bottom dock, which leaves out About.
+      if(width<=620) assert.equal(await aboutButton.isVisible(),false,`Dock leaves out About at ${width}px`);
+      else {
+        await aboutButton.click();
+        await aboutDialog.waitFor({state:'visible'});
+        assert.ok(await aboutDialog.evaluate(el=>{
+          const rect=el.getBoundingClientRect();
+          return rect.left>=0 && rect.right<=innerWidth && rect.top>=0 && rect.bottom<=innerHeight;
+        }),`About dialog fits at ${width}px`);
+        await page.keyboard.press('Escape');
+      }
       if(width===1440 || width===1123 || width===390) {
         await page.locator('.featured-projects').screenshot({path:`test-results/featured-${width}.png`});
         const pageHeight = await page.evaluate(()=>document.documentElement.scrollHeight);
