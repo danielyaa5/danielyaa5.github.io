@@ -85,17 +85,7 @@ const expected = ['3D prints for sale','Print Progress','AI Usage','Price Watch'
     await page.waitForURL('**/#writing');
     // The section sits near the page's end, so it scrolls into view rather than to the top.
     await page.waitForFunction(()=>{const r=document.querySelector('#writing').getBoundingClientRect(); return r.top>=0 && r.top<innerHeight;});
-    const aboutButton = page.getByRole('button',{name:'About',exact:true});
-    await aboutButton.click();
-    const aboutDialog = page.getByRole('dialog',{name:'Hi, I’m Daniel.'});
-    await aboutDialog.waitFor({state:'visible'});
-    assert.match(await aboutDialog.innerText(),/I build software/);
-    await page.keyboard.press('Escape');
-    await aboutDialog.waitFor({state:'hidden'});
-    assert.ok(await aboutButton.evaluate(el=>el===document.activeElement));
-    await aboutButton.click();
-    await page.getByRole('button',{name:'Close About'}).click();
-    await aboutDialog.waitFor({state:'hidden'});
+    assert.equal(await page.getByRole('button',{name:'About',exact:true}).count(),0,'There is no About entry');
     await page.getByRole('link',{name:'Back to top'}).click();
     await page.waitForURL('**/#top');
     await fs.mkdir('test-results',{recursive:true});
@@ -124,17 +114,6 @@ const expected = ['3D prints for sale','Print Progress','AI Usage','Price Watch'
       assert.ok(layout.featured.every(card=>card.inside && card.iconWidth>=84),`Featured artwork and content fit at ${width}px`);
       assert.ok(layout.cards.every(c=>c.benefit>c.name && c.name>c.detail && c.inside && c.artBesideCopy),`Card typography/fit at ${width}px`);
       assert.ok(layout.cards.every(c=>c.detail>=12 && c.linkSize>=12 && c.linkHeight>=44),`Readable labels and usable project links at ${width}px`);
-      // Phones get the bottom dock, which leaves out About.
-      if(width<=620) assert.equal(await aboutButton.isVisible(),false,`Dock leaves out About at ${width}px`);
-      else {
-        await aboutButton.click();
-        await aboutDialog.waitFor({state:'visible'});
-        assert.ok(await aboutDialog.evaluate(el=>{
-          const rect=el.getBoundingClientRect();
-          return rect.left>=0 && rect.right<=innerWidth && rect.top>=0 && rect.bottom<=innerHeight;
-        }),`About dialog fits at ${width}px`);
-        await page.keyboard.press('Escape');
-      }
       if(width===1440 || width===1123 || width===390) {
         await page.locator('.featured-projects').screenshot({path:`test-results/featured-${width}.png`});
         const pageHeight = await page.evaluate(()=>document.documentElement.scrollHeight);

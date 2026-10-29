@@ -102,25 +102,6 @@ async function layout(page) {
         assert.equal(destination,'https://www.etsy.com/shop/UrbanTechGoods');
         await page.locator('[data-filter="all"]').tap();
       });
-      await check('aboutTouchClose',async()=>{
-        const aboutButton=page.getByRole('button',{name:'About',exact:true});
-        // Phones (620px and below) use the bottom dock, which has no About entry.
-        if(width<=620){assert.equal(await aboutButton.isVisible(),false,'Phone dock leaves out About');return;}
-        await aboutButton.tap();
-        const dialog=page.locator('#about');
-        await dialog.waitFor({state:'visible'});
-        result.dialog=await dialog.evaluate(e=>{const r=e.getBoundingClientRect();return{top:r.top,bottom:r.bottom,left:r.left,right:r.right,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth,scrollHeight:e.scrollHeight,clientHeight:e.clientHeight,overflow:getComputedStyle(e).overflowY};});
-        await page.screenshot({path:path.join(output,`about-${width}x${height}.png`)});
-        assert.ok(result.dialog.left>=0&&result.dialog.right<=width&&result.dialog.top>=0&&result.dialog.bottom<=height,'About must fit the viewport');
-        assert.ok(result.dialog.scrollWidth<=result.dialog.clientWidth,'About content must not scroll horizontally');
-        const lastLink=dialog.getByRole('link',{name:'More on GitHub',exact:true});
-        await lastLink.scrollIntoViewIfNeeded();
-        assert.ok(await lastLink.evaluate(e=>{const r=e.getBoundingClientRect(),d=e.closest('dialog').getBoundingClientRect();return r.top>=d.top&&r.bottom<=d.bottom;}),'Bottom About link must be reachable by scrolling');
-        await page.getByRole('button',{name:'Close About'}).tap();
-        await dialog.waitFor({state:'hidden'});
-      });
-      // Keep the rest of the checks usable even if the modal test failed.
-      if(await page.locator('#about').isVisible()) await page.getByRole('button',{name:'Close About'}).tap();
       await check('writingNavigation',async()=>{await page.locator('.hero-actions a[href="#writing"]').tap();assert.equal(new URL(page.url()).hash,'#writing');});
       await check('backToTop',async()=>{await page.getByRole('link',{name:'Back to top',exact:true}).tap();assert.equal(new URL(page.url()).hash,'#top');assert.ok(await page.evaluate(()=>scrollY<30));});
       await check('blogAndArticle',async()=>{

@@ -1,8 +1,3 @@
-const about = document.querySelector('#about');
-document.querySelector('[data-open-about]').addEventListener('click', () => {
-  about.showModal();
-});
-
 document.querySelectorAll('[data-github-stars]').forEach(async badge => {
   try {
     const response = await fetch(`https://api.github.com/repos/${badge.dataset.githubStars}`, {
