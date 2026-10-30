@@ -59,11 +59,14 @@
     if (pos.state === "open" || pos.state === "closed") {
       return pos.state;
     }
+    if (pos.reason === "movement") {
+      return "unknown";
+    }
     const openDist = typeof pos.open_distance === "number" ? pos.open_distance : null;
     const closedDist = typeof pos.closed_distance === "number" ? pos.closed_distance : null;
     if (openDist !== null && closedDist !== null) {
-      if (openDist <= 0.08 && closedDist >= openDist * 4) return "open";
-      if (closedDist <= 0.08 && openDist >= closedDist * 4) return "closed";
+      if (openDist <= 0.06 && closedDist >= openDist * 3) return "open";
+      if (closedDist <= 0.06 && openDist >= closedDist * 3) return "closed";
     }
     return "unknown";
   }
