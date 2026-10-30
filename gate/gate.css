@@ -1,0 +1,376 @@
+:root {
+  --bg: #f6f4ee;
+  --surface: #ffffff;
+  --surface-alt: #f0ede4;
+  --ink: #182b24;
+  --muted: #556860;
+  --line: #d8dfd9;
+  --accent: #16654e;
+  --accent-hover: #0f4f3c;
+  --accent-soft: #e3f2ec;
+  --open-bg: #fff1dc;
+  --open-fg: #8f4f06;
+  --closed-bg: #e3f2ec;
+  --closed-fg: #14634b;
+  --danger-bg: #fceaea;
+  --danger-fg: #982626;
+  --danger-line: #f1c3c3;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121c19;
+    --surface: #1a2824;
+    --surface-alt: #15211e;
+    --ink: #e7f1ec;
+    --muted: #9fb3aa;
+    --line: #2d423b;
+    --accent: #27886b;
+    --accent-hover: #329e7d;
+    --accent-soft: #1f3d33;
+    --open-bg: #453118;
+    --open-fg: #f7c77e;
+    --closed-bg: #1e3f33;
+    --closed-fg: #8ce0c1;
+    --danger-bg: #421f22;
+    --danger-fg: #f8a9a9;
+    --danger-line: #6b3236;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.shell {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 28px 18px 48px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(26px, 5vw, 34px);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.pass-pill {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--closed-fg);
+  border: 1px solid var(--line);
+  margin-top: 4px;
+}
+
+.alert-box {
+  margin-bottom: 16px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  background: var(--accent-soft);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.alert-box.error {
+  background: var(--danger-bg);
+  color: var(--danger-fg);
+  border-color: var(--danger-line);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 6px 24px rgba(16, 36, 28, 0.05);
+}
+
+.subtext {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.password-row {
+  display: flex;
+  gap: 8px;
+}
+
+input[type="password"],
+input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 46px;
+}
+
+input:focus,
+button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 18px;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.checkbox-row input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  min-height: 44px;
+  padding: 10px 14px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ghost-btn,
+.secondary-btn {
+  background: var(--surface-alt);
+  font-size: 14px;
+}
+
+.primary-btn {
+  width: 100%;
+  background: var(--accent);
+  color: #ffffff;
+  border-color: transparent;
+  font-size: 16px;
+  min-height: 48px;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.status-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-label {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.state-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.state-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex-shrink: 0;
+}
+
+.state-dot.closed {
+  background: #198754;
+}
+
+.state-dot.open {
+  background: #d97706;
+}
+
+.state-text {
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+.meta-text {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.action-area {
+  margin: 20px 0;
+}
+
+.gate-btn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 18px 16px;
+  border-radius: 14px;
+  background: var(--accent);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(22, 101, 78, 0.25);
+  transition: transform 0.08s ease, background 0.15s ease;
+}
+
+.gate-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.gate-btn:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.gate-btn-title {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.gate-btn-sub {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.camera-block {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.camera-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.camera-frame {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--surface-alt);
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.camera-empty {
+  margin: 0;
+  padding: 32px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.pass-footer {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.text-btn {
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  padding: 4px 0;
+  min-height: auto;
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+@media (max-width: 420px) {
+  .shell {
+    padding: 20px 14px 36px;
+  }
+  .card {
+    padding: 18px 16px;
+  }
+}

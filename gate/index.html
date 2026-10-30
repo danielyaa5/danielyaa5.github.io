@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light dark">
+  <link rel="canonical" href="https://danielyakobian.com/gate/">
+  <link rel="icon" type="image/png" sizes="128x128" href="/assets/favicon.png">
+  <title>Gate Opener · Guest Access</title>
+  <link rel="stylesheet" href="/gate/gate.css">
+  <script src="/gate/gate.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="top-bar">
+      <div>
+        <p class="eyebrow">GUEST ACCESS</p>
+        <h1>Gate Opener</h1>
+      </div>
+      <span id="pass-pill" class="pass-pill" hidden></span>
+    </header>
+
+    <div id="alert-box" class="alert-box" role="status" aria-live="polite" hidden></div>
+
+    <!-- Step 1: Password entry card -->
+    <section id="auth-card" class="card" aria-labelledby="auth-heading">
+      <h2 id="auth-heading">Enter guest password</h2>
+      <p class="subtext">Enter the guest password shared with you to view the gate camera and open the gate.</p>
+      <form id="auth-form" novalidate>
+        <label class="field-label" for="password-input">Guest password</label>
+        <div class="password-row">
+          <input
+            id="password-input"
+            name="password"
+            type="password"
+            required
+            autocomplete="current-password"
+            autocapitalize="none"
+            spellcheck="false"
+            placeholder="e.g. cedar-grove-48"
+          >
+          <button id="toggle-visibility" type="button" class="ghost-btn" aria-label="Show password">Show</button>
+        </div>
+
+        <label class="checkbox-row">
+          <input id="remember-checkbox" type="checkbox" checked>
+          <span>Save password on this device for next time</span>
+        </label>
+
+        <button id="unlock-btn" type="submit" class="primary-btn">Unlock gate controls</button>
+      </form>
+    </section>
+
+    <!-- Step 2: Unlocked gate control & live camera view -->
+    <section id="control-card" class="card" aria-labelledby="control-heading" hidden>
+      <div class="status-header">
+        <div>
+          <p class="section-label" id="control-heading">CURRENT GATE STATUS</p>
+          <div class="state-row">
+            <span id="state-dot" class="state-dot unknown" aria-hidden="true"></span>
+            <strong id="state-text" class="state-text">Checking…</strong>
+          </div>
+          <p id="state-meta" class="meta-text">Checking bridge…</p>
+        </div>
+        <button id="refresh-btn" type="button" class="secondary-btn">Refresh</button>
+      </div>
+
+      <div class="action-area">
+        <button id="open-gate-btn" type="button" class="gate-btn">
+          <span class="gate-btn-title" id="open-gate-label">Open / Toggle Gate</span>
+          <span class="gate-btn-sub" id="open-gate-sub">Sends one relay pulse to open or close the gate</span>
+        </button>
+      </div>
+
+      <div class="camera-block">
+        <div class="camera-header">
+          <strong id="camera-title">Gate camera</strong>
+          <span id="camera-time" class="meta-text"></span>
+        </div>
+        <div class="camera-frame" id="camera-frame">
+          <img id="camera-image" alt="Latest snapshot from the front gate camera" hidden>
+          <p id="camera-empty" class="camera-empty">No recent camera snapshot available.</p>
+        </div>
+      </div>
+
+      <footer class="pass-footer">
+        <span id="expiry-info" class="meta-text"></span>
+        <button id="forget-btn" type="button" class="text-btn">Change or forget saved password</button>
+      </footer>
+    </section>
+  </main>
+</body>
+</html>
