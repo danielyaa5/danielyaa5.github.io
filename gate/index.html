@@ -32,12 +32,14 @@
         <div class="password-row">
           <input
             id="password-input"
-            name="password"
+            name="gate_passcode"
             type="password"
             required
-            autocomplete="current-password"
+            autocomplete="off"
             autocapitalize="none"
             spellcheck="false"
+            data-1p-ignore
+            data-lpignore="true"
             placeholder="e.g. cedar-grove-48"
           >
           <button id="toggle-visibility" type="button" class="ghost-btn" aria-label="Show password">Show</button>

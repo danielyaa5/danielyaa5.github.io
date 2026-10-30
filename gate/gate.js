@@ -11,6 +11,8 @@
 
   let activePassword = "";
   let refreshTimers = [];
+  let pollTimer = null;
+  let lastMovingState = false;
 
   const $ = (id) => document.getElementById(id);
 
@@ -30,6 +32,40 @@
   function clearScheduledRefreshes() {
     for (const timer of refreshTimers) clearTimeout(timer);
     refreshTimers = [];
+    if (pollTimer) {
+      clearTimeout(pollTimer);
+      pollTimer = null;
+    }
+  }
+
+  function scheduleNextPoll(delayMs) {
+    if (pollTimer) {
+      clearTimeout(pollTimer);
+      pollTimer = null;
+    }
+    if (!activePassword) return;
+    pollTimer = setTimeout(() => {
+      pollTimer = null;
+      if (!activePassword) return;
+      if (document.visibilityState === "hidden") {
+        scheduleNextPoll(15000);
+        return;
+      }
+      verifyAndLoadStatus(activePassword, { saveOnSuccess: false, silent: true });
+    }, delayMs);
+  }
+
+  function effectiveGateState(pos) {
+    if (pos.state === "open" || pos.state === "closed") {
+      return pos.state;
+    }
+    const openDist = typeof pos.open_distance === "number" ? pos.open_distance : null;
+    const closedDist = typeof pos.closed_distance === "number" ? pos.closed_distance : null;
+    if (openDist !== null && closedDist !== null) {
+      if (openDist <= 0.08 && closedDist >= openDist * 4) return "open";
+      if (closedDist <= 0.08 && openDist >= closedDist * 4) return "closed";
+    }
+    return "unknown";
   }
 
   function formatTime(epochSeconds) {
@@ -95,7 +131,11 @@
     dot.className = "state-dot";
 
     const prediction = pos.prediction;
-    if (pos.reason === "movement" || prediction) {
+    const isMoving = pos.reason === "movement" || Boolean(prediction);
+    const resolvedState = effectiveGateState(pos);
+
+    if (isMoving) {
+      lastMovingState = true;
       dot.classList.add("open");
       stateText.textContent = prediction?.target === "open"
         ? "Opening…"
@@ -103,19 +143,31 @@
         ? "Closing…"
         : "Gate Moving…";
       stateMeta.textContent = "Relay pulse accepted — waiting for camera confirmation";
-    } else if (pos.state === "closed") {
+    } else if (resolvedState === "closed") {
+      if (lastMovingState) {
+        lastMovingState = false;
+        showAlert("");
+      }
       dot.classList.add("closed");
       stateText.textContent = "Closed";
       stateMeta.textContent = pos.observed_at
         ? `Camera confirmed at ${formatTime(pos.observed_at)}`
         : "Camera confirmed closed";
-    } else if (pos.state === "open") {
+    } else if (resolvedState === "open") {
+      if (lastMovingState) {
+        lastMovingState = false;
+        showAlert("");
+      }
       dot.classList.add("open");
       stateText.textContent = "Open";
       stateMeta.textContent = pos.observed_at
         ? `Camera confirmed at ${formatTime(pos.observed_at)}`
         : "Camera confirmed open";
     } else {
+      if (lastMovingState) {
+        lastMovingState = false;
+        showAlert("");
+      }
       dot.classList.add("unknown");
       stateText.textContent = "Status Unclear";
       stateMeta.textContent = pos.observed_at
@@ -124,9 +176,9 @@
     }
 
     $("open-gate-label").textContent =
-      pos.state === "closed"
+      resolvedState === "closed"
         ? "Open Gate"
-        : pos.state === "open"
+        : resolvedState === "open"
         ? "Close / Toggle Gate"
         : "Open / Toggle Gate";
 
@@ -145,6 +197,8 @@
       img.hidden = true;
       empty.hidden = false;
     }
+
+    scheduleNextPoll(isMoving ? 6000 : 15000);
   }
 
   function showAuthScreen(keepPasswordValue = true) {
@@ -163,7 +217,12 @@
       showAlert("Enter your guest password.", true);
       return false;
     }
-    $("unlock-btn").disabled = true;
+    const unlockBtn = $("unlock-btn");
+    const wasAuthVisible = !$("auth-card").hidden;
+    unlockBtn.disabled = true;
+    if (wasAuthVisible && !silent) {
+      unlockBtn.textContent = "Unlocking…";
+    }
     $("refresh-btn").disabled = true;
     try {
       const { ok, data } = await callGuestApi("/v1/guest/status", {
@@ -198,13 +257,18 @@
       return true;
     } catch {
       $("password-input").value = cleaned;
-      showAlert(
-        "Could not reach the gate bridge. Check your internet connection and try again.",
-        true
-      );
+      if (!silent) {
+        showAlert(
+          "Could not reach the gate bridge. Check your internet connection and try again.",
+          true
+        );
+      } else {
+        scheduleNextPoll(10000);
+      }
       return false;
     } finally {
-      $("unlock-btn").disabled = false;
+      unlockBtn.disabled = false;
+      unlockBtn.textContent = "Unlock gate controls";
       $("refresh-btn").disabled = false;
     }
   }
@@ -235,19 +299,9 @@
         showAlert(data.error || "Could not send gate command.", true);
         return;
       }
+      clearScheduledRefreshes();
       renderGateView(data);
       showAlert("Gate signal accepted. Refreshing camera view as the gate moves…", false);
-
-      clearScheduledRefreshes();
-      for (const delayMs of [4000, 10000, 20000, 32000]) {
-        refreshTimers.push(
-          setTimeout(() => {
-            if (activePassword) {
-              verifyAndLoadStatus(activePassword, { saveOnSuccess: false, silent: true });
-            }
-          }, delayMs)
-        );
-      }
     } catch {
       showAlert(
         "Connection dropped while sending the command. Check the camera status before tapping again.",
@@ -292,6 +346,12 @@
       showAlert("Saved password removed from this device.", false);
       showAuthScreen(false);
       pwInput.focus();
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && activePassword && !$("control-card").hidden) {
+        verifyAndLoadStatus(activePassword, { saveOnSuccess: false, silent: true });
+      }
     });
 
     let saved = "";
