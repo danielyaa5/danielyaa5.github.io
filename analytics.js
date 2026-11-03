@@ -2,7 +2,7 @@
    It runs only on the published hosts, so local previews and tests send nothing,
    and the guest gate page never loads it. */
 (() => {
-  const TOKEN = 'POSTHOG_PROJECT_TOKEN';
+  const TOKEN = 'phc_phFn2Yijfyw4fMQxXDN878EUWihevmGmEWrUK27bUX4J';
   const HOSTS = ['danielyakobian.com', 'danielyaa5.github.io'];
   if (!HOSTS.includes(location.hostname) || location.pathname.startsWith('/gate')) return;
 
