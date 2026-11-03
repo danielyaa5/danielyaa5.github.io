@@ -1,6 +1,6 @@
 # Daniel’s portfolio
 
-A static portfolio hosted on GitHub Pages. The site uses HTML, CSS, and a small script for the About dialog, with no build step or external runtime dependencies.
+A static portfolio hosted on GitHub Pages. The site uses HTML, CSS, and a small script for the About dialog, with no build step. Its only outside script is PostHog's, for anonymous page views on the published site (see Analytics).
 
 The cream and green layout and illustrations follow the selected Quiet Utility mockup. Illustration files are stored locally in `assets/illustrations/` so the published page does not depend on temporary Canva links.
 
@@ -28,6 +28,14 @@ For artwork changes, run `node tests/artwork.cjs http://localhost:4173`. This ch
 - `assets/social-card.png` is the link preview image. Its source is `assets/social/social-card.html`; render it at 1200×630.
 
 After changing pages, sitemaps or structured data, run `node tests/seo.cjs http://localhost:4173`. It checks robots.txt, canonical addresses, structured data, preview images, the redirects, and that every post is in the sitemap.
+
+## Analytics
+
+`analytics.js` counts page views and link clicks with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=1" defer></script>` to their `<head>`.
+
+The PostHog project must keep **Settings > Project > Web analytics > Enable cookieless tracking** on, or PostHog drops these events. The project token in `analytics.js` is public by design. Cookieless mode has no country data, and a visitor who returns on another day counts as a new visitor.
+
+After changing analytics or adding a page, run `node tests/analytics.cjs http://localhost:4173`. It checks which pages load the script, then simulates the published host with PostHog's real script, intercepts its requests so nothing is sent, and checks the page view, its cleaned address and the untracked gate page. Set `POSTHOG_ARRAY_JS` to a local copy of PostHog's `array.js` if its CDN is unreachable.
 
 ## Publish
 
