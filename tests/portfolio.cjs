@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer','Price Watch','H2D Custom Dashboard','TagTracker','qtfaststart2','AI-billboard','bambu-headless'];
+const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer','Price Watch','QuickDesk','H2D Custom Dashboard','TagTracker','qtfaststart2','AI-billboard','bambu-headless'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -23,14 +23,14 @@ const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer
 
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
-    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===10 && images.every(img=>img.complete && img.naturalWidth>0)));
+    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===11 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
-    assert.equal(await page.locator('.project-link').count(),9);
+    assert.equal(await page.locator('.project-link').count(),10);
     assert.equal(await page.locator('.featured-pick').count(),3);
     assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','Beckon']);
     assert.equal(await page.locator('.featured-lead h3').innerText(), 'Cloud Media Shrinker');
     assert.equal(await page.locator('#other-projects-title').innerText(), 'Other projects');
-    assert.equal(await page.locator('.filter-count').innerText(), '10 projects');
+    assert.equal(await page.locator('.filter-count').innerText(), '11 projects');
     assert.equal(await page.locator('.featured-link').count(), 3);
     assert.equal(await page.locator('.featured-pick a a').count(), 0);
     assert.ok(await page.locator('.star-count').evaluate(badge=>{
@@ -43,7 +43,7 @@ const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer
     assert.equal(await page.locator('.writing-card').count(),3);
     assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
     const groups = {
-      mac: ['3D Print Monitor','TagTracker','AI-billboard'],
+      mac: ['3D Print Monitor','QuickDesk','TagTracker','AI-billboard'],
       ios: ['3D Print Monitor'],
       web: ['Buy or Rent','Netflix PiP Fixer'],
       developer: ['AI Usage','Price Watch','qtfaststart2'],
