@@ -20,7 +20,7 @@
   <link rel="icon" type="image/png" sizes="128x128" href="assets/favicon.png">
   <!-- danielyakobian.com is the primary address; danielyaa5.github.io serves the same files. -->
   <link rel="canonical" href="https://danielyakobian.com/">
-  <script src="script.js?v=no-about-1" defer></script>
+  <script src="script.js?v=ios-filter-1" defer></script>
   <script src="/analytics.js?v=1" defer></script>
   <link rel="stylesheet" href="styles.css?v=no-about-1">
   <script type="application/ld+json">
@@ -140,13 +140,14 @@
         <div class="project-filters" role="group" aria-label="Filter projects" hidden>
           <button type="button" data-filter="all" aria-pressed="true" aria-controls="project-list">All</button>
           <button type="button" data-filter="mac" aria-pressed="false" aria-controls="project-list">Mac apps</button>
+          <button type="button" data-filter="ios" aria-pressed="false" aria-controls="project-list">iOS apps</button>
           <button type="button" data-filter="web" aria-pressed="false" aria-controls="project-list">Browser &amp; web</button>
           <button type="button" data-filter="developer" aria-pressed="false" aria-controls="project-list">Developer tools</button>
           <button type="button" data-filter="printing" aria-pressed="false" aria-controls="project-list">3D printing</button>
         </div>
         <p class="filter-count" role="status" aria-live="polite" hidden>10 projects</p>
         <div class="project-grid" id="project-list" aria-labelledby="other-projects-title">
-          <article class="project" data-category="printing">
+          <article class="project" data-category="mac ios printing">
             <div class="project-main">
               <div class="project-art"><img class="project-illustration" src="assets/illustrations/print-progress.webp" width="1306" height="1204" style="--art-width: 130px" alt=""></div>
               <div class="project-copy">

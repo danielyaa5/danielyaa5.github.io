@@ -30,7 +30,7 @@ if (filters) {
       item.setAttribute('aria-pressed', String(item === button));
     });
     projects.forEach(project => {
-      project.hidden = category !== 'all' && project.dataset.category !== category;
+      project.hidden = category !== 'all' && !project.dataset.category.split(/\s+/).includes(category);
     });
     const visible = projects.filter(project => !project.hidden).length;
     count.textContent = `${visible} ${visible === 1 ? 'project' : 'projects'}${category === 'all' ? '' : ` in ${button.textContent}`}`;

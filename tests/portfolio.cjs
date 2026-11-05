@@ -43,7 +43,8 @@ const expected = ['3D Print Monitor','AI Usage','Price Watch','AI-billboard','Ta
     assert.equal(await page.locator('.writing-card').count(),3);
     assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
     const groups = {
-      mac: ['AI-billboard','TagTracker'],
+      mac: ['3D Print Monitor','AI-billboard','TagTracker'],
+      ios: ['3D Print Monitor'],
       web: ['Buy or Rent','Netflix PiP Fixer'],
       developer: ['AI Usage','Price Watch','qtfaststart2'],
       printing: ['3D Print Monitor','H2D Custom Dashboard','bambu-headless']
