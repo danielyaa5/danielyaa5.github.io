@@ -72,6 +72,7 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
 .project-link span { min-width: 0; }
 .project-link:hover span, .profile-link:hover span { text-decoration: underline; text-underline-offset: 3px; }
 .link-icon { flex: 0 0 auto; width: 14px; height: 14px; object-fit: contain; }
+.store-icon { flex: 0 0 auto; width: 18px; height: 18px; object-fit: contain; }
 .project-preview { padding-left: 24px; font-size: 13px; color: #516047; }
 .site-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 17px 0 18px; margin-top: 15px; border-top: 1px solid #a7b2a5; font-size: 16px; }
 .site-footer p { margin: 0; }
@@ -182,16 +183,16 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 .featured-projects, .other-projects-title, .project-filters, .filter-count { margin-right: var(--rail); }
 .featured-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
 .featured-pick { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) 170px; align-items: center; gap: 18px; padding: 24px; border: 1px solid #a7b2a5; border-radius: 6px; background: #edf1e3; }
-.featured-pick img { grid-column: 2; grid-row: 1; display: block; width: 100%; height: 190px; object-fit: contain; }
+.featured-pick > img { grid-column: 2; grid-row: 1; display: block; width: 100%; height: 190px; object-fit: contain; }
 .featured-copy { grid-column: 1; grid-row: 1; min-width: 0; display: flex; flex-direction: column; align-self: stretch; }
 .featured-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 12px; }
 .featured-pick h3 { font-size: 18px; line-height: 1.25; margin: 0; overflow-wrap: anywhere; }
 .featured-pick h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .featured-pick p { margin: 0 0 18px; font-size: 16px; line-height: 1.4; }
-.featured-link { display: inline-flex; align-items: center; align-self: flex-start; min-height: 44px; margin-top: auto; font-size: 14px; font-weight: 700; color: var(--green); }
+.featured-link { display: inline-flex; align-items: center; align-self: flex-start; gap: 6px; min-height: 44px; margin-top: auto; font-size: 14px; font-weight: 700; color: var(--green); }
 .featured-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .featured-lead { grid-row: span 2; display: flex; flex-direction: column; align-items: stretch; gap: 18px; }
-.featured-lead img { align-self: center; width: min(100%, 330px); height: 310px; }
+.featured-lead > img { align-self: center; width: min(100%, 330px); height: 310px; }
 .featured-lead .featured-copy { flex: 1; }
 .featured-lead h3 { font-size: 28px; letter-spacing: -.4px; }
 .featured-lead p { font-size: 18px; }
@@ -202,8 +203,8 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
   .featured-grid { grid-template-columns: 1fr; }
   .featured-lead { grid-row: auto; }
   .featured-pick { grid-template-columns: minmax(0, 1fr) 180px; }
-  .featured-pick img { height: 180px; }
-  .featured-lead img { width: min(100%, 260px); height: 250px; }
+  .featured-pick > img { height: 180px; }
+  .featured-lead > img { width: min(100%, 260px); height: 250px; }
 }
 .other-projects-title { margin-top: 36px; }
 .project-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
@@ -217,10 +218,10 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 @media (max-width: 620px) {
   .featured-grid { gap: 10px; }
   .featured-pick { grid-template-columns: minmax(0, 1fr) clamp(84px, 24vw, 140px); gap: 14px; padding: 18px; }
-  .featured-pick img { height: 140px; }
+  .featured-pick > img { height: 140px; }
   .featured-pick h3 { font-size: 17px; }
   .featured-pick p { font-size: 15px; margin-bottom: 12px; }
-  .featured-lead img { width: min(100%, 220px); height: 210px; }
+  .featured-lead > img { width: min(100%, 220px); height: 210px; }
   .featured-lead h3 { font-size: 23px; }
   .featured-lead p { font-size: 17px; }
   .project-filters button { font-size: 13px; padding: 9px 11px; }

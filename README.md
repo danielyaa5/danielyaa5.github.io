@@ -4,7 +4,7 @@ A static portfolio hosted on GitHub Pages. The site uses HTML, CSS, and a small 
 
 The cream and green layout and illustrations follow the selected Quiet Utility mockup. Illustration files are stored locally in `assets/illustrations/` so the published page does not depend on temporary Canva links.
 
-The artwork uses high-resolution WebP files with transparency. The tree favicon has a separate 128-pixel PNG. The chain icon is from Tabler Icons; its license is stored beside the SVG.
+The artwork uses high-resolution WebP files with transparency. The tree favicon has a separate 128-pixel PNG. The chain, App Store, and Chrome icons are from Tabler Icons; their shared license is stored in `assets/illustrations/link-LICENSE.txt`.
 
 ## Preview
 

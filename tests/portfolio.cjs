@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['3D Print Monitor','AI Usage','Price Watch','AI-billboard','TagTracker','H2D Custom Dashboard','Buy or Rent','qtfaststart2','Netflix PiP Fixer','bambu-headless'];
+const expected = ['3D Print Monitor','AI Usage','Price Watch','Netflix PiP Fixer','TagTracker','H2D Custom Dashboard','Buy or Rent','qtfaststart2','AI-billboard','bambu-headless'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -38,14 +38,14 @@ const expected = ['3D Print Monitor','AI Usage','Price Watch','AI-billboard','Ta
       const target=badge.getBoundingClientRect();
       return Math.abs(title.top+title.height/2-target.top-target.height/2)<1;
     }), 'Desktop star badge stays beside the PUML title');
-    assert.ok(await page.locator('.featured-pick img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth >= image.clientWidth * 2)));
+    assert.ok(await page.locator('.featured-pick > img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth >= image.clientWidth * 2)));
 
     assert.equal(await page.locator('.writing-card').count(),3);
     assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
     const groups = {
-      mac: ['3D Print Monitor','AI-billboard','TagTracker'],
+      mac: ['3D Print Monitor','TagTracker','AI-billboard'],
       ios: ['3D Print Monitor'],
-      web: ['Buy or Rent','Netflix PiP Fixer'],
+      web: ['Netflix PiP Fixer','Buy or Rent'],
       developer: ['AI Usage','Price Watch','qtfaststart2'],
       printing: ['3D Print Monitor','H2D Custom Dashboard','bambu-headless']
     };
