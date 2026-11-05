@@ -72,7 +72,10 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
 .project-link span { min-width: 0; }
 .project-link:hover span, .profile-link:hover span { text-decoration: underline; text-underline-offset: 3px; }
 .link-icon { flex: 0 0 auto; width: 14px; height: 14px; object-fit: contain; }
-.store-icon { flex: 0 0 auto; width: 27px; height: 27px; object-fit: contain; }
+.store-icon { flex: 0 0 auto; width: 31.5px; height: 31.5px; object-fit: contain; }
+/* Optically center the visible letterforms within each store link. */
+.project-link .store-icon + span { transform: translateY(.09em); }
+.featured-link .store-icon + span { transform: translateY(-.05em); }
 .project-preview { padding-left: 24px; font-size: 13px; color: #516047; }
 .site-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 17px 0 18px; margin-top: 15px; border-top: 1px solid #a7b2a5; font-size: 16px; }
 .site-footer p { margin: 0; }
@@ -149,6 +152,7 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
   .project .project-main, .project:nth-child(even) .project-main, .project.featured .project-main { gap: 12px; grid-template-columns: 25% minmax(0,1fr); }
   .project-benefit, .featured .project-benefit { font-size: 18px; }
   .project h2, .featured h2 { font-size: 16px; }
+  .featured-lead .featured-link { font-size: 13px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
