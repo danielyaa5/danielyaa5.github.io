@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['3D Print Monitor','AI Usage','Price Watch','Netflix PiP Fixer','TagTracker','H2D Custom Dashboard','Buy or Rent','qtfaststart2','AI-billboard','bambu-headless'];
+const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer','Price Watch','H2D Custom Dashboard','TagTracker','qtfaststart2','AI-billboard','bambu-headless'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -45,7 +45,7 @@ const expected = ['3D Print Monitor','AI Usage','Price Watch','Netflix PiP Fixer
     const groups = {
       mac: ['3D Print Monitor','TagTracker','AI-billboard'],
       ios: ['3D Print Monitor'],
-      web: ['Netflix PiP Fixer','Buy or Rent'],
+      web: ['Buy or Rent','Netflix PiP Fixer'],
       developer: ['AI Usage','Price Watch','qtfaststart2'],
       printing: ['3D Print Monitor','H2D Custom Dashboard','bambu-headless']
     };
