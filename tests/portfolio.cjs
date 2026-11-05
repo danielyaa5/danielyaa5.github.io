@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['3D prints for sale','Print Progress','AI Usage','Price Watch','AI-billboard','TagTracker','H2D Custom Dashboard','Buy or Rent','qtfaststart2','Netflix PiP Fixer','bambu-headless'];
+const expected = ['3D Print Monitor','AI Usage','Price Watch','AI-billboard','TagTracker','H2D Custom Dashboard','Buy or Rent','qtfaststart2','Netflix PiP Fixer','bambu-headless'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -19,19 +19,18 @@ const expected = ['3D prints for sale','Print Progress','AI Usage','Price Watch'
     assert.equal(await page.locator('.identity').innerText(), 'Daniel');
     assert.deepEqual(await page.locator('.hero-description strong').allTextContents(), ['Snapchat','Clutter','Tinder']);
     assert.equal(await page.locator('.hero-description').innerText(), 'Software engineer since 2016; Snapchat, Clutter, Tinder. In my free time I make apps, dev tools, 3D prints and work on my motorcycles and car.');
-    assert.equal(await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'3D Print Shop',exact:true}).getAttribute('href'), 'https://www.etsy.com/shop/UrbanTechGoods');
-    assert.equal(await page.locator('.project-shop .project-name').getAttribute('href'), 'https://www.etsy.com/shop/UrbanTechGoods');
+    assert.equal(await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'3D Print Shop',exact:true}).getAttribute('href'), 'https://www.ebay.com/usr/encino_gold-silver');
 
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
-    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===11 && images.every(img=>img.complete && img.naturalWidth>0)));
+    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===10 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
-    assert.equal(await page.locator('.project-link').count(),10);
+    assert.equal(await page.locator('.project-link').count(),9);
     assert.equal(await page.locator('.featured-pick').count(),3);
     assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','Beckon']);
     assert.equal(await page.locator('.featured-lead h3').innerText(), 'Cloud Media Shrinker');
     assert.equal(await page.locator('#other-projects-title').innerText(), 'Other projects');
-    assert.equal(await page.locator('.filter-count').innerText(), '11 projects');
+    assert.equal(await page.locator('.filter-count').innerText(), '10 projects');
     assert.equal(await page.locator('.featured-link').count(), 3);
     assert.equal(await page.locator('.featured-pick a a').count(), 0);
     assert.ok(await page.locator('.star-count').evaluate(badge=>{
@@ -47,7 +46,7 @@ const expected = ['3D prints for sale','Print Progress','AI Usage','Price Watch'
       mac: ['AI-billboard','TagTracker'],
       web: ['Buy or Rent','Netflix PiP Fixer'],
       developer: ['AI Usage','Price Watch','qtfaststart2'],
-      printing: ['3D prints for sale','Print Progress','H2D Custom Dashboard','bambu-headless']
+      printing: ['3D Print Monitor','H2D Custom Dashboard','bambu-headless']
     };
     for (const width of [1440,320]) {
       await page.setViewportSize({width,height:1000});

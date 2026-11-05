@@ -87,20 +87,13 @@ async function layout(page) {
       });
       await check('workNavigation',async()=>{await page.locator('nav a[href="#work"]').tap();assert.equal(new URL(page.url()).hash,'#work');});
       await check('touchFilters',async()=>{
-        for(const [filter,count] of [['printing',4],['mac',2],['web',2],['developer',3],['all',11]]) {
+        for(const [filter,count] of [['printing',3],['mac',2],['web',2],['developer',3],['all',10]]) {
           await page.locator(`[data-filter="${filter}"]`).tap();
           assert.equal(await page.locator('.project:visible').count(),count);
           assert.equal(await page.locator('[data-filter][aria-pressed="true"]').count(),1);
           assert.match(await page.locator('.filter-count').innerText(),new RegExp(`^${count} project${count===1?'':'s'}`));
           if(filter==='printing') await page.locator('#project-list').screenshot({path:path.join(output,`printing-${width}x${height}.png`)});
         }
-      });
-      await check('shopTileHitArea',async()=>{
-        await page.locator('[data-filter="printing"]').tap();
-        await page.locator('.project-shop').scrollIntoViewIfNeeded();
-        const destination=await page.locator('.project-shop').evaluate(e=>{const r=e.getBoundingClientRect();const target=document.elementFromPoint(r.left+r.width/2,r.top+20);return target.closest('a')?.href;});
-        assert.equal(destination,'https://www.etsy.com/shop/UrbanTechGoods');
-        await page.locator('[data-filter="all"]').tap();
       });
       await check('writingNavigation',async()=>{await page.locator('.hero-actions a[href="#writing"]').tap();assert.equal(new URL(page.url()).hash,'#writing');});
       await check('backToTop',async()=>{await page.getByRole('link',{name:'Back to top',exact:true}).tap();assert.equal(new URL(page.url()).hash,'#top');assert.ok(await page.evaluate(()=>scrollY<30));});

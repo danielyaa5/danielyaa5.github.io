@@ -55,14 +55,14 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   assert.deepEqual(person.sameAs, ['https://github.com/danielyaa5', 'https://www.linkedin.com/in/danielyakobian/']);
   const listed = graph.find(node => node['@type'] === 'ItemList').itemListElement.map(entry => entry.item);
   const cards = [...home.matchAll(/<a class="project-name" href="([^"]+)">([^<]+)<\/a>/g)].map(m => ({ url: m[1], name: m[2] }));
-  assert.equal(cards.length, 13);
+  assert.equal(cards.length, 12);
   assert.deepEqual(listed.map(item => ({ url: item.url, name: item.name })), cards, 'structured data matches the project cards');
   for (const card of cards.filter(card => card.url.startsWith('https://danielyaa5.github.io/'))) {
     assert.ok(projects.includes(card.url), `${card.url} is in sitemap-projects.xml`);
   }
 
   const vercel = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
-  const hostRedirects = vercel.redirects.filter(rule => rule.has);
+  const hostRedirects = vercel.redirects.filter(rule => rule.has?.[0]?.type === 'host');
   const hosts = hostRedirects.map(rule => rule.has[0].value);
   assert.deepEqual(hosts, ['www.danielyakobian.com', 'danielyakobian-com.vercel.app']);
   // `/:path*` would not match `/` or paths ending in `/`, so the redirects capture the whole path.

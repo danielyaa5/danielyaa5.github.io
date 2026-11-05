@@ -56,9 +56,6 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
 .project-title h2 { margin-bottom: 0; }
 /* Project names link to each project's home; the padding enlarges the tap area without moving the layout. */
 .project-name { display: inline-block; padding: 6px 0; margin: -6px 0; }
-.project-shop { position: relative; }
-.project-shop .project-name::after { content: ""; position: absolute; inset: 0; border-radius: 6px; z-index: 1; }
-.project-shop .project-link { position: relative; z-index: 2; }
 .star-count { display: inline-flex; align-items: center; min-width: 44px; min-height: 44px; color: var(--green); font-size: 12px; font-weight: 700; line-height: 1.2; white-space: nowrap; }
 .star-count-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 7px; border: 1px solid #b7c3a5; border-radius: 4px; background: #e9eedf; }
 .star-count:hover .star-count-badge { background: #dce7cf; }
