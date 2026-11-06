@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
 const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '');
 const root = path.join(__dirname, '..');
 const site = 'http://danielyakobian.com';
-const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html',
+const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html',
   ...fs.readdirSync(path.join(root, 'blog')).filter(name => name.endsWith('.html') && name !== 'index.html').map(name => `blog/${name}`)];
 const untracked = ['gate/index.html', 'quickdesk/privacy.html'];
 

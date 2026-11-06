@@ -1,0 +1,139 @@
+/* Web resume. Shares the portfolio frame, header and colors from ../styles.css. */
+.resume { --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace; --muted: #5d6a5f; padding: 44px 0 56px; }
+.mono { font-family: var(--mono); }
+.r-hero { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 48px; align-items: end; padding-right: 44px; padding-bottom: 40px; border-bottom: 1px solid #a7b2a5; }
+.eyebrow { margin: 0 0 14px; font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.r-hero h1 { margin: 0 0 18px; font-size: 64px; }
+.lede { margin: 0; max-width: 520px; font-size: 19px; line-height: 1.5; }
+.contact { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 22px 0 0; padding: 0; list-style: none; font-size: 15px; }
+.contact a { text-decoration: underline; text-decoration-color: #a7b2a5; text-underline-offset: 4px; }
+.download { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6px 18px; padding: 26px 28px; border-radius: 8px; background: var(--green); color: #fff; box-shadow: 0 1px 0 #0b2e1d, 0 14px 30px -18px rgba(18, 75, 48, .9); }
+.download:hover { background: #1c6240; color: #fff; }
+.download svg { grid-row: span 2; width: 38px; height: 38px; }
+.download strong { font-size: 27px; letter-spacing: -.4px; line-height: 1.1; }
+.download span { font-family: var(--mono); font-size: 13px; color: #cfe0cf; }
+.impact { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid #a7b2a5; }
+.impact div { padding: 26px 20px 24px 0; }
+.impact div + div { padding-left: 20px; border-left: 1px solid #d0d4b9; }
+.impact b { display: block; font-family: var(--mono); font-size: 34px; letter-spacing: -1px; color: var(--green); }
+.impact div > span { display: block; margin-top: 6px; font-size: 14px; line-height: 1.35; color: var(--muted); }
+.ledger { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 24px; padding: 34px 0; border-bottom: 1px solid #a7b2a5; }
+.ledger > h2, .exp-side h2 { margin: 4px 0 0; font-family: var(--mono); font-size: 13px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.role { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 20px; padding: 0 0 26px; }
+.role + .role { padding-top: 26px; border-top: 1px dashed #c6cdb8; }
+.role:last-child { padding-bottom: 0; }
+.when { padding-top: 3px; font-family: var(--mono); font-size: 13px; line-height: 1.5; color: var(--muted); }
+.role h3 { margin: 0; font-size: 19px; letter-spacing: -.2px; }
+.org { margin: 4px 0 10px; color: var(--muted); font-size: 15px; }
+.role ul { margin: 0; padding-left: 18px; font-size: 16px; line-height: 1.55; }
+.role li + li { margin-top: 4px; }
+.role li::marker { color: #789182; }
+.skills { display: grid; gap: 12px; margin: 0; }
+.skills div { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 20px; }
+.skills dt { font-family: var(--mono); font-size: 13px; padding-top: 2px; color: var(--muted); }
+.skills dd { margin: 0; font-size: 16px; line-height: 1.5; }
+.end-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; margin-top: 36px; padding: 28px 30px; border: 1px solid #d0d4b9; border-radius: 8px; background: linear-gradient(110deg, #f6f6eb, var(--card) 55%, #f4f4e9); }
+.end-cta p { margin: 0; font-size: 20px; font-weight: 700; }
+.end-cta .button { min-height: 54px; padding: 12px 30px; font-size: 18px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.download svg path { transition: transform .25s ease; }
+.download:hover svg path { transform: translateY(2px); }
+
+/* Scroll bar: slides in once the big download button leaves the screen, names the section in view and keeps the PDF one tap away. */
+.scroll-bar { --read: 0; position: fixed; inset: 0 0 auto; z-index: 30; background: rgba(253, 250, 243, .93); border-bottom: 1px solid #a7b2a5; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transform: translateY(-105%); transition: transform .3s ease; }
+.scroll-bar::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--green); transform: scaleX(var(--read)); transform-origin: left; }
+.scroll-bar.is-shown { transform: none; }
+.scroll-bar-inner { display: flex; align-items: center; gap: 16px; max-width: 1067px; min-height: 58px; margin: 0 auto; padding: 0 36px; }
+.scroll-name { font-weight: 700; font-size: 16px; white-space: nowrap; }
+.scroll-where { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-family: var(--mono, ui-monospace, monospace); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--green); white-space: nowrap; text-overflow: ellipsis; transition: opacity .15s ease, transform .15s ease; }
+.scroll-where::before { content: "/"; margin-right: 12px; color: #a7b2a5; }
+.scroll-detail:not(:empty)::before { content: " · "; }
+.scroll-detail { color: #5d6a5f; text-transform: none; letter-spacing: 0; }
+.scroll-where.is-swapping, .now.is-swapping { opacity: 0; transform: translateY(6px); }
+.scroll-download { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 16px; border-radius: 999px; background: var(--green); color: #fff; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.scroll-download:hover { background: #1c6240; color: #fff; }
+.scroll-download svg { width: 18px; height: 18px; }
+.scroll-download .short { display: none; }
+
+/* Experience: the left column follows the scroll and shows the role in view, with a rail that fills as you read. */
+.exp-side { position: sticky; top: 84px; align-self: start; }
+.now { display: none; margin-top: 18px; transition: opacity .15s ease, transform .15s ease; }
+.js .now { display: block; }
+.now p { margin: 0; }
+.now-when { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.now-org { margin-top: 4px !important; font-size: 24px; font-weight: 700; letter-spacing: -.5px; line-height: 1.15; }
+.now-title { margin-top: 4px !important; font-size: 14px; color: var(--muted); }
+.now-stack { display: flex; flex-wrap: wrap; gap: 5px; margin: 12px 0 0; padding: 0; list-style: none; }
+.now-stack li { padding: 3px 8px; border: 1px solid #b7c3a5; border-radius: 4px; background: #e9eedf; color: var(--green); font-size: 12px; font-weight: 700; }
+/* .exp-index is a nav, so it resets the site-wide nav and nav a styles. */
+.exp-index { --progress: 0; position: relative; display: grid; gap: 2px; margin-top: 22px; padding: 0 0 0 18px; font-size: 14px; }
+.exp-index::before, .exp-index::after { content: ""; position: absolute; left: 4px; top: 15px; bottom: 15px; width: 1px; background: #c6cdb8; }
+.exp-index::after { width: 2px; left: 3.5px; background: var(--green); transform: scaleY(var(--progress)); transform-origin: top; }
+.exp-index a { position: relative; display: flex; align-items: center; justify-content: flex-start; gap: 10px; min-width: 0; min-height: 30px; padding: 0; font-size: 14px; color: var(--muted); }
+.exp-index a::before { content: ""; position: absolute; left: -18px; width: 9px; height: 9px; border: 1.5px solid #a7b2a5; border-radius: 50%; background: var(--paper); box-sizing: border-box; z-index: 1; transition: background .2s, border-color .2s; }
+.exp-index a span { font-family: var(--mono); font-size: 12px; }
+.exp-index a.is-past::before { border-color: var(--green); background: var(--green); }
+.exp-index a.is-active { color: var(--ink); font-weight: 700; }
+.exp-index a.is-active::before { border-color: var(--green); background: var(--green); box-shadow: 0 0 0 4px #d4e2bc; }
+.role .when, .role h3 { transition: color .2s; }
+.role.is-active .when, .role.is-active h3 { color: var(--green); }
+
+/* Sections ease in once as they reach the screen. Without JavaScript, or with reduced motion, everything is simply shown. */
+.js .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s cubic-bezier(.2, .7, .2, 1); }
+.js .reveal.is-in { opacity: 1; transform: none; }
+.impact .reveal:nth-child(2) { transition-delay: .08s; }
+.impact .reveal:nth-child(3) { transition-delay: .16s; }
+.impact .reveal:nth-child(4) { transition-delay: .24s; }
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .scroll-bar, .scroll-where, .now, .download svg path { transition: none; }
+}
+@media (max-width: 1123px) { .scroll-bar-inner { padding: 0 64px; } }
+
+/* Below this width the name and the download block no longer fit side by side. */
+@media (max-width: 980px) {
+  .r-hero { grid-template-columns: 1fr; gap: 28px; padding-right: 0; }
+}
+@media (max-width: 850px) {
+  .impact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .impact div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .impact div:nth-child(n+3) { border-top: 1px solid #d0d4b9; }
+  .ledger { grid-template-columns: 1fr; gap: 18px; }
+  .scroll-bar-inner { padding: 0 42px; }
+  /* One column: the scroll bar names the role instead of the side panel. */
+  .exp-side { position: static; }
+  .js .now, .exp-index { display: none; }
+}
+@media (max-width: 620px) {
+  .resume { padding: 30px 0 120px; }
+  .r-hero h1 { font-size: 44px; letter-spacing: -1.4px; margin-bottom: 14px; }
+  .lede { font-size: 17px; }
+  .download { padding: 20px 22px; }
+  .download strong { font-size: 23px; }
+  .impact b { font-size: 27px; }
+  .impact div { padding: 20px 12px 18px 0; }
+  .impact div:nth-child(even) { padding-left: 14px; }
+  .role, .skills div { grid-template-columns: 1fr; gap: 6px; }
+  .when br { display: none; }
+  .end-cta { padding: 22px 20px; }
+  .end-cta .button { width: 100%; }
+  .scroll-bar-inner { gap: 12px; min-height: 54px; padding: 0 30px; }
+  .scroll-name { display: none; }
+  .scroll-where::before { content: none; }
+  .scroll-download { min-height: 44px; padding: 8px 14px; }
+  .scroll-download .long { display: none; }
+  .scroll-download .short { display: inline; }
+}
+@media (max-width: 360px) { .scroll-bar-inner { padding: 0 25px; } }
+@media print {
+  @page { margin: 14mm; }
+  body { background: #fff; }
+  .page-frame { margin: 0; padding: 0; border: 0; box-shadow: none; background: none; }
+  .site-header, .pine, .download, .end-cta, .scroll-bar, .exp-side .now, .exp-index { display: none !important; }
+  .js .reveal { opacity: 1; transform: none; }
+  .resume { padding: 0; }
+  .r-hero { grid-template-columns: 1fr; padding: 0 0 16px; }
+  .r-hero h1 { font-size: 34px; }
+  .impact b { font-size: 24px; }
+  .role, .impact div { break-inside: avoid; }
+}

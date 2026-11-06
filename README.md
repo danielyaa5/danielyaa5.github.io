@@ -18,6 +18,12 @@ Before finishing any layout change, run `node tests/frame.cjs http://localhost:4
 
 For artwork changes, run `node tests/artwork.cjs http://localhost:4173`. This checks image resolution at 2× display density, chain-icon alignment and spacing, mobile fit, and the favicon. Screenshots and the report are saved to the ignored `test-results/` directory.
 
+## Resume
+
+`resume/` is the web version of the resume, with the portfolio frame and a large download button for `assets/Daniel_Yakobian_Resume.pdf`. The navigation's Resume link opens it. The page repeats the PDF's wording, so when the resume changes, replace the PDF and update `resume/index.html` together.
+
+After changing either, run `node tests/resume.cjs http://localhost:4173`. At 11 widths it checks that the download button is at least 64 px tall and in the first screen, that nothing leaves the frame or scrolls sideways, that the mobile dock doesn't cover the button, and that the PDF links resolve. With `pdftotext` installed it also checks that every bullet on the page appears in the PDF. Screenshots go to `test-results/resume-*.png`.
+
 ## Search and link previews
 
 `danielyakobian.com` is the main address. Vercel serves it from this repository, and GitHub Pages serves the same files at `danielyaa5.github.io`, so every page names its `danielyakobian.com` address as canonical and in `og:url`. `vercel.json` permanently redirects `www.danielyakobian.com` and `danielyakobian-com.vercel.app` there. Don't add a custom domain to GitHub Pages: it would redirect the project sites under `danielyaa5.github.io`, including Beckon's update feed.
