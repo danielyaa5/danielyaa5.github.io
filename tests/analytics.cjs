@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
 const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '');
 const root = path.join(__dirname, '..');
 const site = 'http://danielyakobian.com';
-const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html',
+const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html', 'motorcycle-rentals/index.html',
   ...fs.readdirSync(path.join(root, 'blog')).filter(name => name.endsWith('.html') && name !== 'index.html').map(name => `blog/${name}`)];
 const untracked = ['gate/index.html', 'quickdesk/privacy.html'];
 
@@ -109,6 +109,32 @@ const events = request => {
       await tiles.close();
     }
 
+    // Booking links on the motorcycle rentals page send a rental_click named after the bike and the site.
+    for (const width of [390, 820, 1440]) {
+      const rentals = await context.newPage();
+      await rentals.setViewportSize({ width, height: 900 });
+      await rentals.goto(`${site}/motorcycle-rentals/`, { waitUntil: 'networkidle' });
+      await rentals.waitForFunction(() => window.posthog?.__loaded === true);
+      await rentals.evaluate(() => {
+        for (const type of ['click', 'auxclick']) window.addEventListener(type, event => { if (event.target.closest?.('a[href]')) event.preventDefault(); });
+      });
+      const expected = await rentals.locator('.rentals a[data-platform]').evaluateAll(links => links.map(a => {
+        const bike = a.closest('.bike');
+        return { bike: bike ? bike.querySelector('h3').textContent.trim() : 'All bikes', platform: a.dataset.platform, link_text: a.textContent.replace(/\s+/g, ' ').trim(), destination: a.href, position: bike ? [...document.querySelectorAll('.bike')].indexOf(bike) + 1 : 0 };
+      }));
+      assert.ok(expected.filter(e => e.position > 0).length >= 2, 'the rentals page has booking links');
+      const start = captured.length;
+      const links = rentals.locator('.rentals a[data-platform]');
+      for (let i = 0; i < expected.length; i++) await links.nth(i).click({ button: i % 2 ? 'middle' : 'left' });
+      await rentals.locator('.site-header nav a', { hasText: 'Work' }).click();
+      await rentals.waitForTimeout(1500);
+      const sent = captured.slice(start).filter(e => e.event === 'rental_click').map(e => e.properties);
+      const pick = ({ bike, platform, link_text, destination, position }) => ({ bike, platform, link_text, destination, position });
+      assert.deepEqual(sent.map(pick), expected, `rental clicks at ${width}px; other links send none`);
+      assert.ok(sent.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/motorcycle-rentals/`), `cookieless rental clicks at ${width}px`);
+      await rentals.close();
+    }
+
     // Email sign-ups send email_signup with the ticked topics, and a failed one sends email_signup_failed.
     // The address itself never reaches PostHog. The sign-up function is faked here.
     for (const width of [390, 820, 1440]) {
@@ -148,7 +174,7 @@ const events = request => {
     await gate.goto(`${site}/gate/`, { waitUntil: 'networkidle' });
     assert.ok(!gateRequests.some(url => /analytics\.js|posthog/.test(url)), 'gate page loads no analytics');
     assert.equal(captured.length, before, 'gate page sends nothing');
-    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, project clicks and sign-up events at 3 widths.`);
+    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, project clicks, rental clicks and sign-up events at 3 widths.`);
   } finally {
     await browser.close();
   }

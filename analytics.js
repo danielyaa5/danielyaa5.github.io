@@ -1,4 +1,4 @@
-/* Anonymous page views, project clicks and email sign-up counts with PostHog, without cookies or browser storage.
+/* Anonymous page views, project and rental clicks and email sign-up counts with PostHog, without cookies or browser storage.
    It runs only on the published hosts, so local previews and tests send nothing,
    and the guest gate page never loads it. */
 (() => {
@@ -52,6 +52,24 @@
   };
   document.addEventListener('click', tileClick);
   document.addEventListener('auxclick', tileClick);
+
+  // A rental_click event for each Riders Share or Twisted Road link on the motorcycle rentals page,
+  // named after the bike and the site. The profile links at the top count as "All bikes".
+  const rentalClick = event => {
+    if (event.type === 'auxclick' && event.button !== 1) return;
+    const link = event.target.closest?.('.rentals a[data-platform]');
+    if (!link) return;
+    const bike = link.closest('.bike');
+    track('rental_click', {
+      bike: bike ? (bike.querySelector('h3')?.textContent || '').trim() : 'All bikes',
+      platform: link.dataset.platform,
+      link_text: link.textContent.replace(/\s+/g, ' ').trim(),
+      destination: link.href,
+      position: bike ? [...document.querySelectorAll('.bike')].indexOf(bike) + 1 : 0,
+    });
+  };
+  document.addEventListener('click', rentalClick);
+  document.addEventListener('auxclick', rentalClick);
 
   // Email sign-ups from the home page form, with the topics ticked. The address itself is never sent.
   const topicProperties = topics => ({

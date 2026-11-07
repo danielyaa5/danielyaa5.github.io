@@ -1,0 +1,57 @@
+/* Motorcycle rentals. Shares the portfolio frame, header, buttons and colors from ../styles.css. */
+.rentals { --muted: #5d6a5f; --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace; padding: 44px var(--rail) 40px 0; }
+.m-hero { max-width: 640px; padding-bottom: 34px; }
+.eyebrow { margin: 0 0 14px; font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.m-hero h1 { margin: 0 0 18px; font-size: 64px; }
+.lede { margin: 0; font-size: 19px; line-height: 1.5; }
+.rental-profiles { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.rental-profiles .button { min-height: 44px; padding: 9px 16px; font-size: 15px; }
+
+.bike-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.bike { min-width: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #a7b2a5; border-radius: 6px; background: #edf1e3; }
+.bike-photo { display: block; aspect-ratio: 4 / 3; background: #dfe5d4; }
+.bike-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.bike-copy { flex: 1; display: flex; flex-direction: column; padding: 20px 22px 22px; }
+.bike h3 { margin: 0 0 8px; font-size: 22px; line-height: 1.2; letter-spacing: -.3px; }
+.bike p { margin: 0 0 14px; font-size: 16px; line-height: 1.45; }
+.bike-facts { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 18px; padding: 0; list-style: none; }
+.bike-facts li { padding: 3px 8px; border: 1px solid #b7c3a5; border-radius: 4px; background: #e4ebd7; color: var(--green); font-size: 13px; font-weight: 700; }
+.bike-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+.bike-links .button { flex: 1 1 200px; min-height: 48px; padding: 10px 16px; font-size: 16px; text-align: center; }
+.bike-links .button span { margin-left: 4px; }
+
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 34px; border-top: 1px solid #a7b2a5; border-bottom: 1px solid #a7b2a5; }
+.how h2 { grid-column: 1 / -1; margin: 26px 0 4px; font-family: var(--mono); font-size: 13px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.how div { padding: 16px 20px 24px 0; }
+.how div + div { padding-left: 20px; border-left: 1px solid #d0d4b9; }
+.how b { display: block; margin-bottom: 6px; font-size: 17px; }
+.how p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
+.fine-print { margin: 18px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+
+@media (max-width: 900px) {
+  .bike-grid { grid-template-columns: 1fr; }
+  .bike { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .bike-photo { aspect-ratio: auto; min-height: 100%; }
+}
+@media (max-width: 850px) {
+  .how { grid-template-columns: 1fr; }
+  .how div, .how div + div { padding: 14px 0 18px; border-left: 0; }
+  .how div + div { border-top: 1px solid #d0d4b9; }
+}
+@media (max-width: 680px) {
+  .bike { display: flex; }
+  .bike-photo { aspect-ratio: 4 / 3; min-height: 0; }
+}
+@media (max-width: 620px) {
+  .rentals { padding: 30px 0 24px; }
+  .m-hero { padding-bottom: 24px; }
+  .m-hero h1 { font-size: 44px; letter-spacing: -1.4px; margin-bottom: 14px; }
+  .lede { font-size: 17px; }
+  .bike-copy { padding: 16px 16px 18px; }
+  .bike h3 { font-size: 20px; }
+  .bike p { font-size: 15px; }
+  .bike-links { flex-direction: column; }
+  .bike-links .button { flex: 0 0 auto; width: 100%; font-size: 15px; }
+  .rental-profiles { margin-top: 20px; }
+  .rental-profiles .button { flex: 1 1 100%; font-size: 14px; }
+}

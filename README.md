@@ -24,6 +24,14 @@ For artwork changes, run `node tests/artwork.cjs http://localhost:4173`. This ch
 
 After changing either, run `node tests/resume.cjs http://localhost:4173`. At 11 widths it checks that the download button is at least 64 px tall and in the first screen, that nothing leaves the frame or scrolls sideways, that the mobile dock doesn't cover the button, and that the PDF links resolve. With `pdftotext` installed it also checks that every bullet on the page appears in the PDF. Screenshots go to `test-results/resume-*.png`.
 
+## Motorcycle rentals
+
+`motorcycle-rentals/` lists the motorcycles Daniel rents out, one tile per bike, with booking links to each bike's listing on Riders Share and, where it's listed, Twisted Road. The navigation's Motorcycle Rentals link opens it. Riders Share links are the listing's **Share** link, which carries Daniel's referral code, not the plain listing address. Bike photos are stored in `assets/motorcycles/` as WebP so the page doesn't depend on the rental sites' image hosts.
+
+To add or change a bike, copy one `<article class="bike">` block in `motorcycle-rentals/index.html`, add its entry to the page's structured data, and keep `data-platform` (`riders_share` or `twisted_road`) on each booking link. On phones and narrow tablets the navigation shows short labels (Shop, Rentals); the full names stay in each link's `aria-label`.
+
+After changing the page or the navigation, run `node tests/rentals.cjs http://localhost:4173`. At 14 widths it checks that every bike has a sharp photo with alt text and a Riders Share link with a referral code, that booking buttons are full touch targets on one line, that nothing leaves the frame or scrolls sideways, and that the phone dock never covers a button. Screenshots go to `test-results/rentals-*.png`. Each Riders Share or Twisted Road link on the page also sends a `rental_click` PostHog event with `bike`, `platform` (`riders_share` or `twisted_road`), `link_text`, `destination` and `position`; the profile links at the top send `bike: All bikes` and position 0.
+
 ## Search and link previews
 
 `danielyakobian.com` is the main address. Vercel serves it from this repository, and GitHub Pages serves the same files at `danielyaa5.github.io`, so every page names its `danielyakobian.com` address as canonical and in `og:url`. `vercel.json` permanently redirects `www.danielyakobian.com` and `danielyakobian-com.vercel.app` there. Don't add a custom domain to GitHub Pages: it would redirect the project sites under `danielyaa5.github.io`, including Beckon's update feed.
@@ -37,7 +45,7 @@ After changing pages, sitemaps or structured data, run `node tests/seo.cjs http:
 
 ## Analytics
 
-`analytics.js` counts page views, link clicks and email sign-ups with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=3" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
+`analytics.js` counts page views, link clicks and email sign-ups with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=4" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
 
 Every link opened from a project tile on the home page also sends a `project_click` event with these properties:
 
