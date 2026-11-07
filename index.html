@@ -20,9 +20,9 @@
   <link rel="icon" type="image/png" sizes="128x128" href="assets/favicon.png">
   <!-- danielyakobian.com is the primary address; danielyaa5.github.io serves the same files. -->
   <link rel="canonical" href="https://danielyakobian.com/">
-  <script src="script.js?v=signup-1" defer></script>
+  <script src="script.js?v=signup-2" defer></script>
   <script src="/analytics.js?v=3" defer></script>
-  <link rel="stylesheet" href="styles.css?v=signup-2">
+  <link rel="stylesheet" href="styles.css?v=signup-3">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -160,6 +160,10 @@
             <p class="signup-result" id="signup-thanks">You’re signed up. Thanks!</p>
             <p class="signup-result signup-result-error" id="signup-failed">That didn’t go through. Tick at least one option and check your email address, or write to <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
           </form>
+          <div class="signup-done" hidden>
+            <p class="signup-done-text" role="status"><span class="signup-done-check" aria-hidden="true">✓</span> <span class="signup-done-message"></span></p>
+            <button class="button button-outline signup-edit" type="button">Edit email</button>
+          </div>
         </section>
         <h2 class="section-title other-projects-title" id="other-projects-title">Other projects</h2>
         <div class="project-filters" role="group" aria-label="Filter projects" hidden>

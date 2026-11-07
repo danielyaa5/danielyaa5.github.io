@@ -260,6 +260,13 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 .signup-status[data-kind="error"], .signup-result-error { color: #9a2a1c; }
 .signup-status[data-kind="success"], .signup-result { color: var(--green); font-weight: 700; }
 .signup-status a, .signup-result a { text-decoration: underline; text-underline-offset: 3px; }
+/* After signing up, the card shrinks to one line with a way back to the form. */
+.signup.is-done { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding: 12px 16px 12px 24px; }
+.signup.is-done .signup-intro { display: none; }
+.signup-done { display: contents; }
+.signup-done-text { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 18px; font-weight: 700; color: var(--green); }
+.signup-done-check { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--green); color: #fffef6; font-size: 15px; line-height: 1; }
+.signup-edit { min-height: 44px; padding: 8px 18px; font-family: inherit; font-size: 15px; cursor: pointer; }
 /* Without JavaScript the form posts away and comes back to one of these. */
 .signup-result { display: none; margin: 10px 0 0; font-size: 14px; line-height: 1.45; }
 .signup-result:target { display: block; }
@@ -273,6 +280,10 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 }
 @media (max-width: 620px) {
   .signup { margin-top: 16px; padding: 20px 16px; }
+  .signup.is-done { gap: 10px 12px; padding: 10px 10px 10px 14px; }
+  .signup-done-text { gap: 8px; font-size: 16px; }
+  .signup-done-check { width: 22px; height: 22px; font-size: 13px; }
+  .signup-edit { padding: 8px 14px; }
   .signup h2 { font-size: 22px; }
   .signup-intro p { font-size: 15px; }
   .signup-topic { padding: 11px 12px; }

@@ -42,6 +42,9 @@ if (filters) {
 // form still posts and the function sends the browser back to a result message.
 const signup = document.querySelector('.signup-form');
 if (signup) {
+  const section = signup.closest('.signup');
+  const done = section.querySelector('.signup-done');
+  const edit = section.querySelector('.signup-edit');
   const status = signup.querySelector('.signup-status');
   const button = signup.querySelector('.signup-button');
   const email = signup.querySelector('.signup-email');
@@ -56,6 +59,44 @@ if (signup) {
     no_topics: 'Pick at least one kind of email.',
     not_configured: `Sign-ups aren’t open yet. To get on the list now, ${contact}.`,
   };
+  // After signing up, the section shrinks to one line. This browser remembers only that it
+  // signed up and which boxes were ticked (never the address), so later visits stay small.
+  const KEY = 'signup-done';
+  const remember = topics => {
+    try {
+      if (topics) localStorage.setItem(KEY, JSON.stringify({ topics }));
+      else localStorage.removeItem(KEY);
+    } catch {
+      // Storage can be blocked; the page still works, it just forgets.
+    }
+  };
+  const message = done.querySelector('.signup-done-message');
+  const collapse = (focus = false) => {
+    section.classList.add('is-done');
+    signup.hidden = true;
+    done.hidden = false;
+    // Filled in after the row shows, so screen readers announce it.
+    message.textContent = '';
+    requestAnimationFrame(() => { message.textContent = 'Signup success!'; });
+    if (focus) edit.focus();
+  };
+  edit.addEventListener('click', () => {
+    remember(null);
+    section.classList.remove('is-done');
+    done.hidden = true;
+    signup.hidden = false;
+    say('');
+    email.focus();
+  });
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved) {
+      boxes.forEach(box => { box.checked = saved.topics?.includes(box.value) || false; });
+      collapse();
+    }
+  } catch {
+    // Unreadable storage: show the form.
+  }
   boxes.forEach(box => box.addEventListener('change', () => {
     if (status.dataset.kind === 'error' && boxes.some(item => item.checked)) say('');
   }));
@@ -86,8 +127,10 @@ if (signup) {
     }
     button.disabled = false;
     if (result.ok) {
-      say('You’re signed up. Thanks!', 'success');
+      say('');
       email.value = '';
+      remember(topics);
+      collapse(true);
       document.dispatchEvent(new CustomEvent('signup', { detail: { topics } }));
       return;
     }

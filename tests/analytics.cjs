@@ -123,7 +123,8 @@ const events = request => {
       await form.getByLabel(/Promos/).check();
       await form.locator('.signup-email').fill('private-reader@example.com');
       await form.locator('.signup-button').click();
-      await form.waitForFunction(() => document.querySelector('.signup-status').dataset.kind === 'success');
+      await form.waitForSelector('.signup.is-done');
+      await form.locator('.signup-edit').click();
       reply = { ok: false, error: 'provider_error' };
       await form.locator('.signup-email').fill('private-reader@example.com');
       await form.locator('.signup-button').click();

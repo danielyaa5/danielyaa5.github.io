@@ -49,6 +49,34 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
         };
       });
       await page.locator('.signup').screenshot({ path: `test-results/signup-${width}.png` });
+
+      // The one-line state after signing up, as a returning visitor sees it.
+      await page.evaluate(() => localStorage.setItem('signup-done', JSON.stringify({ topics: ['beta'] })));
+      await page.reload({ waitUntil: 'networkidle' });
+      const compact = await page.evaluate(() => {
+        const box = el => el.getBoundingClientRect();
+        const signup = document.querySelector('.signup');
+        const s = box(signup);
+        const text = box(signup.querySelector('.signup-done-text'));
+        const edit = box(signup.querySelector('.signup-edit'));
+        const grid = box(document.querySelector('.featured-grid'));
+        return {
+          height: s.height,
+          oneRow: Math.abs((text.top + text.bottom) / 2 - (edit.top + edit.bottom) / 2) < 2,
+          inside: [text, edit].every(r => r.left >= s.left && r.right <= s.right && r.top >= s.top && r.bottom <= s.bottom),
+          aligned: Math.abs(s.left - grid.left) < 1 && Math.abs(s.right - grid.right) < 1,
+          editHeight: edit.height,
+          formShown: !!document.querySelector('.signup-form').getClientRects().length,
+          sideways: document.documentElement.scrollWidth > innerWidth,
+        };
+      });
+      await page.locator('.signup').screenshot({ path: `test-results/signup-done-${width}.png` });
+      assert.equal(compact.formShown, false, `form hidden after signing up at ${width}px`);
+      assert.ok(compact.inside && compact.aligned, `success row fits its card and lines up at ${width}px`);
+      assert.ok(compact.editHeight >= 44, `Edit email is at least 44px tall at ${width}px`);
+      assert.ok(width < 360 || (compact.oneRow && compact.height <= 72), `success row is one short line at ${width}px: ${JSON.stringify(compact)}`);
+      assert.ok(compact.height <= 120, `success row stays small at ${width}px`);
+      assert.equal(compact.sideways, false);
       assert.ok(layout.order, `sign-up sits between Featured projects and Other projects at ${width}px`);
       assert.ok(layout.below, `sign-up shows below the featured tiles at ${width}px`);
       assert.ok(layout.alignedLeft && layout.alignedRight, `sign-up lines up with the featured tiles at ${width}px`);
@@ -100,9 +128,26 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
       await form.getByLabel(/New app and open source launches/).check();
 
       await form.locator('.signup-button').click();
-      await page.waitForFunction(() => document.querySelector('.signup-status').dataset.kind === 'success');
-      assert.equal(await status.textContent(), 'You’re signed up. Thanks!');
+      // Success shrinks the section to one line with an Edit email button, which takes focus.
+      await page.waitForFunction(() => document.querySelector('.signup-done-message').textContent === 'Signup success!');
+      assert.equal((await page.locator('.signup-done-text').textContent()).trim(), '✓ Signup success!');
+      assert.equal(await form.isVisible(), false, 'the form hides after signing up');
+      assert.equal(await page.locator('.signup-intro').isVisible(), false, 'the intro hides after signing up');
+      assert.ok(await page.evaluate(() => document.activeElement?.matches('.signup-edit')), 'focus moves to Edit email');
       assert.equal(await form.locator('.signup-email').inputValue(), '', 'address is cleared after signing up');
+      assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('signup-done'))), { topics: ['beta', 'new_apps'] }, 'only the ticked topics are remembered');
+      assert.ok(!(await page.evaluate(() => JSON.stringify({ ...localStorage }))).includes('reader@example.com'), 'the address is never stored');
+      // It stays small on the next visit, and Edit email brings the form back with the same boxes ticked.
+      await page.reload({ waitUntil: 'networkidle' });
+      assert.ok(await page.locator('.signup.is-done').isVisible(), 'still one line after a reload');
+      assert.equal(await form.isVisible(), false);
+      await page.locator('.signup-edit').click();
+      assert.ok(await form.isVisible(), 'Edit email shows the form again');
+      assert.ok(await page.locator('.signup-intro').isVisible());
+      assert.equal(await page.locator('.signup-done').isVisible(), false);
+      assert.deepEqual(await form.locator('input[name="topic"]:checked').evaluateAll(boxes => boxes.map(box => box.value)), ['beta', 'new_apps']);
+      assert.ok(await page.evaluate(() => document.activeElement?.matches('.signup-email')), 'focus goes to the email field');
+      assert.equal(await page.evaluate(() => localStorage.getItem('signup-done')), null, 'editing forgets the saved state');
       assert.equal(posts.length, 1);
       assert.equal(posts[0].method, 'POST');
       assert.match(posts[0].type, /^application\/x-www-form-urlencoded/, 'form-encoded, so no preflight is needed cross-origin');
@@ -113,7 +158,7 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
       assert.equal(sent.get('company'), '');
       assert.deepEqual(events, [{ type: 'signup', topics: ['beta', 'new_apps'] }]);
 
-      // Error replies are explained, and the button comes back.
+      // Error replies are explained, and the button comes back (the form is open again after Edit email).
       for (const [next, text] of [
         [{ status: 503, body: { ok: false, error: 'not_configured' } }, 'Sign-ups aren’t open yet. To get on the list now, write to support@danielyakobian.com.'],
         [{ status: 400, body: { ok: false, error: 'invalid_email' } }, 'That email address doesn’t look right. Check it and try again.'],
