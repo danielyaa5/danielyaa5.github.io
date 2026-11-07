@@ -13,7 +13,7 @@ const ORIGINS = new Set([SITE, 'https://danielyaa5.github.io']);
 // get only what they ticked and can change it from any email's unsubscribe page.
 const TOPICS = {
   new_apps: { name: 'New app launches', description: 'An email when Daniel releases a new app.' },
-  beta: { name: 'Beta tester invites', description: 'Try new apps before launch. Beta testers get them free for life.' },
+  beta: { name: 'Beta tester invites', description: 'Try apps early and get them free for life!' },
   promos: { name: 'Promos', description: 'Discounts and promo codes for paid apps.' },
 };
 

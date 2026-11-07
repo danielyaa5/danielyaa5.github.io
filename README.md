@@ -55,7 +55,7 @@ After changing analytics or adding a page, run `node tests/analytics.cjs http://
 
 ## Email sign-up
 
-Below Featured projects, visitors can sign up for emails about new app launches, beta tester invites (beta testers get the app free for life) and promos. The form posts to `api/subscribe.js`, a Vercel function served at `danielyakobian.com/api/subscribe/`. GitHub Pages can't run it, so the copy on `danielyaa5.github.io` posts to `danielyakobian.com` too; the function allows both origins. Without JavaScript the form still posts, and the function sends the browser back to a `#signup-thanks` or `#signup-failed` message.
+Below Featured projects, visitors can sign up for emails about new app launches, beta tester invites (try apps early and get them free for life) and promos. The form posts to `api/subscribe.js`, a Vercel function served at `danielyakobian.com/api/subscribe/`. GitHub Pages can't run it, so the copy on `danielyaa5.github.io` posts to `danielyakobian.com` too; the function allows both origins. Without JavaScript the form still posts, and the function sends the browser back to a `#signup-thanks` or `#signup-failed` message.
 
 Sign-ups are stored as contacts in Resend. Each box is a Resend topic (**New app launches**, **Beta tester invites**, **Promos**), created by the function on first use with an opt-out default, so a contact only gets the topics they ticked. Send to a topic by choosing it in a Resend broadcast; recipients can change topics from the unsubscribe link in every broadcast. Signing up again with the same address adds the newly ticked topics and turns email back on. A hidden `company` field catches bots.
 

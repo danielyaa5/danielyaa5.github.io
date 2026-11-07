@@ -28,7 +28,9 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
         const parts = [...signup.querySelectorAll('h2, p:not(:empty), .signup-topic, .signup-email, .signup-button, legend')].filter(el => el.getClientRects().length);
         const inner = box(signup);
         const targets = [...signup.querySelectorAll('.signup-topic, .signup-email, .signup-button')].map(el => ({ name: el.textContent.trim().slice(0, 30) || el.className, height: box(el).height, width: box(el).width }));
-        const topicLabels = [...signup.querySelectorAll('.signup-topic strong')].map(el => el.textContent);
+        const note = signup.querySelector('[value="beta"] + span .signup-topic-note');
+        const betaNote = { text: note.textContent, bold: note.querySelector('strong')?.textContent, weight: getComputedStyle(note.querySelector('strong')).fontWeight };
+        const topicLabels = [...signup.querySelectorAll('.signup-topic-name')].map(el => el.textContent);
         return {
           order: featured.compareDocumentPosition(signup) & Node.DOCUMENT_POSITION_FOLLOWING && signup.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING,
           below: s.top >= box(featured).bottom - 1 && s.bottom <= box(other).top,
@@ -39,6 +41,7 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
           sideways: document.documentElement.scrollWidth > innerWidth,
           targets,
           topicLabels,
+          betaNote,
           checked: [...signup.querySelectorAll('input[type="checkbox"]')].filter(el => el.checked).length,
           trapVisible: (() => { const r = box(signup.querySelector('.signup-trap')); return r.right > 0 && r.left < innerWidth && r.width > 2; })(),
           emailFont: parseFloat(getComputedStyle(signup.querySelector('.signup-email')).fontSize),
@@ -54,6 +57,7 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
       assert.equal(layout.sideways, false, `no sideways scroll at ${width}px`);
       assert.ok(layout.targets.every(t => t.height >= 44), `touch targets are at least 44px tall at ${width}px: ${JSON.stringify(layout.targets)}`);
       assert.deepEqual(layout.topicLabels, ['New app launches', 'Beta tester invites', 'Promos']);
+      assert.deepEqual(layout.betaNote, { text: 'Try apps early and get them free for life!', bold: 'free for life!', weight: '700' }, 'beta note with "free for life!" in bold');
       assert.equal(layout.checked, 0, 'no box is ticked in advance');
       assert.equal(layout.trapVisible, false, 'the bot trap field is off screen');
       assert.ok(layout.emailFont >= 16, 'email field is 16px so iOS does not zoom');
@@ -91,7 +95,7 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
       assert.equal(await status.getAttribute('data-kind'), 'error');
       assert.equal(posts.length, 0, 'nothing is sent without a topic');
       // Clicking the description text ticks the box too.
-      await form.locator('.signup-topic', { hasText: 'Beta tester invites' }).locator('strong + span').click();
+      await form.locator('.signup-topic', { hasText: 'Beta tester invites' }).locator('.signup-topic-note').click();
       assert.equal(await status.textContent(), '', 'error clears once a box is ticked');
       await form.getByLabel(/New app launches/).check();
 

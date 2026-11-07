@@ -244,8 +244,9 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 .signup-topic:has(input:checked) { border-color: var(--green); background: #e9efdf; }
 .signup-topic:has(input:focus-visible) { outline: 2px solid var(--green); outline-offset: 2px; }
 .signup-topic input { width: 20px; height: 20px; margin: 0; accent-color: var(--green); cursor: pointer; }
-.signup-topic strong { display: block; font-size: 16px; line-height: 1.25; }
-.signup-topic strong + span { display: block; margin-top: 2px; font-size: 14px; line-height: 1.4; color: #455f3d; }
+.signup-topic-name { display: block; font-size: 16px; line-height: 1.25; }
+.signup-topic-note { display: block; margin-top: 2px; font-size: 14px; line-height: 1.4; color: #455f3d; }
+.signup-topic-note strong { color: var(--green); }
 .signup-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .signup-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; margin-top: 16px; }
 .signup-email-label { grid-column: 1 / -1; font-size: 14px; font-weight: 700; color: #455f3d; }
