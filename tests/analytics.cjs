@@ -80,6 +80,35 @@ const events = request => {
     assert.deepEqual(await context.cookies(), [], 'no cookies');
     assert.deepEqual(await page.evaluate(() => [...Object.keys(localStorage), ...Object.keys(sessionStorage)].filter(key => /ph_|posthog/i.test(key))), [], 'no PostHog storage');
 
+    // Links in project tiles send a project_click named after the project, at phone, tablet and desktop widths.
+    // Navigation is cancelled after the site's own listeners run, so the page stays put.
+    context.on('page', async popup => { if (await popup.opener()) await popup.close().catch(() => {}); });
+    for (const width of [390, 820, 1440]) {
+      const tiles = await context.newPage();
+      await tiles.setViewportSize({ width, height: 900 });
+      await tiles.goto(`${site}/`, { waitUntil: 'networkidle' });
+      await tiles.waitForFunction(() => window.posthog?.__loaded === true);
+      await tiles.evaluate(() => {
+        for (const type of ['click', 'auxclick']) window.addEventListener(type, event => { if (event.target.closest?.('a[href]')) event.preventDefault(); });
+      });
+      const start = captured.length;
+      await tiles.locator('.featured-lead .featured-link').click();
+      await tiles.locator('.featured-pick').nth(1).locator('.project-name').click({ button: 'middle' });
+      await tiles.locator('[data-filter="web"]').click();
+      await tiles.locator('#project-list .project', { hasText: 'Netflix PiP Fixer' }).locator('.project-link').click();
+      await tiles.locator('.hero-actions a', { hasText: 'GitHub' }).click();
+      await tiles.waitForTimeout(1500);
+      const clicks = captured.slice(start).filter(e => e.event === 'project_click').map(e => e.properties);
+      const pick = ({ project, link, link_text, destination, section, position, filter }) => ({ project, link, link_text, destination, section, position, filter });
+      assert.deepEqual(clicks.map(pick), [
+        { project: 'Cloud Media Shrinker', link: 'button', link_text: 'View on the Mac App Store →', destination: 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256', section: 'featured', position: 1, filter: undefined },
+        { project: 'puml-for-markdown', link: 'title', link_text: 'puml-for-markdown', destination: 'https://github.com/danielyaa5/puml-for-markdown', section: 'featured', position: 2, filter: undefined },
+        { project: 'Netflix PiP Fixer', link: 'button', link_text: 'Get it on the Chrome Web Store →', destination: 'https://chromewebstore.google.com/detail/netflix-pip-fixer/ceiiadpnmbplofcefdafhfidmocjgikp', section: 'other', position: 4, filter: 'web' },
+      ], `project clicks at ${width}px; links outside the tiles send none`);
+      assert.ok(clicks.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/`), `cookieless project clicks at ${width}px`);
+      await tiles.close();
+    }
+
     // The guest gate page never loads analytics.
     const before = captured.length;
     const gateRequests = [];
@@ -88,7 +117,7 @@ const events = request => {
     await gate.goto(`${site}/gate/`, { waitUntil: 'networkidle' });
     assert.ok(!gateRequests.some(url => /analytics\.js|posthog/.test(url)), 'gate page loads no analytics');
     assert.equal(captured.length, before, 'gate page sends nothing');
-    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment.`);
+    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, project clicks at 3 widths.`);
   } finally {
     await browser.close();
   }

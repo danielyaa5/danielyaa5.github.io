@@ -37,11 +37,21 @@ After changing pages, sitemaps or structured data, run `node tests/seo.cjs http:
 
 ## Analytics
 
-`analytics.js` counts page views and link clicks with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=1" defer></script>` to their `<head>`.
+`analytics.js` counts page views and link clicks with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=2" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
+
+Every link opened from a project tile on the home page also sends a `project_click` event with these properties:
+
+- `project`: the tile's project name, such as `Cloud Media Shrinker`
+- `link`: `title` for the project name, `button` for the tile's store, GitHub or Explore link, `stars` for the GitHub star badge
+- `link_text` and `destination`: the link's words and address
+- `section` and `position`: `featured` or `other`, and the tile's place in that section, counting from 1
+- `filter`: for Other projects tiles, the filter that was on (`all`, `mac`, `ios`, `web`, `developer` or `printing`)
+
+Middle-clicks count too; opening a link from the right-click menu doesn't. The **Project tile clicks** insight in PostHog charts these events by project.
 
 The PostHog project must keep **Settings > Project > Web analytics > Enable cookieless tracking** on, or PostHog drops these events. The project token in `analytics.js` is public by design. Cookieless mode has no country data, and a visitor who returns on another day counts as a new visitor.
 
-After changing analytics or adding a page, run `node tests/analytics.cjs http://localhost:4173`. It checks which pages load the script, then simulates the published host with PostHog's real script, intercepts its requests so nothing is sent, and checks the page view, its cleaned address and the untracked gate page. Set `POSTHOG_ARRAY_JS` to a local copy of PostHog's `array.js` if its CDN is unreachable.
+After changing analytics or adding a page, run `node tests/analytics.cjs http://localhost:4173`. It checks which pages load the script, then simulates the published host with PostHog's real script, intercepts its requests so nothing is sent, and checks the page view, its cleaned address, a `project_click` from a featured and a filtered tile at phone, tablet and desktop widths, and the untracked gate page. Set `POSTHOG_ARRAY_JS` to a local copy of PostHog's `array.js` if its CDN is unreachable.
 
 ## Publish
 
