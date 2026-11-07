@@ -23,6 +23,13 @@ function fakeResend({ topics = [], contacts = new Map(), failCreate = null, rate
       assert.equal(searchParams.get('limit'), '100');
       return reply(200, { object: 'list', has_more: false, data: topics });
     }
+    const topicPath = pathname.match(/^\/topics\/([^/]+)$/);
+    if (method === 'PATCH' && topicPath) {
+      const topic = topics.find(t => t.id === decodeURIComponent(topicPath[1]));
+      if (!topic) return reply(404, { name: 'not_found' });
+      Object.assign(topic, body);
+      return reply(200, { object: 'topic', id: topic.id });
+    }
     if (method === 'POST' && pathname === '/topics') {
       if (failCreate === 'visibility' && 'visibility' in body) return reply(422, { name: 'validation_error', message: 'Unknown field visibility' });
       const topic = { id: `topic-${nextId++}`, created_at: new Date().toISOString(), ...body };
@@ -82,13 +89,13 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
   assert.equal(result.headers['access-control-allow-origin'], 'https://danielyaa5.github.io', 'GitHub Pages copy may post here');
   assert.equal(result.headers['cache-control'], 'no-store');
   assert.deepEqual(resend.topics.map(t => [t.name, t.default_subscription, t.visibility]), [
-    ['New app launches', 'opt_out', 'public'],
+    ['New app and open source launches', 'opt_out', 'public'],
     ['Beta tester invites', 'opt_out', 'public'],
     ['Promos', 'opt_out', 'public'],
   ]);
   assert.ok(resend.topics.every(t => t.name.length <= 50 && t.description.length <= 200), 'topic names and descriptions fit Resend limits');
   const ids = Object.fromEntries(resend.topics.map(t => [t.name, t.id]));
-  assert.deepEqual(resend.contacts.get('reader@example.com'), { unsubscribed: false, topics: { [ids['New app launches']]: 'opt_in', [ids.Promos]: 'opt_in' } });
+  assert.deepEqual(resend.contacts.get('reader@example.com'), { unsubscribed: false, topics: { [ids['New app and open source launches']]: 'opt_in', [ids.Promos]: 'opt_in' } });
   assert.ok(resend.calls.every(c => c.auth === 'Bearer re_test_key'), 'every request uses the key');
 
   // Signing up again on a warm function reuses the topic IDs, re-enables email and adds the new topic.
@@ -98,7 +105,7 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
   result = await call({ body: { email: ' reader@example.com ', topic: 'beta' } });
   assert.equal(result.status, 200);
   assert.ok(!resend.calls.some(c => c.pathname === '/topics'), 'topic IDs are cached between sign-ups');
-  assert.deepEqual(resend.contacts.get('reader@example.com'), { unsubscribed: false, topics: { [ids['New app launches']]: 'opt_in', [ids.Promos]: 'opt_in', [ids['Beta tester invites']]: 'opt_in' } });
+  assert.deepEqual(resend.contacts.get('reader@example.com'), { unsubscribed: false, topics: { [ids['New app and open source launches']]: 'opt_in', [ids.Promos]: 'opt_in', [ids['Beta tester invites']]: 'opt_in' } });
   assert.ok(before > 0);
 
   // A cold function finds existing topics by name instead of creating more.
@@ -109,6 +116,22 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
   assert.equal(resend.topics.length, 3, 'no duplicate topics');
   assert.ok(!resend.calls.some(c => c.method === 'POST' && c.pathname === '/topics'));
   assert.deepEqual(resend.contacts.get('second@example.com').topics, { [ids['Beta tester invites']]: 'opt_in' });
+
+  // A topic created under an earlier name is renamed in place, keeping its subscribers.
+  handler.resetCache();
+  const legacy = [
+    { id: 'old-new-apps', name: 'New app launches', description: 'An email when Daniel releases a new app.', default_subscription: 'opt_out', created_at: '2026-11-07T18:09:00Z' },
+    { id: 'old-beta', name: 'Beta tester invites', description: 'x', default_subscription: 'opt_out', created_at: '2026-11-07T18:09:00Z' },
+    { id: 'old-promos', name: 'Promos', description: 'x', default_subscription: 'opt_out', created_at: '2026-11-07T18:09:00Z' },
+  ];
+  resend = fakeResend({ topics: legacy, contacts: new Map([['owner@example.com', { unsubscribed: false, topics: { 'old-new-apps': 'opt_in' } }]]) });
+  result = await call({ body: 'email=fifth%40example.com&topic=new_apps' });
+  assert.equal(result.status, 200);
+  assert.equal(resend.topics.length, 3, 'no new topic is created for a rename');
+  assert.equal(resend.topics[0].name, 'New app and open source launches');
+  assert.equal(resend.topics[0].description, 'An email when Daniel releases a new app or open source project.');
+  assert.deepEqual(resend.contacts.get('fifth@example.com').topics, { 'old-new-apps': 'opt_in' }, 'new sign-ups join the renamed topic');
+  assert.deepEqual(resend.calls.filter(c => c.method === 'PATCH' && c.pathname.startsWith('/topics/')).map(c => c.pathname), ['/topics/old-new-apps']);
 
   // Rate limits are retried; accounts that reject topic visibility still get topics.
   handler.resetCache();

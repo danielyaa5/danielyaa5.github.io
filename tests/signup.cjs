@@ -56,7 +56,7 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
       assert.deepEqual(layout.spill, [], `nothing spills out of the sign-up card at ${width}px`);
       assert.equal(layout.sideways, false, `no sideways scroll at ${width}px`);
       assert.ok(layout.targets.every(t => t.height >= 44), `touch targets are at least 44px tall at ${width}px: ${JSON.stringify(layout.targets)}`);
-      assert.deepEqual(layout.topicLabels, ['New app launches', 'Beta tester invites', 'Promos']);
+      assert.deepEqual(layout.topicLabels, ['Beta tester invites', 'New app and open source launches', 'Promos']);
       assert.deepEqual(layout.betaNote, { text: 'Try apps early and get them free for life!', bold: 'free for life!', weight: '700' }, 'beta note with "free for life!" in bold');
       assert.equal(layout.checked, 0, 'no box is ticked in advance');
       assert.equal(layout.trapVisible, false, 'the bot trap field is off screen');
@@ -97,7 +97,7 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
       // Clicking the description text ticks the box too.
       await form.locator('.signup-topic', { hasText: 'Beta tester invites' }).locator('.signup-topic-note').click();
       assert.equal(await status.textContent(), '', 'error clears once a box is ticked');
-      await form.getByLabel(/New app launches/).check();
+      await form.getByLabel(/New app and open source launches/).check();
 
       await form.locator('.signup-button').click();
       await page.waitForFunction(() => document.querySelector('.signup-status').dataset.kind === 'success');
@@ -108,10 +108,10 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
       assert.match(posts[0].type, /^application\/x-www-form-urlencoded/, 'form-encoded, so no preflight is needed cross-origin');
       assert.equal(posts[0].accept, 'application/json');
       const sent = new URLSearchParams(posts[0].body);
-      assert.deepEqual(sent.getAll('topic'), ['new_apps', 'beta']);
+      assert.deepEqual(sent.getAll('topic'), ['beta', 'new_apps']);
       assert.equal(sent.get('email'), 'reader@example.com');
       assert.equal(sent.get('company'), '');
-      assert.deepEqual(events, [{ type: 'signup', topics: ['new_apps', 'beta'] }]);
+      assert.deepEqual(events, [{ type: 'signup', topics: ['beta', 'new_apps'] }]);
 
       // Error replies are explained, and the button comes back.
       for (const [next, text] of [

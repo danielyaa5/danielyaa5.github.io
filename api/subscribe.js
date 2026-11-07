@@ -11,8 +11,10 @@ const ORIGINS = new Set([SITE, 'https://danielyaa5.github.io']);
 // The form's checkbox values and the Resend topic each one maps to. Topics are
 // found by name and created on first use, opted out by default, so contacts
 // get only what they ticked and can change it from any email's unsubscribe page.
+// `formerly` lists earlier names; a topic found under one is renamed in place so
+// its subscribers stay on it.
 const TOPICS = {
-  new_apps: { name: 'New app launches', description: 'An email when Daniel releases a new app.' },
+  new_apps: { name: 'New app and open source launches', description: 'An email when Daniel releases a new app or open source project.', formerly: ['New app launches'] },
   beta: { name: 'Beta tester invites', description: 'Try apps early and get them free for life!' },
   promos: { name: 'Promos', description: 'Discounts and promo codes for paid apps.' },
 };
@@ -63,9 +65,21 @@ async function loadTopicIds() {
   }
   const ids = {};
   for (const [key, topic] of Object.entries(TOPICS)) {
-    const found = existing.filter(item => item.name === topic.name).sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))[0];
+    const oldest = names => existing.filter(item => names.includes(item.name)).sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))[0];
+    const found = oldest([topic.name]);
     if (found) {
       ids[key] = found.id;
+      continue;
+    }
+    const renamed = oldest(topic.formerly || []);
+    if (renamed) {
+      ids[key] = renamed.id;
+      try {
+        await resend('PATCH', `/topics/${encodeURIComponent(renamed.id)}`, { name: topic.name, description: topic.description });
+      } catch (error) {
+        // A failed rename leaves the old name showing in Resend; sign-ups still land on the right topic.
+        console.error('topic rename failed', error.message);
+      }
       continue;
     }
     const fields = { name: topic.name, description: topic.description, default_subscription: 'opt_out' };
