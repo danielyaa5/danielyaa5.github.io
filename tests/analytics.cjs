@@ -109,6 +109,36 @@ const events = request => {
       await tiles.close();
     }
 
+    // Email sign-ups send email_signup with the ticked topics, and a failed one sends email_signup_failed.
+    // The address itself never reaches PostHog. The sign-up function is faked here.
+    for (const width of [390, 820, 1440]) {
+      const form = await context.newPage();
+      await form.setViewportSize({ width, height: 900 });
+      let reply = { ok: true };
+      await form.route('https://danielyakobian.com/api/subscribe/', route => route.fulfill({ status: reply.ok ? 200 : 502, contentType: 'application/json', headers: { 'access-control-allow-origin': site }, body: JSON.stringify(reply) }));
+      await form.goto(`${site}/`, { waitUntil: 'networkidle' });
+      await form.waitForFunction(() => window.posthog?.__loaded === true);
+      const start = captured.length;
+      await form.getByLabel(/Beta tester invites/).check();
+      await form.getByLabel(/Promos/).check();
+      await form.locator('.signup-email').fill('private-reader@example.com');
+      await form.locator('.signup-button').click();
+      await form.waitForFunction(() => document.querySelector('.signup-status').dataset.kind === 'success');
+      reply = { ok: false, error: 'provider_error' };
+      await form.locator('.signup-email').fill('private-reader@example.com');
+      await form.locator('.signup-button').click();
+      await form.waitForFunction(() => document.querySelector('.signup-status').dataset.kind === 'error');
+      await form.waitForTimeout(1500);
+      const sent = captured.slice(start);
+      const signups = sent.filter(e => /^email_signup/.test(e.event)).map(({ event, properties: p }) => ({ event, topics: p.topics, topic_count: p.topic_count, new_apps: p.new_apps, beta: p.beta, promos: p.promos, error: p.error }));
+      assert.deepEqual(signups, [
+        { event: 'email_signup', topics: ['beta', 'promos'], topic_count: 2, new_apps: false, beta: true, promos: true, error: undefined },
+        { event: 'email_signup_failed', topics: ['beta', 'promos'], topic_count: 2, new_apps: false, beta: true, promos: true, error: 'provider_error' },
+      ], `sign-up events at ${width}px`);
+      assert.ok(!JSON.stringify(sent).includes('private-reader'), `the email address is never sent to PostHog at ${width}px`);
+      await form.close();
+    }
+
     // The guest gate page never loads analytics.
     const before = captured.length;
     const gateRequests = [];
@@ -117,7 +147,7 @@ const events = request => {
     await gate.goto(`${site}/gate/`, { waitUntil: 'networkidle' });
     assert.ok(!gateRequests.some(url => /analytics\.js|posthog/.test(url)), 'gate page loads no analytics');
     assert.equal(captured.length, before, 'gate page sends nothing');
-    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, project clicks at 3 widths.`);
+    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, project clicks and sign-up events at 3 widths.`);
   } finally {
     await browser.close();
   }

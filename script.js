@@ -36,3 +36,63 @@ if (filters) {
     count.textContent = `${visible} ${visible === 1 ? 'project' : 'projects'}${category === 'all' ? '' : ` in ${button.textContent}`}`;
   });
 }
+
+// Email sign-up: posts the ticked topics and the address to the sign-up function
+// on danielyakobian.com, then reports the result in place. Without JavaScript the
+// form still posts and the function sends the browser back to a result message.
+const signup = document.querySelector('.signup-form');
+if (signup) {
+  const status = signup.querySelector('.signup-status');
+  const button = signup.querySelector('.signup-button');
+  const email = signup.querySelector('.signup-email');
+  const boxes = [...signup.querySelectorAll('input[name="topic"]')];
+  const say = (html, kind = '') => {
+    status.innerHTML = html;
+    status.dataset.kind = kind;
+  };
+  const contact = 'write to <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>';
+  const messages = {
+    invalid_email: 'That email address doesn’t look right. Check it and try again.',
+    no_topics: 'Pick at least one kind of email.',
+    not_configured: `Sign-ups aren’t open yet. To get on the list now, ${contact}.`,
+  };
+  boxes.forEach(box => box.addEventListener('change', () => {
+    if (status.dataset.kind === 'error' && boxes.some(item => item.checked)) say('');
+  }));
+  signup.addEventListener('submit', async event => {
+    event.preventDefault();
+    const topics = boxes.filter(box => box.checked).map(box => box.value);
+    if (!topics.length) {
+      say(messages.no_topics, 'error');
+      boxes[0].focus();
+      return;
+    }
+    button.disabled = true;
+    say('Signing you up…');
+    let result = {};
+    try {
+      // A form-encoded body keeps this a simple cross-origin request from danielyaa5.github.io.
+      const response = await fetch(signup.action, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new URLSearchParams(new FormData(signup)),
+        credentials: 'omit',
+        signal: AbortSignal.timeout(20000),
+      });
+      result = await response.json().catch(() => ({}));
+      if (!response.ok && !result.error) result.error = `http_${response.status}`;
+    } catch {
+      result = { error: 'network' };
+    }
+    button.disabled = false;
+    if (result.ok) {
+      say('You’re signed up. Thanks!', 'success');
+      email.value = '';
+      document.dispatchEvent(new CustomEvent('signup', { detail: { topics } }));
+      return;
+    }
+    say(messages[result.error] || `That didn’t go through. Try again in a minute, or ${contact}.`, 'error');
+    document.dispatchEvent(new CustomEvent('signup-error', { detail: { topics, error: result.error || 'unknown' } }));
+    if (result.error === 'invalid_email') email.focus();
+  });
+}

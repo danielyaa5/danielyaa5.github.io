@@ -230,3 +230,55 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
   .featured-lead p { font-size: 17px; }
   .project-filters button { font-size: 13px; padding: 9px 11px; }
 }
+
+/* Email sign-up under Featured projects. The form posts to the /api/subscribe/ function on Vercel. */
+.signup { position: relative; display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: 30px; margin: 22px var(--rail) 0 0; padding: 26px 24px; border: 1px solid #a7b2a5; border-radius: 6px; background: linear-gradient(110deg, #f6f6eb, var(--card) 55%, #f4f4e9); }
+.signup h2 { margin: 0 0 10px; font-size: 25px; line-height: 1.2; letter-spacing: -.5px; }
+.signup-intro p { margin: 0 0 12px; font-size: 16px; line-height: 1.5; }
+.signup-intro .signup-privacy { margin: 0; font-size: 13px; line-height: 1.45; color: #516047; }
+.signup-form { min-width: 0; }
+.signup-topics { display: grid; gap: 8px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.signup-topics legend { margin-bottom: 8px; padding: 0; font-size: 14px; font-weight: 700; color: #455f3d; }
+.signup-topic { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; align-items: start; min-height: 44px; padding: 11px 14px; border: 1px solid #c9d0bd; border-radius: 5px; background: #fdfbf5; cursor: pointer; }
+.signup-topic:hover { border-color: #789182; }
+.signup-topic:has(input:checked) { border-color: var(--green); background: #e9efdf; }
+.signup-topic:has(input:focus-visible) { outline: 2px solid var(--green); outline-offset: 2px; }
+.signup-topic input { width: 20px; height: 20px; margin: 0; accent-color: var(--green); cursor: pointer; }
+.signup-topic strong { display: block; font-size: 16px; line-height: 1.25; }
+.signup-topic strong + span { display: block; margin-top: 2px; font-size: 14px; line-height: 1.4; color: #455f3d; }
+.signup-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.signup-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; margin-top: 16px; }
+.signup-email-label { grid-column: 1 / -1; font-size: 14px; font-weight: 700; color: #455f3d; }
+.signup-email { min-width: 0; min-height: 46px; padding: 10px 14px; border: 1.5px solid #789182; border-radius: 4px; background: #fffefa; color: var(--ink); font: inherit; font-size: 16px; }
+.signup-email::placeholder { color: #7b8775; }
+.signup-email:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-color: var(--green); }
+.signup-button { min-width: 116px; min-height: 46px; padding: 10px 22px; font-family: inherit; font-size: 16px; cursor: pointer; }
+.signup-button:disabled { opacity: .7; cursor: progress; }
+.signup-status { margin: 10px 0 0; font-size: 14px; line-height: 1.45; }
+.signup-status:empty { margin: 0; }
+.signup-status[data-kind="error"], .signup-result-error { color: #9a2a1c; }
+.signup-status[data-kind="success"], .signup-result { color: var(--green); font-weight: 700; }
+.signup-status a, .signup-result a { text-decoration: underline; text-underline-offset: 3px; }
+/* Without JavaScript the form posts away and comes back to one of these. */
+.signup-result { display: none; margin: 10px 0 0; font-size: 14px; line-height: 1.45; }
+.signup-result:target { display: block; }
+.signup-result-error { font-weight: 400; }
+@media (min-width: 901px) and (max-width: 1123px) {
+  .signup { gap: 22px; padding: 22px 20px; }
+}
+@media (max-width: 900px) {
+  .signup { grid-template-columns: 1fr; gap: 18px; }
+  .signup-intro p:not(.signup-privacy) { margin-bottom: 8px; }
+}
+@media (max-width: 620px) {
+  .signup { margin-top: 16px; padding: 20px 16px; }
+  .signup h2 { font-size: 22px; }
+  .signup-intro p { font-size: 15px; }
+  .signup-topic { padding: 11px 12px; }
+  .signup-row { grid-template-columns: 1fr; }
+  .signup-button { width: 100%; }
+}
+@media (max-width: 360px) {
+  .signup { padding: 18px 13px; }
+  .signup-topic { gap: 10px; padding: 10px; }
+}

@@ -37,7 +37,7 @@ After changing pages, sitemaps or structured data, run `node tests/seo.cjs http:
 
 ## Analytics
 
-`analytics.js` counts page views and link clicks with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=2" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
+`analytics.js` counts page views, link clicks and email sign-ups with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=3" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
 
 Every link opened from a project tile on the home page also sends a `project_click` event with these properties:
 
@@ -51,7 +51,19 @@ Middle-clicks count too; opening a link from the right-click menu doesn't. The *
 
 The PostHog project must keep **Settings > Project > Web analytics > Enable cookieless tracking** on, or PostHog drops these events. The project token in `analytics.js` is public by design. Cookieless mode has no country data, and a visitor who returns on another day counts as a new visitor.
 
-After changing analytics or adding a page, run `node tests/analytics.cjs http://localhost:4173`. It checks which pages load the script, then simulates the published host with PostHog's real script, intercepts its requests so nothing is sent, and checks the page view, its cleaned address, a `project_click` from a featured and a filtered tile at phone, tablet and desktop widths, and the untracked gate page. Set `POSTHOG_ARRAY_JS` to a local copy of PostHog's `array.js` if its CDN is unreachable.
+After changing analytics or adding a page, run `node tests/analytics.cjs http://localhost:4173`. It checks which pages load the script, then simulates the published host with PostHog's real script, intercepts its requests so nothing is sent, and checks the page view, its cleaned address, a `project_click` from a featured and a filtered tile and the email sign-up events at phone, tablet and desktop widths, and the untracked gate page. Set `POSTHOG_ARRAY_JS` to a local copy of PostHog's `array.js` if its CDN is unreachable.
+
+## Email sign-up
+
+Below Featured projects, visitors can sign up for emails about new app launches, beta tester invites (beta testers get the app free for life) and promos. The form posts to `api/subscribe.js`, a Vercel function served at `danielyakobian.com/api/subscribe/`. GitHub Pages can't run it, so the copy on `danielyaa5.github.io` posts to `danielyakobian.com` too; the function allows both origins. Without JavaScript the form still posts, and the function sends the browser back to a `#signup-thanks` or `#signup-failed` message.
+
+Sign-ups are stored as contacts in Resend. Each box is a Resend topic (**New app launches**, **Beta tester invites**, **Promos**), created by the function on first use with an opt-out default, so a contact only gets the topics they ticked. Send to a topic by choosing it in a Resend broadcast; recipients can change topics from the unsubscribe link in every broadcast. Signing up again with the same address adds the newly ticked topics and turns email back on. A hidden `company` field catches bots.
+
+The function needs `RESEND_API_KEY`, a Resend API key with full access, set in the Vercel project's environment variables for Production and Preview. Without it the form tells visitors sign-ups aren't open yet. Sending broadcasts from `danielyakobian.com` also needs the domain verified in Resend.
+
+A successful sign-up sends an `email_signup` PostHog event with `topics`, `topic_count` and a true/false property per topic (`new_apps`, `beta`, `promos`); a failed one sends `email_signup_failed` with an `error` code. The address is never sent to PostHog.
+
+After changing the form, run `node tests/signup.cjs http://localhost:4173`. At 13 widths it checks that the form sits between Featured projects and Other projects, lines up with the tiles, stays in its card and has 44-pixel touch targets, then fills it in against a fake function: empty and topic-less sign-ups, a successful one, each error message, and the no-JavaScript path. Screenshots go to `test-results/signup-*.png`. After changing the function, run `node tests/subscribe-api.cjs`, which runs it against a fake Resend API.
 
 ## Publish
 

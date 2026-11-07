@@ -20,9 +20,9 @@
   <link rel="icon" type="image/png" sizes="128x128" href="assets/favicon.png">
   <!-- danielyakobian.com is the primary address; danielyaa5.github.io serves the same files. -->
   <link rel="canonical" href="https://danielyakobian.com/">
-  <script src="script.js?v=ios-filter-1" defer></script>
-  <script src="/analytics.js?v=2" defer></script>
-  <link rel="stylesheet" href="styles.css?v=store-icons-4">
+  <script src="script.js?v=signup-1" defer></script>
+  <script src="/analytics.js?v=3" defer></script>
+  <link rel="stylesheet" href="styles.css?v=signup-1">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -136,6 +136,30 @@
               </div>
             </article>
           </div>
+        </section>
+        <section class="signup" id="signup" aria-labelledby="signup-title">
+          <div class="signup-intro">
+            <h2 id="signup-title">Get updates by email</h2>
+            <p>Pick what you want to hear about. No spam, and every email has an unsubscribe link.</p>
+            <p class="signup-privacy">Your address is kept with my email provider, Resend, and used only for what you tick. It’s never shared or sold.</p>
+          </div>
+          <form class="signup-form" action="https://danielyakobian.com/api/subscribe/" method="post">
+            <fieldset class="signup-topics">
+              <legend>Email me about</legend>
+              <label class="signup-topic"><input type="checkbox" name="topic" value="new_apps"><span><strong>New app launches</strong><span>When I release a new app.</span></span></label>
+              <label class="signup-topic"><input type="checkbox" name="topic" value="beta"><span><strong>Beta tester invites</strong><span>Try apps before launch. Beta testers get them free for life.</span></span></label>
+              <label class="signup-topic"><input type="checkbox" name="topic" value="promos"><span><strong>Promos</strong><span>Discounts and promo codes for my paid apps.</span></span></label>
+            </fieldset>
+            <div class="signup-trap" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+            <div class="signup-row">
+              <label class="signup-email-label" for="signup-email">Email address</label>
+              <input class="signup-email" id="signup-email" type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="254" required>
+              <button class="button signup-button" type="submit">Sign up</button>
+            </div>
+            <p class="signup-status" role="status" aria-live="polite"></p>
+            <p class="signup-result" id="signup-thanks">You’re signed up. Thanks!</p>
+            <p class="signup-result signup-result-error" id="signup-failed">That didn’t go through. Tick at least one option and check your email address, or write to <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
+          </form>
         </section>
         <h2 class="section-title other-projects-title" id="other-projects-title">Other projects</h2>
         <div class="project-filters" role="group" aria-label="Filter projects" hidden>

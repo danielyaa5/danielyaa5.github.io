@@ -1,4 +1,4 @@
-/* Anonymous page views and project clicks with PostHog, without cookies or browser storage.
+/* Anonymous page views, project clicks and email sign-up counts with PostHog, without cookies or browser storage.
    It runs only on the published hosts, so local previews and tests send nothing,
    and the guest gate page never loads it. */
 (() => {
@@ -27,7 +27,11 @@
   // so clicks can be counted per project. Clicks made before PostHog loads wait for it.
   let ready = false;
   const pending = [];
-  const send = properties => window.posthog?.capture('project_click', properties, { transport: 'sendBeacon', send_instantly: true });
+  const send = ([event, properties]) => window.posthog?.capture(event, properties, { transport: 'sendBeacon', send_instantly: true });
+  const track = (event, properties) => {
+    if (ready) send([event, properties]);
+    else pending.push([event, properties]);
+  };
   const tileClick = event => {
     if (event.type === 'auxclick' && event.button !== 1) return;
     const link = event.target.closest?.('a[href]');
@@ -44,11 +48,21 @@
       position: [...document.querySelectorAll(featured ? '.featured-pick' : '#project-list .project')].indexOf(tile) + 1,
       ...(featured || !filter ? {} : { filter }),
     };
-    if (ready) send(properties);
-    else pending.push(properties);
+    track('project_click', properties);
   };
   document.addEventListener('click', tileClick);
   document.addEventListener('auxclick', tileClick);
+
+  // Email sign-ups from the home page form, with the topics ticked. The address itself is never sent.
+  const topicProperties = topics => ({
+    topics,
+    topic_count: topics.length,
+    new_apps: topics.includes('new_apps'),
+    beta: topics.includes('beta'),
+    promos: topics.includes('promos'),
+  });
+  document.addEventListener('signup', event => track('email_signup', topicProperties(event.detail?.topics || [])));
+  document.addEventListener('signup-error', event => track('email_signup_failed', { ...topicProperties(event.detail?.topics || []), error: String(event.detail?.error || 'unknown') }));
 
   const script = document.createElement('script');
   script.src = 'https://us-assets.i.posthog.com/static/array.js';
