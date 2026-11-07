@@ -3,8 +3,9 @@ const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 
 // Run: node tests/rentals.cjs http://localhost:4173
-// The motorcycle rentals page: every bike has a photo, a name and a booking link on Riders Share
+// The motorcycle rentals page: every bookable bike has a photo, a name and a booking link on Riders Share
 // (the listing's Share link, which carries the referral code) and, where listed, Twisted Road.
+// Bikes under repair come last, say so on the photo and in the tile, and have no booking links.
 // At each width nothing leaves the frame or scrolls sideways, buttons are full touch targets
 // and the phone dock never covers a booking button. Screenshots go to test-results/rentals-*.png.
 const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '');
@@ -42,7 +43,8 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 820, 768, 680, 600, 414, 390,
             const range = document.createRange(); range.selectNodeContents(a);
             return { platform: a.dataset.platform, href: a.href, text: a.textContent.trim(), width: b.width, height: b.height, lines: Math.round(range.getBoundingClientRect().height / parseFloat(getComputedStyle(a).lineHeight || 20)) };
           });
-          return { name: bike.querySelector('h3')?.textContent.trim(), alt: img?.alt, loaded: !!img && img.complete && img.naturalWidth > 0, sharp: !!img && img.naturalWidth >= box(img).width * 1.5, left: box(bike).left, right: box(bike).right, links };
+          const status = bike.querySelector('.bike-status');
+          return { name: bike.querySelector('h3')?.textContent.trim(), repair: bike.matches('.is-repair'), status: status && getComputedStyle(status).display !== 'none' ? status.textContent.trim() : null, note: bike.querySelector('.bike-note')?.textContent.trim(), allLinks: bike.querySelectorAll('a').length, alt: img?.alt, loaded: !!img && img.complete && img.naturalWidth > 0, sharp: !!img && img.naturalWidth >= box(img).width * 1.5, left: box(bike).left, right: box(bike).right, links };
         });
         return {
           sideways: document.documentElement.scrollWidth > innerWidth,
@@ -61,12 +63,21 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 820, 768, 680, 600, 414, 390,
         assert.equal(r.current, 'Motorcycle Rentals', `${where}: navigation marks the rentals page`);
         assert.equal(r.navRows, 1, `${where}: navigation stays on one row`);
         assert.equal(r.dockFixed, phone, `${where}: phone dock only on phones`);
-        assert.ok(r.bikes.length >= 1, `${where}: at least one bike`);
+        assert.ok(r.bikes.filter(b => !b.repair).length >= 1, `${where}: at least one bookable bike`);
+        assert.ok(r.bikes.findIndex(b => b.repair) === -1 || r.bikes.slice(r.bikes.findIndex(b => b.repair)).every(b => b.repair), `${where}: bookable bikes come first`);
         for (const bike of r.bikes) {
           assert.ok(bike.name, `${where}: bike has a name`);
           assert.ok(bike.loaded, `${where}: ${bike.name} photo loads`);
           assert.ok(bike.sharp, `${where}: ${bike.name} photo is sharp on 1.5x screens`);
           assert.ok(bike.alt && bike.alt.length > 10, `${where}: ${bike.name} photo has alt text`);
+          if (bike.repair) {
+            // Bikes under repair show the status on the photo and a note, and no booking buttons.
+            assert.equal(bike.status, 'Under repair', `${where}: ${bike.name} shows Under repair on its photo`);
+            assert.match(bike.note || '', /under repair/i, `${where}: ${bike.name} explains it can't be booked`);
+            assert.equal(bike.allLinks, 0, `${where}: ${bike.name} has no booking links while under repair`);
+            continue;
+          }
+          assert.equal(bike.status, null, `${where}: ${bike.name} has no status badge`);
           const rs = bike.links.filter(l => l.platform === 'riders_share');
           assert.equal(rs.length, 1, `${where}: ${bike.name} has one Riders Share link`);
           const url = new URL(rs[0].href);

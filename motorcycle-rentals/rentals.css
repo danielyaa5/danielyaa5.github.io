@@ -10,7 +10,11 @@
 .bike-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .bike { min-width: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #a7b2a5; border-radius: 6px; background: #edf1e3; }
 .bike-photo { display: block; aspect-ratio: 4 / 3; background: #dfe5d4; }
+.bike-photo { position: relative; }
 .bike-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.bike-status { position: absolute; left: 12px; top: 12px; padding: 5px 11px; border-radius: 999px; background: rgba(253, 250, 243, .95); color: var(--green); font-size: 13px; font-weight: 700; box-shadow: 0 2px 8px -2px rgba(17, 24, 16, .35); }
+.is-repair .bike-photo img { filter: saturate(.55); }
+.bike .bike-note { margin: auto 0 0; padding: 12px 14px; border: 1px dashed #a7b2a5; border-radius: 4px; font-size: 14px; line-height: 1.45; color: var(--muted); }
 .bike-copy { flex: 1; display: flex; flex-direction: column; padding: 20px 22px 22px; }
 .bike h3 { margin: 0 0 8px; font-size: 22px; line-height: 1.2; letter-spacing: -.3px; }
 .bike p { margin: 0 0 14px; font-size: 16px; line-height: 1.45; }
