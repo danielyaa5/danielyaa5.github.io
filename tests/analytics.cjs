@@ -158,6 +158,34 @@ const events = request => {
       await rentals.close();
     }
 
+    // Each resume PDF button sends a resume_download named after the button; other links on the page send none.
+    for (const width of [390, 820, 1440]) {
+      const resume = await context.newPage();
+      await resume.setViewportSize({ width, height: 900 });
+      await resume.goto(`${site}/resume/`, { waitUntil: 'networkidle' });
+      await resume.waitForFunction(() => window.posthog?.__loaded === true);
+      await resume.evaluate(() => {
+        for (const type of ['click', 'auxclick']) window.addEventListener(type, event => { if (event.target.closest?.('a[href]')) event.preventDefault(); });
+      });
+      const start = captured.length;
+      await resume.locator('.r-hero .download').click();
+      await resume.locator('.r-hero a', { hasText: 'LinkedIn' }).click();
+      await resume.locator('.end-cta .button').scrollIntoViewIfNeeded();
+      await resume.waitForSelector('.scroll-bar.is-shown');
+      await resume.locator('.scroll-download').click({ button: 'middle' });
+      await resume.locator('.end-cta .button').click();
+      await resume.waitForTimeout(1500);
+      const pdf = `${site}/assets/Daniel_Yakobian_Resume.pdf`;
+      const sent = captured.slice(start).filter(e => e.event === 'resume_download').map(e => e.properties);
+      assert.deepEqual(sent.map(({ button, link_text, destination }) => ({ button, link_text, destination })), [
+        { button: 'top', link_text: 'Download PDF 1 page · 29 KB', destination: pdf },
+        { button: 'scroll_bar', link_text: await resume.locator('.scroll-download').evaluate(a => a.textContent.replace(/\s+/g, ' ').trim()), destination: pdf },
+        { button: 'end', link_text: 'Download PDF resume', destination: pdf },
+      ], `resume downloads at ${width}px; other links send none`);
+      assert.ok(sent.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/resume/`), `cookieless resume downloads at ${width}px`);
+      await resume.close();
+    }
+
     // Email sign-ups send email_signup with the ticked topics, and a failed one sends email_signup_failed.
     // The address itself never reaches PostHog. The sign-up function is faked here.
     for (const width of [390, 820, 1440]) {
@@ -197,7 +225,7 @@ const events = request => {
     await gate.goto(`${site}/gate/`, { waitUntil: 'networkidle' });
     assert.ok(!gateRequests.some(url => /analytics\.js|posthog/.test(url)), 'gate page loads no analytics');
     assert.equal(captured.length, before, 'gate page sends nothing');
-    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, web vitals, project clicks, rental clicks and sign-up events at 3 widths.`);
+    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, web vitals, project clicks, rental clicks, resume downloads and sign-up events at 3 widths.`);
   } finally {
     await browser.close();
   }

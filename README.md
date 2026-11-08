@@ -45,7 +45,7 @@ After changing pages, sitemaps or structured data, run `node tests/seo.cjs http:
 
 ## Analytics
 
-`analytics.js` counts page views, link clicks and email sign-ups, and measures page speed (web vitals), with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment, including the ones inside web vitals and link click details; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=5" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
+`analytics.js` counts page views, link clicks, resume downloads and email sign-ups, and measures page speed (web vitals), with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment, including the ones inside web vitals and link click details; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=6" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
 
 Every link opened from a project tile on the home page also sends a `project_click` event with these properties:
 
@@ -56,6 +56,8 @@ Every link opened from a project tile on the home page also sends a `project_cli
 - `filter`: for Other projects tiles, the filter that was on (`all`, `mac`, `ios`, `web`, `developer` or `printing`)
 
 Middle-clicks count too; opening a link from the right-click menu doesn't. The **Project tile clicks** insight in PostHog charts these events by project.
+
+Every click on a link to the resume PDF sends a `resume_download` event with `button` (`top` for the button under the name on `resume/`, `scroll_bar` for the one in the bar that slides in on scroll, `end` for the one in the last section, `other` for any other resume PDF link), `link_text` and `destination`. Middle-clicks count too. Opening the PDF's address directly, or from the right-click menu, isn't counted. The **Resume downloads** insight in PostHog charts these events by button.
 
 The PostHog project must keep **Settings > Project > Web analytics > Enable cookieless tracking** on, or PostHog drops these events. The project token in `analytics.js` is public by design. Cookieless mode has no country data, and a visitor who returns on another day counts as a new visitor.
 

@@ -79,6 +79,19 @@
   document.addEventListener('click', rentalClick);
   document.addEventListener('auxclick', rentalClick);
 
+  // A resume_download event for each click on a link to the resume PDF, named after the button:
+  // `top` (under the name), `scroll_bar` (the bar that slides in on scroll), `end` (the last section) or `other`.
+  const RESUME_PDF = /\/assets\/[^/]*resume[^/]*\.pdf$/i;
+  const resumeClick = event => {
+    if (event.type === 'auxclick' && event.button !== 1) return;
+    const link = event.target.closest?.('a[href]');
+    if (!link || !RESUME_PDF.test(link.pathname)) return;
+    const button = link.matches('.scroll-download') ? 'scroll_bar' : link.matches('.r-hero .download') ? 'top' : link.closest('.end-cta') ? 'end' : 'other';
+    track('resume_download', { button, link_text: link.textContent.replace(/\s+/g, ' ').trim(), destination: link.href });
+  };
+  document.addEventListener('click', resumeClick);
+  document.addEventListener('auxclick', resumeClick);
+
   // Email sign-ups from the home page form, with the topics ticked. The address itself is never sent.
   const topicProperties = topics => ({
     topics,
