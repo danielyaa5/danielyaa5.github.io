@@ -25,7 +25,8 @@ const CHECKS = [
   { name: 'Blog', url: `${SITE}/blog/`, status: [200], includes: 'Daniel Yakobian' },
   { name: 'Analytics script', url: `${SITE}/analytics.js`, status: [200], includes: 'posthog' },
   // The sign-up function only takes POST, so a GET answering 405 from the function shows it is deployed and running.
-  { name: 'Email sign-up function', url: `${SITE}/api/subscribe/`, status: [405], includes: 'method_not_allowed' },
+  // It answers in JSON only when asked to, as the page's script does; otherwise it redirects like a no-JavaScript form post.
+  { name: 'Email sign-up function', url: `${SITE}/api/subscribe/`, accept: 'application/json', status: [405], includes: 'method_not_allowed' },
   { name: 'www redirect', url: `${WWW}/`, status: [301, 302, 307, 308], location: `${SITE}/` },
   { name: 'GitHub Pages copy', url: `${MIRROR}/`, status: [200], includes: 'Daniel Yakobian' },
 ];
@@ -36,7 +37,7 @@ async function fetchCheck(check) {
   const started = Date.now();
   const response = await fetch(check.url, {
     redirect: 'manual',
-    headers: { 'User-Agent': 'danielyakobian.com-uptime-check', 'Cache-Control': 'no-cache' },
+    headers: { 'User-Agent': 'danielyakobian.com-uptime-check', 'Cache-Control': 'no-cache', ...(check.accept ? { Accept: check.accept } : {}) },
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
   const body = await response.text();
