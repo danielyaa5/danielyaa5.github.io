@@ -28,6 +28,10 @@
 .role ul { margin: 0; padding-left: 18px; font-size: 16px; line-height: 1.55; }
 .role li + li { margin-top: 4px; }
 .role li::marker { color: #789182; }
+/* School emblem beside the degree, from the school's official logo files. */
+.school { display: flex; align-items: flex-start; gap: 16px; }
+.school-mark { flex: none; display: block; width: 48px; height: 48px; margin-top: 1px; }
+.school .org { margin-bottom: 0; }
 .skills { display: grid; gap: 12px; margin: 0; }
 .skills div { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 20px; }
 .skills dt { font-family: var(--mono); font-size: 13px; padding-top: 2px; color: var(--muted); }
@@ -115,6 +119,8 @@
   .impact div:nth-child(even) { padding-left: 14px; }
   .role, .skills div { grid-template-columns: 1fr; gap: 6px; }
   .when br { display: none; }
+  .school { gap: 14px; }
+  .school-mark { width: 42px; height: 42px; }
   .end-cta { padding: 22px 20px; }
   .end-cta .button { width: 100%; }
   .scroll-bar-inner { gap: 12px; min-height: 54px; padding: 0 30px; }
