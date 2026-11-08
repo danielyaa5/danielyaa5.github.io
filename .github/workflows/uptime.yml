@@ -1,0 +1,39 @@
+name: Uptime check
+
+# Every 15 minutes, checks that danielyakobian.com, its sign-up function and the GitHub Pages copy answer.
+# A failure opens one issue that mentions the owner (so GitHub emails them); it closes itself when checks pass.
+# See .github/scripts/uptime.cjs and the Monitoring section of README.md.
+on:
+  schedule:
+    - cron: '4,19,34,49 * * * *'
+  workflow_dispatch:
+    inputs:
+      test_alert:
+        description: Add a pretend failure to test the alert issue and email
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Check the site
+        run: node .github/scripts/uptime.cjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPTIME_TEST_ALERT: ${{ inputs.test_alert }}
