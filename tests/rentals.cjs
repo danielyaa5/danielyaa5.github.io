@@ -5,6 +5,7 @@ const { chromium } = require('playwright');
 // Run: node tests/rentals.cjs http://localhost:4173
 // The motorcycle rentals page: every bookable bike has a photo, a name and a booking link on Riders Share
 // (the listing's Share link, which carries the referral code) and, where listed, Twisted Road.
+// A referral card near the top links to sign-up on both sites with Daniel's referral codes.
 // Bikes under repair come last, say so on the photo and in the tile, and have no booking links.
 // At each width nothing leaves the frame or scrolls sideways, buttons are full touch targets
 // and the phone dock never covers a booking button. Screenshots go to test-results/rentals-*.png.
@@ -19,6 +20,7 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 820, 768, 680, 600, 414, 390,
 
   const page0 = await (await fetch(`${base}/motorcycle-rentals/`)).text();
   assert.match(page0, /class="rental-profiles">[\s\S]*href="https:\/\/www\.riders-share\.com\/user\/[^"]+\/ref-[^"]+"[\s\S]*href="https:\/\/www\.twistedroad\.com\/users\/[^"]+"/, 'profile links to both sites, Riders Share with the referral code');
+  assert.match(page0, /class="referral"[\s\S]*data-platform="riders_share" href="https:\/\/www\.riders-share\.com\/[^"]*\/?ref-[^"]+"[\s\S]*data-platform="twisted_road" href="https:\/\/www\.twistedroad\.com\/ref\/[^"]+"/, 'referral card links to both sites with the referral codes');
 
   const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}) });
   const failures = [];
@@ -53,7 +55,8 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 820, 768, 680, 600, 414, 390,
           navRows: new Set([...nav.querySelectorAll('a')].map(a => Math.round(box(a).top))).size,
           dockFixed: getComputedStyle(nav).position === 'fixed',
           bikes,
-          blocks: [...document.querySelectorAll('.m-hero, .bike, .how, .site-footer, .bike-links .button')].map(el => ({ name: el.className, left: box(el).left, right: box(el).right })),
+          referral: [...document.querySelectorAll('.referral-links a')].map(a => { const b = box(a); const range = document.createRange(); range.selectNodeContents(a); return { text: a.textContent.trim(), width: b.width, height: b.height, lines: Math.round(range.getBoundingClientRect().height / parseFloat(getComputedStyle(a).lineHeight || 20)) }; }),
+          blocks: [...document.querySelectorAll('.m-hero, .referral, .referral-links .button, .bike, .how, .site-footer, .bike-links .button')].map(el => ({ name: el.className, left: box(el).left, right: box(el).right })),
         };
       });
       const where = `${width}px`;
@@ -88,13 +91,15 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 820, 768, 680, 600, 414, 390,
           assert.ok(bike.links.every(l => l.height >= 44 && l.width >= 44), `${where}: ${bike.name} buttons are 44px touch targets`);
           assert.ok(bike.links.every(l => l.lines <= 1), `${where}: ${bike.name} button labels stay on one line`);
         }
+        assert.equal(r.referral.length, 2, `${where}: referral card has a button for each site`);
+        assert.ok(r.referral.every(l => l.height >= 44 && l.width >= 44 && l.lines <= 1), `${where}: referral buttons are 44px touch targets on one line`);
         for (const b of r.blocks) assert.ok(b.left >= r.frame.left - 1 && b.right <= r.frame.right + 1, `${where}: ${b.name} leaves the frame`);
         if (phone) {
           // Scroll each booking button into view; the dock must never sit on top of it at the end of the page.
           await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
           const covered = await page.evaluate(() => {
             const d = document.querySelector('.site-header nav').getBoundingClientRect();
-            return [...document.querySelectorAll('.bike-links a, .site-footer a')].filter(a => { const r = a.getBoundingClientRect(); return r.bottom > d.top && r.top < d.bottom && r.right > d.left && r.left < d.right; }).map(a => a.textContent.trim());
+            return [...document.querySelectorAll('.referral-links a, .bike-links a, .site-footer a')].filter(a => { const r = a.getBoundingClientRect(); return r.bottom > d.top && r.top < d.bottom && r.right > d.left && r.left < d.right; }).map(a => a.textContent.trim());
           });
           assert.deepEqual(covered, [], `${where}: dock covers links at the end of the page`);
         }
