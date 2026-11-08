@@ -59,8 +59,13 @@ const events = request => {
     });
     if (process.env.POSTHOG_ARRAY_JS) {
       await context.route('https://us-assets.i.posthog.com/static/array.js', route => route.fulfill({ contentType: 'application/javascript', body: fs.readFileSync(process.env.POSTHOG_ARRAY_JS) }));
+      // The web vitals script sits beside array.js in PostHog's package (dist/web-vitals*.js).
+      await context.route(/^https:\/\/us-assets\.i\.posthog\.com\/static\/(?:[\d.]+\/)?(web-vitals[\w-]*)\.js/, route => {
+        const name = route.request().url().match(/(web-vitals[\w-]*)\.js/)[1];
+        route.fulfill({ contentType: 'application/javascript', body: fs.readFileSync(path.join(path.dirname(process.env.POSTHOG_ARRAY_JS), `${name}.js`)) });
+      });
     }
-    await context.route(/^https:\/\/us(-assets)?\.i\.posthog\.com\/(?!static\/array\.js)/, async route => {
+    await context.route(/^https:\/\/us(-assets)?\.i\.posthog\.com\/(?!static\/(?:[\d.]+\/)?(?:array|web-vitals[\w-]*)\.js)/, async route => {
       if (route.request().method() === 'POST' && /\/e\/|\/i\/v0\/e\//.test(new URL(route.request().url()).pathname)) captured.push(...events(route.request()));
       await route.fulfill({ status: 200, contentType: 'application/json', body: '{"status":1}' });
     });
@@ -79,6 +84,24 @@ const events = request => {
     assert.ok(!JSON.stringify(captured).includes('private-fragment'), 'fragment never sent');
     assert.deepEqual(await context.cookies(), [], 'no cookies');
     assert.deepEqual(await page.evaluate(() => [...Object.keys(localStorage), ...Object.keys(sessionStorage)].filter(key => /ph_|posthog/i.test(key))), [], 'no PostHog storage');
+
+    // Page speed: a click gives an interaction, and hiding the page sends the web vitals gathered so far,
+    // with this site's addresses cleaned inside each metric too.
+    await page.locator('.hero h1').click();
+    await page.evaluate(() => {
+      Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' });
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await page.waitForTimeout(1500);
+    const vitals = captured.filter(e => e.event === '$web_vitals');
+    assert.ok(vitals.length >= 1, 'web vitals are sent');
+    const metrics = Object.assign({}, ...vitals.map(e => e.properties));
+    for (const name of ['FCP', 'LCP']) {
+      assert.equal(typeof metrics[`$web_vitals_${name}_value`], 'number', `${name} is measured`);
+      assert.equal(metrics[`$web_vitals_${name}_event`].$current_url, `${site}/`, `${name} address is cleaned`);
+    }
+    assert.ok(vitals.every(e => e.properties.$current_url === `${site}/` && e.properties.$cookieless_mode === true), 'cookieless web vitals with a clean address');
+    assert.ok(!/utm_source=|private-fragment/.test(JSON.stringify(vitals)), 'no query or fragment inside web vitals');
 
     // Links in project tiles send a project_click named after the project, at phone, tablet and desktop widths.
     // Navigation is cancelled after the site's own listeners run, so the page stays put.
@@ -174,7 +197,7 @@ const events = request => {
     await gate.goto(`${site}/gate/`, { waitUntil: 'networkidle' });
     assert.ok(!gateRequests.some(url => /analytics\.js|posthog/.test(url)), 'gate page loads no analytics');
     assert.equal(captured.length, before, 'gate page sends nothing');
-    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, project clicks, rental clicks and sign-up events at 3 widths.`);
+    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, web vitals, project clicks, rental clicks and sign-up events at 3 widths.`);
   } finally {
     await browser.close();
   }

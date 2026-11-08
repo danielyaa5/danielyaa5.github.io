@@ -1,5 +1,5 @@
-/* Anonymous page views, project and rental clicks and email sign-up counts with PostHog, without cookies or browser storage.
-   It runs only on the published hosts, so local previews and tests send nothing,
+/* Anonymous page views, page speed (web vitals), project and rental clicks and email sign-up counts with PostHog,
+   without cookies or browser storage. It runs only on the published hosts, so local previews and tests send nothing,
    and the guest gate page never loads it. */
 (() => {
   const TOKEN = 'phc_phFn2Yijfyw4fMQxXDN878EUWihevmGmEWrUK27bUX4J';
@@ -16,9 +16,17 @@
       return value;
     }
   };
+  // Web vitals and link clicks nest addresses inside objects and lists, so those are cleaned too.
+  const cleanAll = (value, depth = 0) => {
+    if (value && typeof value === 'object' && depth < 4) {
+      for (const key of Object.keys(value)) value[key] = cleanAll(value[key], depth + 1);
+      return value;
+    }
+    return clean(value);
+  };
   const scrub = event => {
     for (const bag of [event?.properties, event?.$set, event?.$set_once]) {
-      if (bag) for (const key of Object.keys(bag)) bag[key] = clean(bag[key]);
+      if (bag) cleanAll(bag);
     }
     return event;
   };
@@ -99,7 +107,8 @@
       rageclick: false,
       capture_dead_clicks: false,
       capture_exceptions: false,
-      capture_performance: false,
+      // Page speed (LCP, INP, CLS, FCP) for PostHog's Web vitals dashboard; no network timing.
+      capture_performance: { web_vitals: true, network_timing: false },
       enable_heatmaps: false,
       disable_session_recording: true,
       disable_surveys: true,
