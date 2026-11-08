@@ -14,6 +14,8 @@ const base = process.argv[2] || 'http://127.0.0.1:4173';
       await page.setViewportSize({ width, height: 1000 });
       await page.goto(base, { waitUntil: 'networkidle' });
       await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(img => img.loading !== 'lazy').map(img => img.decode().catch(error => { throw new Error(`Image failed to decode: ${img.getAttribute('src')}: ${error.message}`); }))); });
+      // Offscreen art loads when scrolled to, so scroll each lazy image into view first.
+      await page.evaluate(async () => { for (const img of document.querySelectorAll('img[loading="lazy"]')) { img.scrollIntoView(); await img.decode().catch(error => { throw new Error(`Image failed to decode: ${img.getAttribute('src')}: ${error.message}`); }); } scrollTo(0, 0); });
       const result = await page.evaluate(() => {
         const art = [...document.querySelectorAll('.hero-illustration, .project-illustration')];
         const links = [...document.querySelectorAll('.project-link, .profile-link')];

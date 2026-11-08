@@ -43,7 +43,9 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
 .button:hover { background: #1c6240; color: #fff; }
 .button-outline { min-width: 112px; background: transparent; color: var(--green); font-weight: 700; }
 .button-outline:hover { color: var(--green); background: #e9efdf; }
-.hero-illustration { width: 100%; max-width: 390px; height: auto; margin-top: 6px; }
+/* The hero art sits in a <picture> so browsers that read AVIF get the smaller file. */
+.hero picture { display: block; }
+.hero-illustration { display: block; width: 100%; max-width: 390px; height: auto; margin-top: 6px; }
 .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); grid-auto-rows: 1fr; gap: 9px; }
 .project { min-width: 0; display: flex; flex-direction: column; border: 1px solid #d0d4b9; border-radius: 6px; padding: 17px 17px 0; background: linear-gradient(110deg, #f6f6eb, var(--card) 55%, #f4f4e9); box-shadow: inset 0 0 0 3px #f8f8ef, 0 1px 3px #59684a0d; }
 .project:nth-child(odd of .project:not([hidden])):nth-last-child(1 of .project:not([hidden])) { grid-column: 1 / -1; }

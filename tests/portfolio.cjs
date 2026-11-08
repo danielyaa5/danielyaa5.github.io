@@ -14,6 +14,9 @@ const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer
     });
     await page.goto(base, {waitUntil:'networkidle'});
     await page.evaluate(async () => { await document.fonts.ready; await Promise.all([...document.images].filter(img => img.loading !== 'lazy').map(img => img.decode())); });
+    // Offscreen art loads when scrolled to; the hero loads first.
+    assert.ok(await page.locator('.hero-illustration').evaluate(img => img.loading !== 'lazy' && img.fetchPriority === 'high'));
+    await page.evaluate(async () => { for (const img of document.querySelectorAll('img[loading="lazy"]')) { img.scrollIntoView(); await img.decode().catch(() => {}); } scrollTo(0, 0); });
     assert.deepEqual(await page.locator('.project h2').allTextContents(), expected);
     assert.doesNotMatch(await page.content(), /MimiBot|Photo Review/i);
     assert.equal(await page.locator('.identity').innerText(), 'Daniel');
