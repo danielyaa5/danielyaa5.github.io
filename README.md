@@ -32,6 +32,10 @@ To add or change a bike, copy one `<article class="bike">` block in `motorcycle-
 
 After changing the page or the navigation, run `node tests/rentals.cjs http://localhost:4173`. At 14 widths it checks that every bike has a sharp photo with alt text and a Riders Share link with a referral code, that the referral card links to both sites with the referral codes, that booking and referral buttons are full touch targets on one line, that nothing leaves the frame or scrolls sideways, and that the phone dock never covers a button. Screenshots go to `test-results/rentals-*.png`. Each Riders Share or Twisted Road link on the page also sends a `rental_click` PostHog event with `bike`, `platform` (`riders_share` or `twisted_road`), `link_text`, `destination` and `position`; the profile links at the top send `bike: All bikes` and position 0.
 
+## Blog
+
+Every post lives in `blog/` on this site, with its images in `assets/writing/` (a folder per post when it has several). Home Writings and the All writing list (`blog/index.html`) link to these pages, never to a project site. Three posts used to be served elsewhere and now only forward here: the H2D exhaust fan post (`h2d-custom-dashboard` repo, `docs/index.html`), the gate widget post (`gate-opener-widget` repo, `docs/index.html`) and the AI Trader write-up (the `ai-trader-writeup` repo's README, which links here). Edit the copy in this repository.
+
 ## Search and link previews
 
 `danielyakobian.com` is the main address. Vercel serves it from this repository, and GitHub Pages serves the same files at `danielyaa5.github.io`, so every page names its `danielyakobian.com` address as canonical and in `og:url`. `vercel.json` permanently redirects `www.danielyakobian.com` and `danielyakobian-com.vercel.app` there. Don't add a custom domain to GitHub Pages: it would redirect the project sites under `danielyaa5.github.io`, including Beckon's update feed.

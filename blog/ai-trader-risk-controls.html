@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="I built an experimental trading system that uses one model to propose trades, two others to review them, and Python to enforce the rules between those steps.">
+  <meta name="author" content="Daniel Yakobian">
+  <meta name="theme-color" content="#fdfaf3">
+  <meta property="og:site_name" content="Daniel Yakobian">
+  <meta property="og:title" content="Building an AI Trader With Deterministic Risk Controls">
+  <meta property="og:description" content="I built an experimental trading system that uses one model to propose trades, two others to review them, and Python to enforce the rules between those steps.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://danielyakobian.com/blog/ai-trader-risk-controls.html">
+  <meta property="og:image" content="https://danielyakobian.com/assets/writing/ai-trader.jpg">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="900">
+  <meta property="article:published_time" content="2026-10-22">
+  <meta property="article:author" content="https://danielyakobian.com/">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Building an AI Trader With Deterministic Risk Controls | Daniel Yakobian</title>
+  <link rel="canonical" href="https://danielyakobian.com/blog/ai-trader-risk-controls.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css?v=speed-1">
+  <link rel="stylesheet" href="blog.css?v=7">
+  <script src="/analytics.js?v=6" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Building an AI Trader With Deterministic Risk Controls",
+    "description": "I built an experimental trading system that uses one model to propose trades, two others to review them, and Python to enforce the rules between those steps.",
+    "url": "https://danielyakobian.com/blog/ai-trader-risk-controls.html",
+    "mainEntityOfPage": "https://danielyakobian.com/blog/ai-trader-risk-controls.html",
+    "image": "https://danielyakobian.com/assets/writing/ai-trader.jpg",
+    "datePublished": "2026-10-22",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
+    "publisher": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
+    "isPartOf": { "@type": "Blog", "@id": "https://danielyakobian.com/blog/#blog", "url": "https://danielyakobian.com/blog/" }
+  }
+  </script>
+</head>
+<body class="blog-page" id="top">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="page-frame">
+    <header class="site-header"><a class="identity" href="../" aria-label="Daniel, home">Daniel</a><nav aria-label="Main navigation"><a href="../#work" data-icon="work">Work</a><a href="./" aria-current="page" data-icon="blog">Blog</a><a href="https://github.com/danielyaa5" data-icon="github">GitHub</a></nav></header>
+    <main id="content"><article class="blog-article"><header class="article-header"><p class="eyebrow">Notes on building software</p><h1>Building an AI Trader With Deterministic Risk Controls</h1><p class="article-meta"><a href="../" rel="author">Daniel Yakobian</a> · <time datetime="2026-10-22">October 22, 2026</time></p></header><div class="article-body">
+<p>I built an experimental trading system that uses one model to propose trades, two others to review them, and Python to enforce the rules between those steps.</p>
+<p>The interesting engineering problem is deciding what an AI-generated proposal is allowed to do. A convincing explanation cannot override a position limit. Agreement between models cannot make an old quote current. An accepted order cannot be treated as a confirmed fill.</p>
+<p>The implementation stays private. This post documents the architecture and its limitations, without publishing source code, account information, or trading records.</p>
+<figure class="article-figure">
+<a href="../assets/writing/ai-trader/dashboard-overview.webp"><img src="../assets/writing/ai-trader/dashboard-overview.webp" width="1400" height="1020" alt="Desktop dashboard demo showing portfolio cards, fictional positions, review decisions, runtime events, and policy filters."></a>
+<figcaption>A public demo rendering of the dashboard. All balances, symbols, positions, events, and review text in these screenshots are fictional. Private labels are replaced and inline explanations are collapsed. These images show the interface, not a performance record or historical model output.</figcaption>
+</figure>
+<h2>The decision pipeline</h2>
+<p>Each decision cycle starts with a frozen packet of market and portfolio data. It gives the proposer and reviewers a shared reference point and gives the audit log something concrete to preserve.</p>
+<p>The pipeline is:</p>
+<ol>
+<li>Build the market and portfolio snapshot.</li>
+<li>Ask a proposer for structured trade candidates.</li>
+<li>Apply deterministic eligibility and risk checks.</li>
+<li>Send eligible proposals to two reviewers in parallel.</li>
+<li>Require both reviewers to approve.</li>
+<li>Recheck the adjusted proposal against the risk rules.</li>
+<li>Pass the approved ticket to the execution adapter.</li>
+<li>Track the order and monitor the position separately.</li>
+</ol>
+<p>Gemini handles proposal generation, while Claude and GPT handle the two reviews. Their roles are separate from the Python execution path.</p>
+<figure class="article-figure">
+<a href="../assets/writing/ai-trader/architecture.webp"><img src="../assets/writing/ai-trader/architecture.webp" width="1400" height="962" alt="System architecture from a frozen data packet through proposal, policy validation, two reviewers, consensus, execution, and monitoring, with a separate audit trail." loading="lazy"></a>
+<figcaption>The boundaries matter: a proposal, a policy pass, a reviewer approval, and an execution attempt are different events.</figcaption>
+</figure>
+<h2>Review the ticket, not the sales pitch</h2>
+<p>Before review, the system removes the proposer&#x27;s thesis text. Each reviewer receives the proposed ticket, the relevant market data, portfolio context, and the initial risk-check results.</p>
+<p>That is an attempt to reduce narrative anchoring: the reviewers should evaluate the trade rather than continue the proposer&#x27;s argument. They do not receive each other&#x27;s verdict before returning their own.</p>
+<p>The consensus gate requires two approvals. A missing review, timeout, or non-approval blocks the proposal. Reviewers can also recommend a smaller position or a lower purchase limit. Python combines those recommendations and reruns the risk check before execution.</p>
+<p>Separate model calls do not establish statistical independence. The reviewers share inputs and can share blind spots. Whether this review structure improves decisions needs to be measured.</p>
+<figure class="article-figure">
+<a href="../assets/writing/ai-trader/reviewer-decisions.webp"><img src="../assets/writing/ai-trader/reviewer-decisions.webp" width="1400" height="678" alt="Two fictional review examples: both reviewers approve the first proposal, while one reviewer vetoes the second for a liquidity issue." loading="lazy"></a>
+<figcaption>Illustrative review text: one unanimous approval and one veto. The examples are fixtures, not captured model responses.</figcaption>
+</figure>
+<h2>Keep enforceable rules in code</h2>
+<p>The deterministic gate checks whether a proposal fits the configured trading policy. Its checks include:</p>
+<ul>
+<li>Restricting execution to the designated account.</li>
+<li>Permitting only supported opening trades, with no short positions or multi-leg option spreads.</li>
+<li>Grounding symbols and option contracts in the supplied market packet.</li>
+<li>Applying quote-age, liquidity, option-expiration, and delta requirements.</li>
+<li>Limiting position size, aggregate exposure, concurrent positions, and daily trade count.</li>
+<li>Preserving a configured cash reserve.</li>
+<li>Requiring a structured exit plan and checking stop distance and reward-to-risk assumptions.</li>
+<li>Applying household overlap and tax-related restrictions from a supplied snapshot.</li>
+</ul>
+<p>The tax-related checks are policy filters based on the data available to the system. They are not a complete tax determination.</p>
+<figure class="article-figure">
+<a href="../assets/writing/ai-trader/policy-filters.webp"><img src="../assets/writing/ai-trader/policy-filters.webp" width="1400" height="309" alt="Fictional blocked and eligible symbols in the dashboard&#x27;s policy-filter panel." loading="lazy"></a>
+<figcaption>The interface separates excluded symbols from the candidate universe. The symbols above are invented for this demo.</figcaption>
+</figure>
+<p>The system also tracks drawdown and daily losses. Its circuit-breaker logic can reduce entry size or pause new positions, with manual reauthorization required for certain lock states. Entry restrictions and position-exit handling are separate concerns.</p>
+<figure class="article-figure">
+<a href="../assets/writing/ai-trader/circuit-breakers.webp"><img src="../assets/writing/ai-trader/circuit-breakers.webp" width="1400" height="875" alt="Circuit-breaker diagram showing normal sizing, reduced sizing, paused entries, emergency exit requests, a daily-loss pause, and unavailable broker-state handling." loading="lazy"></a>
+<figcaption>A policy sketch rather than a recommended trading configuration. Higher-severity rules can activate directly.</figcaption>
+</figure>
+<figure class="article-figure">
+<a href="../assets/writing/ai-trader/risk-controls.webp"><img src="../assets/writing/ai-trader/risk-controls.webp" width="1400" height="205" alt="Dashboard summary cards in a fictional paused-entry state, displaying a zero entry-size multiplier." loading="lazy"></a>
+<figcaption>A different demo scenario: new entries are paused. The sample portfolio value is fictional and does not establish why any real account paused.</figcaption>
+</figure>
+<h2>Submission is not a fill</h2>
+<p>The execution path checks risk and consensus results, generates a client order identifier, checks the local ledger for duplicates, and refreshes the underlying quote before a live entry. If that quote is unavailable or has moved beyond the configured tolerance, the entry is aborted.</p>
+<p>Before sending a live order, it records a pending-submission event. The order lifecycle distinguishes submitted, filled, rejected, and uncertain outcomes that require reconciliation.</p>
+<p>Those distinctions matter after a timeout. A failed request does not establish that the broker failed to receive the order. Retrying without checking can create a duplicate.</p>
+<p>The implementation includes duplicate checks and broker-position reconciliation, but those mechanisms still need scrutiny. A local client identifier is not proof of broker-enforced exactly-once execution, and position reconciliation needs enough detail to distinguish option contracts and partial fills.</p>
+<figure class="article-figure">
+<a href="../assets/writing/ai-trader/order-lifecycle.webp"><img src="../assets/writing/ai-trader/order-lifecycle.webp" width="1400" height="892" alt="Simplified order lifecycle showing pending submission, submitted, observed fills, pending exits, observed closure, rejection, and an uncertain outcome requiring reconciliation." loading="lazy"></a>
+<figcaption>An uncertain response needs reconciliation. It must not be silently rewritten as either a confirmed fill or a confirmed failure.</figcaption>
+</figure>
+<h2>Exits use a separate monitoring loop</h2>
+<p>An exit plan should not require another round of model deliberation before the system can act on it.</p>
+<p>A separate watchdog evaluates configured stops, profit targets, holding deadlines, and option-expiration rules. It uses deterministic logic to choose exit actions and tracks pending exits until subsequent broker reconciliation indicates the position has closed.</p>
+<p>This is polling-based monitoring with external dependencies. A trigger does not guarantee a fill or a particular loss limit. Quote availability, market hours, spreads, gaps, and broker responses still affect execution.</p>
+<h2>Preserve the evidence</h2>
+<p>Paper and live modes use separate state directories. Run records preserve the data packet, proposals, review results, risk decisions, timing, and execution outcomes. Rejected proposals go into a separate log for later analysis.</p>
+<p>A dashboard brings together portfolio state, decisions, and operating status. The test suite includes cases for account restrictions, proposal eligibility, circuit breakers, reviewer consensus, duplicate handling, and paper/live state separation. Those tests exercise software behavior; they do not validate a trading strategy&#x27;s profitability.</p>
+<figure class="article-figure phone-shot">
+<img src="../assets/writing/ai-trader/dashboard-mobile.webp" width="645" height="1005" alt="Mobile-width public demo of the dashboard with a fictional-data banner, portfolio summary, circuit-breaker status, and policy snapshot." loading="lazy">
+<figcaption>The same demo at a mobile viewport, with summary cards stacked vertically. All values and events remain fictional.</figcaption>
+</figure>
+<p>The next useful evaluation is a comparison: proposer alone, proposer plus deterministic rules, and the full review pipeline. I want to measure the reviewers&#x27; incremental value alongside latency, inference cost, rejection rates, and execution quality.</p>
+<h2>What this project establishes so far</h2>
+<p>This is an engineering experiment. I am not presenting a verified return figure, an audited track record, or evidence that multiple models outperform a simpler strategy.</p>
+<p>The architecture makes proposals, policy checks, reviews, execution attempts, and observed outcomes separately inspectable. That separation is useful well beyond trading, wherever a model recommends an action and software must decide whether and how to carry it out.</p></div><p class="article-back"><a href="./">← All posts</a></p></article></main>
+    <footer class="site-footer"><p><a href="../">Daniel</a> / Built to be useful.</p><a href="./">All posts</a></footer>
+  </div>
+</body>
+</html>

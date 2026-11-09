@@ -136,3 +136,28 @@
  .data-table th, .data-table td { padding: 8px; }
  .data-table thead th, .data-table tbody th { white-space: normal; min-width: 4.5em; }
 }
+
+/* Build notes moved from project sites (AI Trader, H2D exhaust, gate widget): image pairs, phone screenshots and small notes. */
+.article-body .article-note { font-size: 15px; line-height: 1.6; color: #52604d; }
+.article-body .release-note { border-left: 3px solid var(--rule); padding-left: 16px; }
+.article-figure.figure-narrow { max-width: 540px; margin-left: auto; margin-right: auto; }
+.article-figure.white-bg img { background: #fff; }
+.article-figure.phone-shot img { max-width: 320px; margin: 0 auto; }
+.article-figure > a, .figure-pair > a { display: block; }
+.figure-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.figure-pair > .article-figure { margin: 0; min-width: 0; }
+.figure-pair.square img { aspect-ratio: 1; object-fit: contain; background: #fff; }
+.figure-pair.tall { margin: 4px 0 26px; gap: 20px; }
+.figure-pair.tall img { aspect-ratio: 4 / 5; object-fit: cover; }
+.figure-pair .hero-shot img { object-position: 50% 45%; }
+.app-shots { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 24px; }
+.app-shots .app-shot { width: 300px; max-width: 100%; }
+.app-shots .widget-shot { width: 180px; max-width: 100%; }
+@media (max-width: 560px) {
+ .figure-pair.tall { grid-template-columns: 1fr; gap: 24px; }
+ .figure-pair .hero-shot img { aspect-ratio: 4 / 3; }
+ .figure-pair .lock-screen-shot { width: 100%; max-width: 360px; justify-self: center; }
+}
+@media (max-width: 480px) {
+ .figure-pair:not(.tall) { gap: 10px; }
+}
