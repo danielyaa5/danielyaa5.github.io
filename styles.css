@@ -45,16 +45,14 @@ button:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
 .site-mark .mark-groove { fill: none; stroke-width: 3.2; }
 /* Leaves and wrench turn and move around the base of the plant. */
 .site-mark .mark-leaf, .site-mark .mark-wrench { transform-box: view-box; transform-origin: 96px 168px; }
-/* Hover: the wrench rises out of the grass and the leaves open; it eases back when the pointer leaves. */
+/* Hover: the leaves sway once in a breeze, back first, while the wrench stays still. */
+@keyframes mark-sway { 0%, 100% { rotate: 0deg; } 28% { rotate: var(--sway); } 62% { rotate: calc(var(--sway) * -.45); } 84% { rotate: calc(var(--sway) * .15); } }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .site-mark .mark-leaf, .site-mark .mark-wrench { transition: rotate .55s cubic-bezier(.34, 1.56, .64, 1), translate .55s cubic-bezier(.34, 1.56, .64, 1); }
-  .site-mark:hover .mark-wrench, .site-mark:focus-visible .mark-wrench { translate: 0 -14px; }
-  .site-mark:hover .mark-back.mark-r, .site-mark:focus-visible .mark-back.mark-r { rotate: 5deg; }
-  .site-mark:hover .mark-back.mark-l, .site-mark:focus-visible .mark-back.mark-l { rotate: -5deg; }
-  .site-mark:hover .mark-mid.mark-r, .site-mark:focus-visible .mark-mid.mark-r { rotate: 9deg; }
-  .site-mark:hover .mark-mid.mark-l, .site-mark:focus-visible .mark-mid.mark-l { rotate: -9deg; }
-  .site-mark:hover .mark-front.mark-r, .site-mark:focus-visible .mark-front.mark-r { rotate: 7deg; }
-  .site-mark:hover .mark-front.mark-l, .site-mark:focus-visible .mark-front.mark-l { rotate: -7deg; }
+  .site-mark .mark-r { --sway: 8deg; }
+  .site-mark .mark-l { --sway: -8deg; }
+  .site-mark .mark-mid { --sway-delay: .07s; }
+  .site-mark .mark-front { --sway-delay: .14s; }
+  .site-mark:hover .mark-leaf, .site-mark:focus-visible .mark-leaf { animation: mark-sway 1.3s ease-in-out var(--sway-delay, 0s) both; }
 }
 .hero { position: relative; display: grid; grid-template-columns: 56.5% 43.5%; align-items: center; padding: 39px 0 35px; }
 /* Below this width the illustration fills its column, so keep it clear of the frame's vertical line. */
