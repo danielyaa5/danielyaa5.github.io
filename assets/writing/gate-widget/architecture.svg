@@ -14,6 +14,24 @@
  .label { font-size:16px; font-weight:550; }
  .route { fill:none; stroke-width:2.5; stroke-linejoin:round; }
 </style>
+<style>
+ /* Dark mode: the blog follows the system setting, so the diagram does too (Forest night palette). */
+ @media (prefers-color-scheme: dark) {
+  svg > rect:first-of-type { fill: #17221b; }
+  text { fill: #ebe8da; }
+  .detail { fill: #b4bfae; }
+  rect[fill="#f6f8fb"] { fill: #121b15; stroke: #3a4a3e; }
+  rect[fill="#fff"] { fill: #1b271f; }
+  rect[fill="#edf3ff"] { fill: #1b2638; }
+  rect[fill="#edf7f2"] { fill: #1c3024; }
+  rect[fill="#f6f0fc"] { fill: #2a2236; }
+  rect[fill="#fff7e8"] { fill: #2e2616; }
+  [fill="#2353b6"] { fill: #8fb0f2; } [stroke="#2353b6"] { stroke: #8fb0f2; }
+  [fill="#256f56"] { fill: #7fcb9e; } [stroke="#256f56"] { stroke: #7fcb9e; }
+  [fill="#8055a8"] { fill: #bf9ce4; } [stroke="#8055a8"] { stroke: #bf9ce4; }
+  [fill="#93631d"] { fill: #dcac5c; } [stroke="#93631d"] { stroke: #dcac5c; }
+ }
+</style>
 <rect width="840" height="1180" rx="22" fill="#fff"/>
 <text x="40" y="48" font-size="28" font-weight="650">Taps, snapshots and the old gate</text>
 <circle cx="48" cy="78" r="5" fill="#2353b6"/><text x="62" y="84" class="detail">Commands</text>
