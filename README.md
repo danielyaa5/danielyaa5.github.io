@@ -36,6 +36,14 @@ After changing the page or the navigation, run `node tests/rentals.cjs http://lo
 
 Every post lives in `blog/` on this site, with its images in `assets/writing/` (a folder per post when it has several). Home Writings and the All writing list (`blog/index.html`) link to these pages, never to a project site. Three posts used to be served elsewhere and now only forward here: the H2D exhaust fan post (`h2d-custom-dashboard` repo, `docs/index.html`), the gate widget post (`gate-opener-widget` repo, `docs/index.html`) and the AI Trader write-up (the `ai-trader-writeup` repo's README, which links here). Edit the copy in this repository.
 
+## Dark mode
+
+The site follows the visitor's system setting. Light colors stay where they are in each stylesheet; a `@media screen and (prefers-color-scheme: dark)` block at the end of `styles.css` (and of `blog/blog.css`, `resume/resume.css` and `motorcycle-rentals/rentals.css`) swaps them for the forest-night palette: page `#0e1511`, cards `#17221b`, cream text `#ebe8da`, mint links `#98d4a8` and green filled buttons `#2a6b47`. In dark mode `--green` is the text accent, so anything filled uses `--fill` instead. Print stays light.
+
+The illustrations aren't duplicated. The `--line-art` CSS filter turns their dark outlines and cream fills into quiet sage line art, and it applies to the hero, project and featured art, the tree and any image with the `line-art` class (illustrated blog thumbnails and covers; leave screenshots and photos without it). Art drawn on a white square instead of transparency gets `art-on-white`, which multiplies in light mode and lightens in dark mode. The Tabler icons are recolored with a filter.
+
+A new page needs `<meta name="color-scheme" content="light dark">` and the two `theme-color` tags (light `#fdfaf3`, dark `#0e1511`), and any colors its own stylesheet sets need a dark version. Check new work with Playwright's `colorScheme: 'dark'` as well as light.
+
 ## Search and link previews
 
 `danielyakobian.com` is the main address. Vercel serves it from this repository, and GitHub Pages serves the same files at `danielyaa5.github.io`, so every page names its `danielyakobian.com` address as canonical and in `og:url`. `vercel.json` permanently redirects `www.danielyakobian.com` and `danielyakobian-com.vercel.app` there. Don't add a custom domain to GitHub Pages: it would redirect the project sites under `danielyaa5.github.io`, including Beckon's update feed.

@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="My K1 Max has a chamber sensor but no chamber heater. A smart plug, a Fingerbot and a few Klipper macros now let each ASA print heat and hold its own chamber.">
   <meta name="author" content="Daniel Yakobian">
-  <meta name="theme-color" content="#fdfaf3">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
   <meta property="og:site_name" content="Daniel Yakobian">
   <meta property="og:title" content="Teaching my K1 Max to turn on its own chamber heater">
   <meta property="og:description" content="My K1 Max has a chamber sensor but no chamber heater. A smart plug, a Fingerbot and a few Klipper macros now let each ASA print heat and hold its own chamber.">
@@ -20,8 +22,8 @@
   <title>Teaching my K1 Max to turn on its own chamber heater | Daniel Yakobian</title>
   <link rel="canonical" href="https://danielyakobian.com/blog/k1-max-chamber-heater.html">
   <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png">
-  <link rel="stylesheet" href="../styles.css?v=speed-1">
-  <link rel="stylesheet" href="blog.css?v=7">
+  <link rel="stylesheet" href="../styles.css?v=dark-1">
+  <link rel="stylesheet" href="blog.css?v=8">
   <script src="/analytics.js?v=6" defer></script>
   <script type="application/ld+json">
   {
@@ -46,7 +48,7 @@
     <header class="site-header"><a class="identity" href="../" aria-label="Daniel, home">Daniel</a><nav aria-label="Main navigation"><a href="../#work" data-icon="work">Work</a><a href="./" aria-current="page" data-icon="blog">Blog</a><a href="https://github.com/danielyaa5" data-icon="github">GitHub</a></nav></header>
     <main id="content"><article class="blog-article"><header class="article-header"><p class="eyebrow">Notes on 3D printing</p><h1>Teaching my K1 Max to turn on its own chamber heater</h1><p class="article-meta"><a href="../" rel="author">Daniel Yakobian</a> · <time datetime="2026-10-23">October 23, 2026</time></p></header><div class="article-body"><p>ASA wants a warm chamber. My Creality K1 Max has an enclosure, a chamber temperature sensor and a chamber fan, but no chamber heater. Left to the bed, the air warms up slowly. So I added a heater.</p>
 <figure class="article-figure">
-<img src="../assets/writing/k1-max-chamber-heater.webp" width="1600" height="900" alt="Illustration of an enclosed 3D printer with a heater inside, a small robot holding the end of a power cable, and a smart plug in the wall with a Wi-Fi signal">
+<img class="line-art" src="../assets/writing/k1-max-chamber-heater.webp" width="1600" height="900" alt="Illustration of an enclosed 3D printer with a heater inside, a small robot holding the end of a power cable, and a smart plug in the wall with a Wi-Fi signal">
 <figcaption>The setup, more or less. The real Fingerbot doesn't have a face.</figcaption>
 </figure>
 <p>The heater was the easy part. The hard part was its start button, because my printer doesn't have fingers.</p>

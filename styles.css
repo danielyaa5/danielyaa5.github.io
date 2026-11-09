@@ -53,6 +53,8 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
 .project:nth-child(even) .project-main { grid-template-columns: 156px minmax(0,1fr); }
 .project-art { display: flex; align-items: flex-start; justify-content: flex-start; padding-top: 1px; }
 .project-illustration { display: block; max-width: 100%; width: var(--art-width); height: auto; object-fit: contain; }
+/* Art drawn on a white square rather than transparency; multiply lets the card show through. */
+.art-on-white { mix-blend-mode: multiply; }
 .project-copy { min-width: 0; }
 .project h2 { margin: 0 0 9px; font-size: 17px; line-height: 1.25; font-weight: 700; letter-spacing: -.15px; }
 .project-title { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 9px; margin-bottom: 9px; }
@@ -300,4 +302,78 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 @media (max-width: 360px) {
   .signup { padding: 18px 13px; }
   .signup-topic { gap: 10px; padding: 10px; }
+}
+
+/* Dark mode follows the visitor's system setting: a forest-night page with cream text and mint links.
+   Light colors above stay the source of truth; this block only swaps them on screens (print stays light). */
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #0e1511;
+    --card: #17221b;
+    --ink: #ebe8da;
+    --green: #98d4a8;
+    --rule: #3a4a3e;
+    /* Dark-only tokens. --green is the text accent here; filled controls use --fill. */
+    --fill: #2a6b47;
+    --fill-hover: #33805a;
+    --on-fill: #f6f3e6;
+    --frame: #4f6656;
+    --card-line: #2d3b31;
+    --soft: #a9b5a3;
+    --soft-strong: #c3ccbb;
+    --hover: #213326;
+    --field: #111a14;
+    --chip: #1f3326;
+    --chip-line: #3a5a44;
+    --tag: #2a4733;
+    --tag-ink: #dcecd9;
+    /* Turns the dark-outlined, cream-filled artwork into quiet sage line art. */
+    --line-art: invert(.734) sepia(1) saturate(.486) hue-rotate(57.9deg) brightness(.743) contrast(1.479);
+  }
+  ::selection { background: #2f5a3d; }
+  .skip-link { background: var(--fill); color: var(--on-fill); }
+  .page-frame { border-color: var(--frame); background: radial-gradient(ellipse at 40% 20%, #18231c 0, #141e18 60%, #111a15 100%); box-shadow: 0 0 0 2px #18211b; }
+  .site-header, .site-footer { border-color: var(--rule); }
+  .hero::after { border-color: var(--frame); }
+  .button, .button:hover, .skip-link:focus { color: var(--on-fill); }
+  .button { background: var(--fill); border-color: var(--fill); }
+  .button:hover { background: var(--fill-hover); border-color: var(--fill-hover); }
+  .button-outline { background: transparent; border-color: #5f8a6c; color: var(--green); }
+  .button-outline:hover { background: var(--hover); color: var(--green); }
+  .project { border-color: var(--card-line); background: linear-gradient(110deg, #16201a, #19251d 55%, #17211b); box-shadow: inset 0 0 0 3px #1a261e, 0 1px 3px #0006; }
+  .star-count-badge { border-color: var(--chip-line); background: var(--chip); }
+  .star-count:hover .star-count-badge { background: var(--hover); }
+  .category { color: var(--tag-ink); background: var(--tag); }
+  .project-footer { border-color: var(--card-line); }
+  .project-preview, .filter-count { color: var(--soft); }
+  .writing-card { border-color: var(--card-line); }
+  .writing-thumb { border-color: var(--card-line); background: var(--card); }
+  .featured-pick { border-color: var(--rule); background: #1a281f; }
+  .project-filters button { border-color: var(--rule); }
+  .project-filters button:hover { background: var(--hover); }
+  .project-filters button[aria-pressed="true"] { color: var(--on-fill); background: var(--fill); border-color: var(--fill); }
+  .project-status { border-color: var(--rule); color: var(--soft); }
+  .signup { border-color: var(--rule); background: linear-gradient(110deg, #16201a, #19251d 55%, #17211b); }
+  .signup-intro .signup-privacy, .signup-topic-note { color: var(--soft); }
+  .signup-topics legend, .signup-email-label { color: var(--soft-strong); }
+  .signup-topic { border-color: var(--card-line); background: var(--field); }
+  .signup-topic:hover, .signup-email { border-color: var(--frame); }
+  .signup-topic:has(input:checked) { border-color: var(--green); background: var(--hover); }
+  .signup-email { background: var(--field); }
+  .signup-email::placeholder { color: #7d8a78; }
+  .signup-status[data-kind="error"], .signup-result-error { color: #f1a395; }
+  .signup-done-check { background: var(--fill); color: var(--on-fill); }
+  /* Artwork and the dark-green Tabler icons. */
+  .pine, .hero-illustration, .featured-pick > img, .project-illustration, .line-art { filter: var(--line-art); }
+  /* Art drawn on white: after the filter the white is darker than the card, so lighten drops it. */
+  .art-on-white { mix-blend-mode: lighten; }
+  .link-icon, .store-icon { filter: invert(1) hue-rotate(180deg) brightness(1.05); }
+}
+@media screen and (prefers-color-scheme: dark) and (max-width: 620px) {
+  .page-frame .site-header nav { background: rgba(26, 44, 33, .94); box-shadow: 0 10px 30px -8px #000c, inset 0 0 0 1px #3c5c46; }
+  .site-header nav a { color: #d5e3d2; }
+  .site-header nav a:hover { color: #fff; }
+  .site-header nav a:focus-visible { outline-color: var(--green); }
+  .site-header nav a[aria-current="page"] { background: var(--fill); color: var(--on-fill); }
 }

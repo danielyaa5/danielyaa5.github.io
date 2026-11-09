@@ -146,3 +146,29 @@
   .impact b { font-size: 24px; }
   .role, .impact div { break-inside: avoid; }
 }
+
+/* Dark mode: the tokens come from ../styles.css; these swap the colors resume.css sets directly. */
+@media screen and (prefers-color-scheme: dark) {
+  .resume { --muted: var(--soft); }
+  .r-hero, .impact, .ledger { border-color: var(--rule); }
+  .contact a { text-decoration-color: #5f8a6c; }
+  .download, .download:hover, .scroll-download, .scroll-download:hover { color: var(--on-fill); }
+  .download { background: var(--fill); box-shadow: 0 1px 0 #0a1f13, 0 14px 30px -18px rgba(0, 0, 0, .9); }
+  .download:hover, .scroll-download:hover { background: var(--fill-hover); }
+  .download span { color: #cfe6d3; }
+  .impact div + div, .impact div:nth-child(n+3) { border-color: var(--card-line); }
+  .role + .role { border-color: var(--rule); }
+  .role li::marker { color: #6d8a73; }
+  .now-stack li { border-color: var(--chip-line); background: var(--chip); }
+  .exp-index::before { background: var(--rule); }
+  .exp-index a::before { border-color: #5f8a6c; }
+  .exp-index a.is-active::before { box-shadow: 0 0 0 4px #2f5a3d; }
+  .end-cta { border-color: var(--card-line); background: linear-gradient(110deg, #16201a, #19251d 55%, #17211b); }
+  .scroll-bar { background: rgba(14, 21, 17, .93); border-color: var(--rule); }
+  .scroll-where::before { color: #5f8a6c; }
+  .scroll-detail { color: var(--soft); }
+  .scroll-download { background: var(--fill); }
+}
+@media screen and (prefers-color-scheme: dark) and (max-width: 850px) {
+  .impact div:nth-child(n+3) { border-color: var(--card-line); }
+}

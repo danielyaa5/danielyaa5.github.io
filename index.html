@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Free Mac apps and developer tools by Daniel Yakobian, including Beckon, Cloud Media Shrinker, 3D Print Monitor, TagTracker and puml-for-markdown.">
   <meta name="author" content="Daniel Yakobian">
-  <meta name="theme-color" content="#fdfaf3">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
   <meta property="og:site_name" content="Daniel Yakobian">
   <meta property="og:title" content="Daniel Yakobian — Small frustrations. Useful software.">
   <meta property="og:description" content="Mac apps, everyday tools, and experiments that turn small frustrations into useful software.">
@@ -22,7 +24,7 @@
   <link rel="canonical" href="https://danielyakobian.com/">
   <script src="script.js?v=signup-2" defer></script>
   <script src="/analytics.js?v=6" defer></script>
-  <link rel="stylesheet" href="styles.css?v=speed-1">
+  <link rel="stylesheet" href="styles.css?v=dark-1">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -201,7 +203,7 @@
           </article>
           <article class="project" data-category="web">
             <div class="project-main">
-              <div class="project-art"><img class="project-illustration" loading="lazy" src="assets/illustrations/buy-or-rent.webp" width="200" height="200" style="--art-width: 156px; mix-blend-mode: multiply" alt=""></div>
+              <div class="project-art"><img class="project-illustration art-on-white" loading="lazy" src="assets/illustrations/buy-or-rent.webp" width="200" height="200" style="--art-width: 156px" alt=""></div>
               <div class="project-copy">
                 <h2><a class="project-name" href="https://buy-or-rent-web.vercel.app/">Buy or Rent</a></h2>
                 <p class="project-benefit">Compare the long-term numbers behind buying a home versus renting.</p>
@@ -212,7 +214,7 @@
           </article>
           <article class="project" data-category="web">
             <div class="project-main">
-              <div class="project-art"><img class="project-illustration" loading="lazy" src="assets/illustrations/netflix-pip-fixer.webp" width="200" height="200" style="--art-width: 156px; mix-blend-mode: multiply" alt=""></div>
+              <div class="project-art"><img class="project-illustration art-on-white" loading="lazy" src="assets/illustrations/netflix-pip-fixer.webp" width="200" height="200" style="--art-width: 156px" alt=""></div>
               <div class="project-copy">
                 <h2><a class="project-name" href="https://chromewebstore.google.com/detail/netflix-pip-fixer/ceiiadpnmbplofcefdafhfidmocjgikp">Netflix PiP Fixer</a></h2>
                 <p class="project-benefit">Keep Netflix picture-in-picture available while you browse.</p>
@@ -292,8 +294,8 @@
       <section class="writing" id="writing" aria-labelledby="writing-title">
         <h2 id="writing-title">Writings</h2>
         <div class="writing-grid">
-          <article class="writing-card"><h3><a href="blog/claude-code-max-effort.html">Does max effort pay off? I checked 1,037 of my Claude Code prompts</a></h3><p>Max was a fifth of my Claude Code prompts and half of everything Claude generated. I went through 1,037 of my own prompts to see what it bought.</p><img class="writing-thumb" src="assets/writing/claude-code-max-effort.webp" width="1600" height="900" alt="Illustration of an effort dial turned to max beside two bars: max was 20% of prompts and 51% of tokens generated" loading="lazy"><a class="writing-link" href="blog/claude-code-max-effort.html">Read article →</a></article>
-          <article class="writing-card"><h3><a href="blog/bambu-headless-cli.html">Bypassing Bambu’s MQTT signature check by masquerading as Bambu Studio</a></h3><p>How a <code>dyld</code> executable-path shim and a C++ bridge let a Python CLI sign H2D print commands using Studio’s own closed-source networking dylib.</p><img class="writing-thumb" src="assets/writing/bambu-headless-cli.webp" width="1600" height="900" alt="Illustration of a terminal window holding a disguise mask to pass a signature checkpoint and reach an enclosed dual-nozzle 3D printer" loading="lazy"><a class="writing-link" href="blog/bambu-headless-cli.html">Read article →</a></article>
+          <article class="writing-card"><h3><a href="blog/claude-code-max-effort.html">Does max effort pay off? I checked 1,037 of my Claude Code prompts</a></h3><p>Max was a fifth of my Claude Code prompts and half of everything Claude generated. I went through 1,037 of my own prompts to see what it bought.</p><img class="writing-thumb line-art" src="assets/writing/claude-code-max-effort.webp" width="1600" height="900" alt="Illustration of an effort dial turned to max beside two bars: max was 20% of prompts and 51% of tokens generated" loading="lazy"><a class="writing-link" href="blog/claude-code-max-effort.html">Read article →</a></article>
+          <article class="writing-card"><h3><a href="blog/bambu-headless-cli.html">Bypassing Bambu’s MQTT signature check by masquerading as Bambu Studio</a></h3><p>How a <code>dyld</code> executable-path shim and a C++ bridge let a Python CLI sign H2D print commands using Studio’s own closed-source networking dylib.</p><img class="writing-thumb line-art" src="assets/writing/bambu-headless-cli.webp" width="1600" height="900" alt="Illustration of a terminal window holding a disguise mask to pass a signature checkpoint and reach an enclosed dual-nozzle 3D printer" loading="lazy"><a class="writing-link" href="blog/bambu-headless-cli.html">Read article →</a></article>
           <article class="writing-card writing-card-wide"><h3><a href="blog/ai-trader-risk-controls.html">Building an AI Trader With Deterministic Risk Controls</a></h3><p>I built an experimental trading system that uses one model to propose trades, two others to review them, and Python to enforce the rules between those steps.</p><img class="writing-thumb" src="assets/writing/ai-trader.webp" width="1600" height="900" alt="AI Trader dashboard charts with fictional demo data: account equity per run, a decision funnel, reviewer verdicts, top veto reasons and exit contract ladders" loading="lazy"><a class="writing-link" href="blog/ai-trader-risk-controls.html">Read article →</a></article>
         </div>
         <a class="all-writing" href="blog/">All writing →</a>

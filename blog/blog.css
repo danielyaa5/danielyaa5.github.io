@@ -161,3 +161,41 @@
 @media (max-width: 480px) {
  .figure-pair:not(.tall) { gap: 10px; }
 }
+
+/* Dark mode: the tokens come from ../styles.css; these swap the colors blog.css sets directly. */
+@media screen and (prefers-color-scheme: dark) {
+  .article-meta, .qa-figure figcaption, .article-figure figcaption, .effort-figure figcaption, .article-body .table-note, .article-body .article-note { color: var(--soft); }
+  .post-card { border-color: var(--card-line); }
+  .qa-diagram { border-color: var(--rule); background: #141e18; }
+  .diagram-kicker, .data-table caption { color: var(--soft-strong); }
+  .session-card, .account-box { border-color: var(--card-line); background: var(--card); }
+  .qa-session, .context-source { border-color: #4f7a5c; background: #1c3024; }
+  .desktop-box { border-color: var(--rule); background: var(--field); }
+  .window-bar { border-color: var(--card-line); background: #1b271f; }
+  .window-bar i { background: #6d8a73; }
+  .desktop-box > span, .flow-steps span, .temp-scale span { color: var(--soft); }
+  .shared-hardware { border-color: var(--rule); }
+  .article-figure img, .article-figure video { border-color: var(--card-line); background: var(--card); }
+  /* Photos shot on white keep their white backing. */
+  .article-figure.white-bg img, .figure-pair.square img { background: #fff; }
+  .article-body code { background: #1f2c23; }
+  .article-body pre { border-color: var(--card-line); background: #121b15; }
+  .article-body pre code { background: none; }
+  .flow-steps li::before { border-color: #5f8a6c; background: var(--card); }
+  .flow-steps li:not(:last-child)::after { border-color: var(--rule); }
+  .temp-scale::before { background: linear-gradient(#5f8a6c, #2a3a2e); }
+  .temp-scale i { border-color: #8fb79a; background: var(--card); }
+  .temp-scale .temp-band { background: #1c3024; }
+  .temp-scale .temp-target i { background: #8fb79a; }
+  .temp-scale .temp-limit i { border-color: var(--green); }
+  .effort-figure, .table-wrap { border-color: var(--card-line); background: var(--card); }
+  .chart-legend, .share-value { color: var(--soft-strong); }
+  .key-tokens, .bar-tokens { background: #45b06f; }
+  .key-prompts, .bar-prompts { background: #e0ae2c; }
+  .share-pair { border-color: var(--rule); }
+  .data-table th, .data-table td { border-color: var(--card-line); }
+  .data-table thead th { color: var(--soft); }
+}
+@media screen and (prefers-color-scheme: dark) and (max-width: 620px) {
+  .context-branch { border-color: var(--card-line); }
+}

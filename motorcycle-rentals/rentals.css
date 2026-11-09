@@ -72,3 +72,16 @@
   .rental-profiles { margin-top: 20px; }
   .rental-profiles .button { flex: 1 1 100%; font-size: 14px; }
 }
+
+/* Dark mode: the tokens come from ../styles.css; these swap the colors rentals.css sets directly. */
+@media screen and (prefers-color-scheme: dark) {
+  .rentals { --muted: var(--soft); }
+  .referral { border-color: var(--rule); background: #1a281f; }
+  .bike { border-color: var(--card-line); background: var(--card); }
+  .bike-photo { background: #1f2c23; }
+  .bike-status { background: rgba(14, 21, 17, .9); box-shadow: 0 2px 8px -2px rgba(0, 0, 0, .6); }
+  .bike .bike-note { border-color: var(--rule); }
+  .bike-facts li { border-color: var(--chip-line); background: var(--chip); }
+  .how { border-color: var(--rule); }
+  .how div + div { border-color: var(--card-line); }
+}
