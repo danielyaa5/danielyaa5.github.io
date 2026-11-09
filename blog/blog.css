@@ -1,7 +1,4 @@
 .blog-page .page-frame::before { display: none; }
-.blog-page .site-header { margin-right: 0; }
-.blog-page nav { padding-right: 0; }
-.blog-page nav [aria-current="page"] { text-decoration: underline; text-underline-offset: 5px; }
 .blog-article, .blog-index { max-width: 700px; margin: 0 auto; padding: 56px 0 36px; }
 .eyebrow { margin: 0 0 18px; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
 .blog-page h1 { max-width: 680px; font-size: clamp(34px, 5vw, 52px); line-height: 1.12; letter-spacing: -1.7px; margin: 0 0 22px; text-wrap: balance; }

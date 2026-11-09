@@ -36,6 +36,8 @@ After changing the page or the navigation, run `node tests/rentals.cjs http://lo
 
 Every post lives in `blog/` on this site, with its images in `assets/writing/` (a folder per post when it has several). Home Writings and the All writing list (`blog/index.html`) link to these pages, never to a project site. Three posts used to be served elsewhere and now only forward here: the H2D exhaust fan post (`h2d-custom-dashboard` repo, `docs/index.html`), the gate widget post (`gate-opener-widget` repo, `docs/index.html`) and the AI Trader write-up (the `ai-trader-writeup` repo's README, which links here). Edit the copy in this repository.
 
+Blog pages use the same header as the rest of the site: the five-link navigation (the phone dock on small screens) and the corner mark. The header is copied into each page, so a navigation change means editing `index.html`, `resume/index.html`, `motorcycle-rentals/index.html` and every page in `blog/`, including new posts. Run `node tests/nav.cjs http://localhost:4173` afterwards; it fails if any page's links, current-page marker or corner mark differ from the home page's.
+
 ## Dark mode
 
 The site follows the visitor's system setting. Light colors stay where they are in each stylesheet; a `@media screen and (prefers-color-scheme: dark)` block at the end of `styles.css` (and of `blog/blog.css`, `resume/resume.css` and `motorcycle-rentals/rentals.css`) swaps them for the forest-night palette: page `#0e1511`, cards `#17221b`, cream text `#ebe8da`, mint links `#98d4a8` and green filled buttons `#2a6b47`. In dark mode `--green` is the text accent, so anything filled uses `--fill` instead. Print stays light.
