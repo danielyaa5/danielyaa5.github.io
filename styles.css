@@ -43,17 +43,21 @@ button:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
 .site-mark .mark-mid, .site-mark .mark-front { fill: var(--mark-front); }
 .site-mark .mark-steel { fill: var(--mark-steel); }
 .site-mark .mark-groove { fill: none; stroke-width: 3.2; }
-/* Leaves and wrench turn and move around the base of the plant. */
-.site-mark .mark-leaf, .site-mark .mark-wrench { transform-box: view-box; transform-origin: 96px 168px; }
-/* Hover: the leaves sway once in a breeze, back first, while the wrench stays still. */
-@keyframes mark-sway { 0%, 100% { rotate: 0deg; } 28% { rotate: var(--sway); } 62% { rotate: calc(var(--sway) * -.45); } 84% { rotate: calc(var(--sway) * .15); } }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .site-mark .mark-r { --sway: 8deg; }
-  .site-mark .mark-l { --sway: -8deg; }
-  .site-mark .mark-mid { --sway-delay: .07s; }
-  .site-mark .mark-front { --sway-delay: .14s; }
-  .site-mark:hover .mark-leaf, .site-mark:focus-visible .mark-leaf { animation: mark-sway 1.3s ease-in-out var(--sway-delay, 0s) both; }
+/* Hover: the outline redraws in green from the roots up, then retracts when the pointer leaves. Each shape is
+   followed by a trace copy (so shapes in front still cover it) whose dash is the length of that path. */
+.site-mark { --mark-trace: #2f9460; }
+.site-mark .mark-trace { fill: none; stroke: var(--mark-trace); transition: stroke-dashoffset .35s ease-in; }
+.site-mark .mark-groove + .mark-trace { stroke-width: 3.2; }
+.site-mark .mark-steel + .mark-trace { --trace-delay: .2s; }
+.site-mark .mark-groove + .mark-trace { --trace-delay: .3s; }
+.site-mark .mark-mid + .mark-trace { --trace-delay: .1s; }
+.site-mark .mark-front + .mark-trace { --trace-delay: .25s; }
+.site-mark:focus-visible .mark-trace { stroke-dashoffset: 0; transition: stroke-dashoffset .9s ease-out var(--trace-delay, 0s); }
+@media (hover: hover) {
+  .site-mark:hover .mark-trace { stroke-dashoffset: 0; transition: stroke-dashoffset .9s ease-out var(--trace-delay, 0s); }
 }
+/* With reduced motion the outline still turns green, without drawing. */
+@media (prefers-reduced-motion: reduce) { .site-mark .mark-trace, .site-mark:hover .mark-trace, .site-mark:focus-visible .mark-trace { transition: none; } }
 .hero { position: relative; display: grid; grid-template-columns: 56.5% 43.5%; align-items: center; padding: 39px 0 35px; }
 /* Below this width the illustration fills its column, so keep it clear of the frame's vertical line. */
 @media (max-width: 1100px) { .hero { padding-right: 28px; } }
@@ -389,7 +393,7 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
   /* Artwork and the dark-green Tabler icons. */
   .hero-illustration, .featured-pick > img, .project-illustration, .line-art { filter: var(--line-art); }
   /* The corner mark draws with the colors that filter gives the other art. */
-  .site-mark { --mark-line: #94a98b; --mark-back: #2f3b2b; --mark-front: #293425; --mark-steel: #202a1c; }
+  .site-mark { --mark-line: #94a98b; --mark-back: #2f3b2b; --mark-front: #293425; --mark-steel: #202a1c; --mark-trace: #98d4a8; }
   /* Art drawn on white: after the filter the white is darker than the card, so lighten drops it. */
   .art-on-white { mix-blend-mode: lighten; }
   .link-icon, .store-icon { filter: invert(1) hue-rotate(180deg) brightness(1.05); }
