@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="I ran the same six web research questions through Claude Code, Codex CLI and Google's Antigravity CLI, twice, and checked every link they cited. The tool mattered more than the model.">
+  <meta name="author" content="Daniel Yakobian">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
+  <meta property="og:site_name" content="Daniel Yakobian">
+  <meta property="og:title" content="Which AI CLI can actually search the web?">
+  <meta property="og:description" content="I ran the same six web research questions through Claude Code, Codex CLI and Google's Antigravity CLI, twice, and checked every link they cited. The tool mattered more than the model.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://danielyakobian.com/blog/ai-cli-web-search.html">
+  <meta property="og:image" content="https://danielyakobian.com/assets/writing/ai-cli-web-search.jpg">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="900">
+  <meta property="article:published_time" content="2026-11-09">
+  <meta property="article:author" content="https://danielyakobian.com/">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Which AI CLI can actually search the web? | Daniel Yakobian</title>
+  <link rel="canonical" href="https://danielyakobian.com/blog/ai-cli-web-search.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png">
+  <link rel="stylesheet" href="../styles.css?v=mark-3">
+  <link rel="stylesheet" href="blog.css?v=9">
+  <script src="/analytics.js?v=6" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Which AI CLI can actually search the web?",
+    "description": "I ran the same six web research questions through Claude Code, Codex CLI and Google's Antigravity CLI, twice, and checked every link they cited. The tool mattered more than the model.",
+    "url": "https://danielyakobian.com/blog/ai-cli-web-search.html",
+    "mainEntityOfPage": "https://danielyakobian.com/blog/ai-cli-web-search.html",
+    "image": "https://danielyakobian.com/assets/writing/ai-cli-web-search.jpg",
+    "datePublished": "2026-11-09",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
+    "publisher": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
+    "isPartOf": { "@type": "Blog", "@id": "https://danielyakobian.com/blog/#blog", "url": "https://danielyakobian.com/blog/" }
+  }
+  </script>
+</head>
+<body class="blog-page" id="top">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="page-frame">
+    <header class="site-header"><a class="identity" href="../" aria-label="Daniel, home">Daniel</a><nav aria-label="Main navigation"><a href="../#work" data-icon="work">Work</a><a href="./" aria-current="page" data-icon="blog">Blog</a><a href="https://github.com/danielyaa5" data-icon="github">GitHub</a></nav></header>
+    <main id="content"><article class="blog-article"><header class="article-header"><p class="eyebrow">Notes on building software</p><h1>Which AI CLI can actually search the web?</h1><p class="article-meta"><a href="../" rel="author">Daniel Yakobian</a> · <time datetime="2026-11-09">November 9, 2026</time></p></header><div class="article-body">
+
+<h2>The short answer</h2>
+<p>I ran the same 6 web research questions through Claude Code, OpenAI's Codex CLI and Google's Antigravity CLI, twice.</p>
+<ul>
+<li><strong>Claude Code and Codex were the ones I'd trust.</strong> Across their 36 runs, I didn't find either one inventing a link or a fact. Claude Code finished all 6 questions in under 4 minutes, making it the fastest. It was also the only one that found the tiny Hacker News posts, by calling HN's search API instead of searching the web. Codex was the only one that consistently returned real reddit.com links.</li>
+<li><strong>Antigravity was slow, and its results depended on the model.</strong> Gemini 4 Argon was accurate, but each pass took almost half an hour. It returned Google redirect links without ever giving me a real URL. Gemini 3.8 Flash priced a $200 board at $80 and dismissed the correct price as &ldquo;search scraper hallucinations&rdquo;.</li>
+<li><strong>The tool matters more than the model.</strong> Claude Opus 5.5 got 11 of 12 in Claude Code and 6 of 12 in Antigravity, where it couldn't open a single page. Inside Antigravity, it gave the wrong version of my package twice. It also invented three Reddit links in one run, sending me to a chess puzzle and a philosophy question.</li>
+</ul>
+
+<h2>Why I tested this</h2>
+<p>Two of my side projects use an AI agent CLI for web research. Switching the CLI changed the results much more than I'd expected.</p>
+<ul>
+<li><strong>Reply Radar</strong> runs privately on my home Mac. It looks for fresh Reddit and Hacker News threads where a reply about one of my projects would be useful. In October, Codex (GPT-6 Astra) found 22 threads across 7 projects. Gemini 3.8 Flash found zero through Google's Antigravity CLI. I retested with Gemini 4 Argon on Nov 2, and it also found zero.</li>
+<li>Antigravity's search tool returned only <code>vertexaisearch.cloud.google.com</code> redirect links, never the actual thread URLs. I tried allowing those citations anyway. It then matched years-old threads to invented titles and dates, so I turned it off.</li>
+<li>Claude Code ran into the opposite problem: its web search found no Reddit pages, and Reddit rejected its attempts to fetch them.</li>
+<li><strong><a href="https://github.com/danielyaa5/price-watch">Price Watch</a></strong>, my deal tracker, uses Gemini through Antigravity three times a day. It gave me redirect links in place of store pages and often reported prices from search summaries without reading the store page. I added code to resolve those redirects and flag prices it couldn't verify.</li>
+</ul>
+<p>These were anecdotes from two apps using different prompts. I wanted a comparison that would tell me whether the gap was real and whether it came from the model or the tool running it.</p>
+
+<h2>How I tested</h2>
+<p>I gave six setups the same 6 questions with the same prompt, twice, on the evening of Nov 8, 2026 (Pacific). That's 72 runs. All ran on the M2 MacBook Air that serves as my home server, and all 72 completed without an error or a timeout.</p>
+<div class="table-wrap" role="region" aria-labelledby="setups-caption" tabindex="0">
+<table class="data-table text-table">
+  <caption id="setups-caption">The six setups</caption>
+  <thead><tr><th scope="col">Setup</th><th scope="col">CLI and version</th><th scope="col">Model and effort</th><th scope="col">Search tools it had</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Claude Code</th><td>Claude Code 2.1.317</td><td>Claude Opus 5.5, high</td><td>WebSearch, WebFetch</td></tr>
+    <tr><th scope="row">Codex Astra</th><td>Codex CLI 0.162.0-alpha.17.2</td><td>GPT-6 Astra, high</td><td>built-in web search (live)</td></tr>
+    <tr><th scope="row">Codex Sol</th><td>Codex CLI 0.162.0-alpha.17.2</td><td>GPT-6.1 Sol (my default), high</td><td>built-in web search (live)</td></tr>
+    <tr><th scope="row">agy Argon</th><td>Antigravity CLI (agy) 1.5.3</td><td>Gemini 4 Argon, high</td><td>search_web (read_url_content listed, never used)</td></tr>
+    <tr><th scope="row">agy Flash</th><td>Antigravity CLI (agy) 1.5.3</td><td>Gemini 3.8 Flash, high</td><td>search_web (read_url_content listed, never used)</td></tr>
+    <tr><th scope="row">agy Claude</th><td>Antigravity CLI (agy) 1.5.3</td><td>Claude Opus 5.5, high</td><td>search_web (read_url_content listed, never used)</td></tr>
+  </tbody>
+</table>
+</div>
+<p>The last row gives me a control. Antigravity also runs Claude, which lets me test the same model in two tools. If Claude struggles inside Antigravity, I can blame the tool rather than Gemini. Google's older Gemini CLI isn't installed on that Mac; Antigravity is the CLI Google ships now.</p>
+<p><strong>The questions</strong> come from the work my apps actually do. For each, I could check the answer against a primary source:</p>
+<ol>
+<li><strong>Fresh news:</strong> who won the 2026 World Series, who they played, the series result, the deciding game's date and the MVP. Every part of it happened after every model's training cutoff.</li>
+<li><strong>New release:</strong> the latest uv version, its release date and two changes listed in its release notes.</li>
+<li><strong>Store price:</strong> the price of a Raspberry Pi 5 with 8GB on adafruit.com, and whether it's in stock.</li>
+<li><strong>Reddit threads:</strong> up to 5 posts from the last 30 days asking how to free up iCloud storage taken up by photos or videos.</li>
+<li><strong>Hacker News threads:</strong> up to 5 submissions about Home Assistant or home automation from the last 14 days, including points and dates.</li>
+<li><strong>A package page:</strong> the latest version of my npm package puml-for-markdown and the Node versions it supports.</li>
+</ol>
+<p><strong>Same conditions for everyone.</strong> I started every run in an empty temporary folder with no MCP servers. Claude Code could use only its two web tools. Codex used its read-only sandbox. Antigravity ran under macOS sandbox-exec with its MCP config hidden, matching the setup in my apps. Each prompt started with the date and requested a plain answer, a list of source URLs and an admission if anything couldn't be confirmed.</p>
+<p><strong>Checking.</strong> Before and after each pass, I saved snapshots of the real answers from the GitHub releases API, the npm registry, Adafruit's product page and Hacker News search. I then fetched every URL in every final answer, following Google redirects to their destinations. For Reddit, I checked post IDs in the arctic-shift Reddit archive. For Hacker News, I used the official HN API. That let me compare the cited titles, dates and points with the actual posts.</p>
+
+<h2>Scoreboard</h2>
+<p>Each cell shows how many passes, out of 2, produced the right answer. A Reddit or Hacker News answer needed at least one real post within the time window and no made-up posts to count.</p>
+<div class="table-wrap" role="region" aria-labelledby="score-caption" tabindex="0">
+<table class="data-table score-table">
+  <caption id="score-caption">Passes with the right answer, out of 2</caption>
+  <thead><tr><th scope="col">Setup</th><th scope="col">News</th><th scope="col">Release</th><th scope="col">Price</th><th scope="col">Reddit</th><th scope="col">HN</th><th scope="col">Package</th><th scope="col">Score</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Claude Code</th><td>2</td><td>2</td><td>2</td><td>1</td><td>2</td><td>2</td><td><strong>11/12</strong></td></tr>
+    <tr><th scope="row">agy Argon</th><td>2</td><td>2</td><td>2</td><td>2</td><td>1</td><td>2</td><td><strong>11/12</strong></td></tr>
+    <tr><th scope="row">Codex Astra</th><td>2</td><td>2</td><td>2</td><td>2</td><td>0</td><td>2</td><td><strong>10/12</strong></td></tr>
+    <tr><th scope="row">Codex Sol</th><td>2</td><td>2</td><td>2</td><td>2</td><td>0</td><td>2</td><td><strong>10/12</strong></td></tr>
+    <tr><th scope="row">agy Flash</th><td>2</td><td>2</td><td>1</td><td>0</td><td>0</td><td>2</td><td><strong>7/12</strong></td></tr>
+    <tr><th scope="row">agy Claude</th><td>2</td><td>2</td><td>2</td><td>0</td><td>0</td><td>0</td><td><strong>6/12</strong></td></tr>
+  </tbody>
+</table>
+</div>
+<p>Those scores leave out two substantial differences: how long the answers took and whether a setup made anything up.</p>
+<div class="table-wrap" role="region" aria-labelledby="time-caption" tabindex="0">
+<table class="data-table wrap-head">
+  <caption id="time-caption">Time, tool use and mistakes</caption>
+  <thead><tr><th scope="col">Setup</th><th scope="col">Minutes for 6 questions (pass 1 / pass 2)</th><th scope="col">Searches</th><th scope="col">Pages opened</th><th scope="col" class="cell-text">Wrong or made-up details</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Claude Code</th><td>3.8 / 3.7</td><td>14</td><td>45</td><td class="cell-text">none found</td></tr>
+    <tr><th scope="row">Codex Astra</th><td>5.6 / 4.2</td><td>31</td><td>15</td><td class="cell-text">none found</td></tr>
+    <tr><th scope="row">Codex Sol</th><td>7.0 / 4.5</td><td>34</td><td>20</td><td class="cell-text">none found</td></tr>
+    <tr><th scope="row">agy Claude</th><td>5.6 / 5.0</td><td>73</td><td>0</td><td class="cell-text">a wrong version twice, a wrong pull request number, 3 invented Reddit URLs</td></tr>
+    <tr><th scope="row">agy Flash</th><td>14.9 / 17.1</td><td>312</td><td>0</td><td class="cell-text">an $80 price for a $200 board, an invented final score</td></tr>
+    <tr><th scope="row">agy Argon</th><td>28.0 / 26.1</td><td>341</td><td>0</td><td class="cell-text">none found</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="table-note">The search and page counts cover both passes combined. All six setups ran alongside each other, sharing the same network at the same time.</p>
+<p>I checked every cited link. The only ones I found pointing to the wrong thing were Claude's three invented Reddit URLs inside Antigravity. A handful wouldn't load: one dead Google redirect, one link truncated after &ldquo;item?id=&rdquo;, some rate limits and bot walls, and six HN API links that my own checker cut short. Some citations were just home pages that padded the source list.</p>
+
+<h2>What happened, question by question</h2>
+<h3>1. Fresh news: everyone got it</h3>
+<p>All 12 runs answered correctly: the Milwaukee Brewers beat the Tampa Bay Rays 4 games to 1, winning Game 5 on Oct 28, with William Contreras as MVP. The extra details were where the answers diverged. Claude Code opened two pages and included details such as Contreras hitting .381. In its second answer, Gemini 3.8 Flash described Game 5 as &ldquo;a 4&ndash;0 shutout&rdquo;; the score was 4-1. Claude inside Antigravity had the facts right but added a warning: &ldquo;I only had search summaries to work from and couldn't open the full pages, so this is less checked than I'd like.&rdquo;</p>
+
+<h3>2. New release: same answer, very different effort</h3>
+<p>All 12 answers identified uv 0.13.7, released Nov 3. Claude Code went directly to uv's GitHub releases without searching and finished in 17 to 23 seconds. Codex needed 15 to 32 seconds. Gemini through Antigravity took 78 to 105 seconds to reach the same answer. Claude inside Antigravity attached the wrong pull request number to one change: #23077 instead of #22977.</p>
+
+<h3>3. Store price: one confident wrong answer</h3>
+<p>The 8GB Pi 5 was $200.00 on Adafruit, in stock, with a limit of 2 per customer. Eleven of 12 runs reported that correctly. Gemini 3.8 Flash's first pass was the exception. After 28 searches and no page reads, it answered:</p>
+<blockquote><p>Adafruit currently charges $80.00 for the standalone Raspberry Pi 5 with 8GB of RAM... Don't let search scraper hallucinations or marketplace scalpers convince you it's a $200 board</p></blockquote>
+<p>It had picked up the old launch price, then argued that the correct price was wrong. On the second pass, the same setup reported $200. This is the same failure that led me to add price checks to Price Watch. Codex and Claude Code read the product page on every run. Claude Code even fetched it a second time to quote the exact wording around the price.</p>
+
+<h3>4. Reddit: Codex wins, Antigravity needs a decoder</h3>
+<p>Only Codex returned real reddit.com links every time. Each of the four Codex runs listed 4 or 5 posts. All were real, all were from the last 30 days, and the runs mostly selected the same posts.</p>
+<p>Claude Code's search tool refuses reddit.com, while Reddit blocked its page fetches. On the first pass, it explained the problem and returned nothing. On the second, it found r/iCloud's RSS feed and extracted two real posts after 12 fetches.</p>
+<p>Antigravity's results varied by model:</p>
+<ul>
+<li><strong>Gemini 4 Argon</strong> returned 5 good posts in each pass. Every title, subreddit and date matched the post at the other end of the link. None of those links was a reddit.com URL, though. It said it couldn't see the post IDs and wouldn't guess, so it supplied Google redirects instead. The first pass took 9 minutes; the second took almost 5.</li>
+<li><strong>Gemini 3.8 Flash</strong> said it couldn't confirm anything, but still supplied citations. Most were stale: 9 of 10 links pointed to posts outside the window, including some from January.</li>
+<li><strong>Claude</strong> refused both times: &ldquo;I'd rather give you nothing than five made-up links.&rdquo; Yet in pass two, alongside its claim to have found nothing, it listed three reddit.com URLs. Their slugs match real post titles, but their post IDs are invented. One goes nowhere. Another opens a chess puzzle in r/chessquiz, and the third opens a question in r/askphilosophy.</li>
+</ul>
+<p>Reply Radar's Antigravity runs in October had attached invented titles to old threads. Here, Argon's details were correct, and Flash didn't list anything as found. The difficulty was checking the links. Without following Google's redirects, there's no way to distinguish a good answer from a bad one.</p>
+
+<h3>5. Hacker News: only the API caller found anything</h3>
+<p>This question was the hardest because the relevant stories were tiny. HN's own search turns up just two stories mentioning Home Assistant within the window, with 3 and 2 points. Neither got anywhere near the front page.</p>
+<p>Claude Code found both on both passes, along with three related stories, and reported the right points and dates. It made no web searches. Instead, it sent six queries directly to HN's Algolia search API using WebFetch and finished in about 43 seconds.</p>
+<p>Everyone else returned nothing on the first pass. Gemini 4 Argon used 700 seconds and 88 searches before saying it had checked each day's front page, somewhere a 2-point story never appears. On its second pass, it found 5 real stories within the window, including one of the two. Codex came back empty on all four attempts, taking 100 to 190 seconds each. It didn't invent posts, either: it offered older stories as near misses and gave their dates and points correctly. Even Gemini 3.8 Flash, which found nothing, supplied a correct item URL for an older story with 251 points from Oct 16. Search snippets do sometimes include the real ID.</p>
+
+<h3>6. Package page: Antigravity's Claude missed twice</h3>
+<p>The correct answer is 2.2.0, requiring Node 22 or newer. Claude Code was the only setup to read the npm registry directly, taking 16 to 32 seconds. Codex couldn't load npm's site, so it checked GitHub's release page and package.json instead and explained that substitution. Gemini 4 Argon reached the answer partly by quoting my repo's AGENTS.md. Gemini 3.8 Flash answered correctly and added, &ldquo;Quizzing me on your own repo? I see what you did there.&rdquo; I hadn't identified myself in the prompt. Claude inside Antigravity answered &ldquo;probably 2.1.2&rdquo; on both passes.</p>
+
+<h2>Is it the model or the tool?</h2>
+<p>I ran Claude Opus 5.5 in Claude Code and Antigravity with identical prompts and the same effort setting. It scored 11 of 12 in Claude Code, versus 6 of 12 in Antigravity. With the model held constant, that gap comes from the tool.</p>
+<p>Page reading is the difference. Antigravity lists <code>read_url_content</code> as an available tool, yet none of its 36 runs used it, regardless of model. Claude repeatedly said it had no way to read pages: &ldquo;I only have a search tool here, not one that loads the page itself, so these figures come from search engine snapshots that may be out of date.&rdquo; What Antigravity's search supplies is a short AI-written summary and redirect links. The model sees Google's summary, without ever seeing the store page, registry entry or Reddit post behind it.</p>
+<p>For the most part, Claude was honest about that limitation. It hedged every answer, declined to list Reddit or HN posts it couldn't verify, and pointed me to places I could check myself. That caution didn't make the answers correct. It guessed &ldquo;probably 2.1.2&rdquo; for my package twice. In one Reddit run, it assembled URLs from titles in the summaries and supplied post IDs that don't exist.</p>
+<p>In Claude Code, the same model largely bypassed search. It made no searches on 4 of the 6 questions, going directly to uv's GitHub releases, Adafruit's product page, HN's search API and the npm registry. Across both passes, it opened 45 pages and made 14 searches. That explains its speed: reading the right page once beats searching a dozen times.</p>
+<p>The Gemini results follow the same pattern. Gemini 4 Argon got the facts right, but needed about 170 searches per pass to reconstruct from snippets what a few page reads would have given it. It also couldn't return a real URL. Codex fell between the two approaches. Its search supports opening pages and finding text within them, and it used that on most questions, though it couldn't access HN's API or npm's site.</p>
+
+<h2>Caveats</h2>
+<ul>
+<li><strong>Two passes is a small sample.</strong> Results sometimes changed between passes for the same setup. Gemini 4 Argon went from no HN posts in pass one to five in pass two. Gemini 3.8 Flash gave the wrong price once and the right price once. A one-point scoreboard difference is noise.</li>
+<li><strong>One Mac, one network.</strong> I ran everything on my M2 MacBook Air, with traffic routed through NordVPN. Reddit blocks a lot of VPN traffic, which probably made Claude Code's Reddit fetches less successful. A different network could produce different results.</li>
+<li><strong>The setups weren't perfectly identical.</strong> Safe mode kept my personal settings out of Claude Code. Codex loaded my global AGENTS.md by default, a 34 KB file of working rules. Antigravity somehow knew who I was despite having no instruction file from me. My guess is that it used the signed-in Google account.</li>
+<li><strong>Search indexes move.</strong> These answers reflect the search engines' contents on the evening of Nov 8. I took the ground-truth snapshots in the same hour.</li>
+<li><strong>Redirect links lasted at least a day.</strong> I checked all 105 Google redirect links again about 20 hours later. Of those, 103 still reached the same page. The remaining two had led to another redirect on the first check; one now returns a 404. I didn't check beyond that.</li>
+<li><strong>I didn't compare cost.</strong> Claude Code reported API-equivalent usage of $0.50 and $0.58 per pass. Codex and Antigravity used subscription plans that don't report a cost.</li>
+<li><strong>Hand scoring.</strong> I compared the answers with the snapshots and scored them myself. Whether a post is &ldquo;about Home Assistant&rdquo; or &ldquo;asks how to free up iCloud storage&rdquo; involves judgment. HN points also drift, so I accepted counts within a couple of the snapshot.</li>
+</ul>
+
+<h2>What I'm changing, and what I'd tell you</h2>
+<p>For my own apps:</p>
+<ul>
+<li><strong>Reply Radar stays on Codex,</strong> keeping Claude Code as its existing backup. Only Codex supplied real Reddit links every time. For Hacker News, I'll use HN's Algolia API directly rather than have an agent search, since that was the only approach that found the small posts.</li>
+<li><strong>Price Watch needs to read the store page.</strong> It currently uses Gemini 3.8 Flash in Antigravity, the setup that priced a $200 board at $80. I'll either move it to Codex or Claude Code, or have the app fetch the product page and give the model its text.</li>
+<li><strong>One flag needs to go.</strong> My Antigravity command includes both <code>--disable-slash-commands</code> and <code>--mode plan</code>. In agy 1.5.3, setting that flag quietly disables plan mode.</li>
+</ul>
+<p>If you're choosing an AI CLI for web research:</p>
+<ol>
+<li><strong>Choose one that can open pages.</strong> Search summaries are fine for big news, but I wouldn't rely on them for prices, version numbers or anything small or new.</li>
+<li><strong>Give it an API when one exists.</strong> HN's Algolia API, the npm registry and GitHub's releases page beat any search engine. The agent that used them also finished fastest.</li>
+<li><strong>Check the links, not the tone.</strong> Cautious wording didn't guarantee a correct answer. The most confidently wrong answer here dismissed the actual price as a hallucination. Opening every cited link with a script caught every fake one in this test.</li>
+<li><strong>Use Gemini 4 Argon in Antigravity if you can wait,</strong> and follow the redirect links yourself before trusting the answer.</li>
+</ol>
+
+<h2>Appendix: exact commands</h2>
+<p>I gave every run this prompt, with the question appended:</p>
+<blockquote><p>Today's date is 2026-11-09. Answer the question below using your built-in web search and web page reading tools. Don't read local files, run shell commands or write files; everything you need is on the web. Answer in plain text. End with a line 'Sources:' followed by every URL you relied on, one per line. If you can't find or confirm something, say so instead of guessing.</p></blockquote>
+<p>Claude Code (prompt on stdin):</p>
+<pre class="command" tabindex="0"><code>claude -p --safe-mode --model opus --effort high --output-format stream-json --verbose \
+  --max-turns 40 --no-session-persistence --strict-mcp-config --mcp-config '{"mcpServers":{}}' \
+  --tools WebSearch,WebFetch --allowedTools WebSearch,WebFetch --permission-mode dontAsk</code></pre>
+<p>Codex (prompt on stdin; Sol runs drop <code>-m</code>, so Codex uses its configured default, gpt-6.1-sol):</p>
+<pre class="command" tabindex="0"><code>codex exec --json --sandbox read-only --skip-git-repo-check --ephemeral --color never \
+  -c web_search="live" -c 'mcp_servers={}' -c model_reasoning_effort="high" \
+  -o last.txt -m gpt-6-astra -</code></pre>
+<p>Antigravity (model is <code>gemini-4-argon-high</code>, <code>gemini-3.8-flash-high</code> or <code>claude-opus-5-5-high</code>):</p>
+<pre class="command" tabindex="0"><code>/usr/bin/sandbox-exec -p '(version 1)(allow default)(deny file-read-data file-write* (regex #"/mcp_config[.]json$"))' \
+  agy --mode plan --output-format stream-json --print-timeout 16m --disable-slash-commands \
+  --model gemini-4-argon-high -p "&lt;prompt&gt;"</code></pre>
+<p>agy 1.5.3 warns that <code>--mode plan</code> does nothing when <code>--disable-slash-commands</code> is set. These runs therefore weren't in plan mode. Even so, all 36 runs called only <code>search_web</code>, wrote no files and left every working folder empty.</p>
+</div><p class="article-back"><a href="./">← All posts</a></p></article></main>
+    <footer class="site-footer"><p><a href="../">Daniel</a> / Built to be useful.</p><a href="./">All posts</a></footer>
+  </div>
+</body>
+</html>

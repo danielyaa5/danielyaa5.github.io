@@ -101,7 +101,7 @@ async function layout(page) {
         await page.getByRole('navigation').getByRole('link',{name:'Blog',exact:true}).tap();
         await page.waitForURL('**/blog/');
         await page.evaluate(()=>Promise.all([...document.images].map(i=>{i.loading='eager';return i.decode();})));
-        assert.equal(await page.locator('.post-card .writing-thumb').count(),7);
+        assert.equal(await page.locator('.post-card .writing-thumb').count(),8);
         result.blogLayout=await layout(page);
         assert.equal(result.blogLayout.sideways,false);
         assert.deepEqual(result.blogLayout.images,[]);

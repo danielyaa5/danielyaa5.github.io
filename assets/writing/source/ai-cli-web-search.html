@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8">
+<!-- Source for assets/writing/ai-cli-web-search.webp and .jpg: an illustration built from the post's real numbers (scores out of 12, average minutes per pass). Render at 1600x900 (e.g. Playwright screenshot), save as WebP and JPEG. -->
+<style>
+html,body{margin:0;width:1600px;height:900px;overflow:hidden;background:#f1f3e8;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Inter,Arial,sans-serif;color:#111810}
+.wrap{position:relative;width:100%;height:100%;display:grid;grid-template-columns:520px 1fr;align-items:center;padding:0 100px 0 80px;box-sizing:border-box;gap:70px}
+.lens{width:520px;height:520px}
+.chart h3{display:grid;grid-template-columns:250px 1fr 140px;margin:0 0 22px;font-size:26px;font-weight:700;color:#455f3d;letter-spacing:.02em}
+.chart h3 span:last-child{text-align:right}
+.row{display:grid;grid-template-columns:250px 1fr 140px;align-items:center;height:92px}
+.name{font-size:36px;font-weight:700;color:#24452f;letter-spacing:-.4px}
+.name small{display:block;font-size:24px;font-weight:600;color:#52604d;letter-spacing:0;margin-top:2px}
+.track{position:relative;height:50px;border-radius:6px;background:#e1e4d3}
+.bar{height:100%;border-radius:6px;background:#2e8b57;display:flex;align-items:center;justify-content:flex-end;padding-right:16px;box-sizing:border-box;font-size:30px;font-weight:700;color:#fffdf6}
+.bar.mid{background:#7f9a7a}.bar.low{background:#a8b99f;color:#24452f}
+.min{text-align:right;font-size:34px;font-weight:700;color:#24452f;font-variant-numeric:tabular-nums}
+.min.slow{color:#9a3b1f}
+</style></head><body><div class="wrap">
+<svg class="lens" viewBox="0 0 520 520" aria-hidden="true">
+  <!-- a browser window seen through a magnifying glass -->
+  <rect x="20" y="70" width="400" height="300" rx="20" fill="#fffdf6" stroke="#24452f" stroke-width="8"/>
+  <line x1="20" y1="122" x2="420" y2="122" stroke="#24452f" stroke-width="8"/>
+  <circle cx="56" cy="96" r="9" fill="#24452f"/><circle cx="86" cy="96" r="9" fill="#24452f"/><circle cx="116" cy="96" r="9" fill="#24452f"/>
+  <rect x="150" y="84" width="240" height="24" rx="12" fill="#e1e4d3"/>
+  <rect x="60" y="160" width="230" height="20" rx="10" fill="#7f9a7a"/>
+  <rect x="60" y="200" width="300" height="14" rx="7" fill="#c9d3bf"/>
+  <rect x="60" y="230" width="270" height="14" rx="7" fill="#c9d3bf"/>
+  <rect x="60" y="275" width="200" height="20" rx="10" fill="#7f9a7a"/>
+  <rect x="60" y="315" width="290" height="14" rx="7" fill="#c9d3bf"/>
+  <circle cx="300" cy="300" r="118" fill="#f1f3e8" fill-opacity=".55" stroke="#24452f" stroke-width="16"/>
+  <path d="M 246 270 a 66 66 0 0 1 60 -36" fill="none" stroke="#fffdf6" stroke-width="10" stroke-linecap="round"/>
+  <line x1="386" y1="386" x2="480" y2="480" stroke="#24452f" stroke-width="34" stroke-linecap="round"/>
+  <line x1="382" y1="382" x2="402" y2="402" stroke="#24452f" stroke-width="20"/>
+</svg>
+<div class="chart">
+  <h3><span>Setup</span><span>Correct out of 12</span><span>Min/pass</span></h3>
+  <div class="row"><span class="name">Claude Code</span><span class="track"><span class="bar" style="width:91.7%">11</span></span><span class="min">4</span></div>
+  <div class="row"><span class="name">Argon<small>in Antigravity</small></span><span class="track"><span class="bar" style="width:91.7%">11</span></span><span class="min slow">27</span></div>
+  <div class="row"><span class="name">Codex Astra</span><span class="track"><span class="bar mid" style="width:83.3%">10</span></span><span class="min">5</span></div>
+  <div class="row"><span class="name">Codex Sol</span><span class="track"><span class="bar mid" style="width:83.3%">10</span></span><span class="min">6</span></div>
+  <div class="row"><span class="name">Flash<small>in Antigravity</small></span><span class="track"><span class="bar low" style="width:58.3%">7</span></span><span class="min slow">16</span></div>
+  <div class="row"><span class="name">Claude<small>in Antigravity</small></span><span class="track"><span class="bar low" style="width:50%">6</span></span><span class="min">5</span></div>
+</div>
+</div></body></html>
