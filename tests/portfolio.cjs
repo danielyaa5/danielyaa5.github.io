@@ -23,6 +23,13 @@ const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer
     assert.deepEqual(await page.locator('.hero-description strong').allTextContents(), ['Snapchat','Clutter','Tinder']);
     assert.equal(await page.locator('.hero-description').innerText(), 'Software engineer since 2016; Snapchat, Clutter, Tinder. In my free time I make apps, dev tools, 3D prints and work on my motorcycles and car.');
     assert.equal(await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'3D Print Shop',exact:true}).getAttribute('href'), 'https://www.ebay.com/usr/encino_gold-silver');
+    // The corner mark links to the book; on phones its tap area (the link plus its 5px ::after) stays at least 44px.
+    const mark = page.getByRole('link',{name:'Zen and the Art of Motorcycle Maintenance on Goodreads',exact:true});
+    assert.equal(await mark.getAttribute('href'), 'https://www.goodreads.com/book/show/629.Zen_and_the_Art_of_Motorcycle_Maintenance');
+    assert.equal(await page.locator('.site-mark svg path').count(), 8);
+    await page.setViewportSize({width:320,height:1000});
+    assert.ok(await mark.evaluate(link=>{ const r=link.getBoundingClientRect(); const pad=-parseFloat(getComputedStyle(link,'::after').top)*2; return r.width+pad>=44 && r.height+pad>=44; }), 'Corner mark tap area is at least 44px on phones');
+    await page.setViewportSize({width:1440,height:1000});
 
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');

@@ -29,9 +29,33 @@ nav a { display: inline-flex; align-items: center; justify-content: center; min-
 [data-icon="moto"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='5' cy='16' r='3'/%3E%3Ccircle cx='19' cy='16' r='3'/%3E%3Cpath d='M7.5 14h5l4-4H6m1.5 4 4-4'/%3E%3Cpath d='M13 6h2l1.5 3 2 4'/%3E%3C/svg%3E"); }
 [data-icon="github"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 19c-4 1.3-4-2-6-2.5m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21'/%3E%3C/svg%3E"); }
 button:focus-visible { outline: 2px solid var(--green); outline-offset: 5px; }
-/* The vertical line under the tree runs beside the hero only, so the grid below never crosses it. */
+/* The vertical line under the corner mark runs beside the hero only, so the grid below never crosses it. */
 .hero::after { content: ""; position: absolute; right: 5px; top: 4px; bottom: 0; border-left: 1px solid #789182; pointer-events: none; }
-.pine { position: absolute; top: 14px; right: 11px; width: 62px; height: 57px; object-fit: contain; }
+/* The corner mark: a wrench growing out of grass, drawn as inline SVG line art, linking to
+   Zen and the Art of Motorcycle Maintenance. The frame's vertical line reads as its stem. */
+.site-mark { --mark-line: #203222; --mark-back: #cfe0bd; --mark-front: #dbe9c9; --mark-steel: #f1f2e8; position: absolute; top: 14px; right: 11px; width: 62px; height: 57px; border-radius: 6px; }
+/* A larger tap area than the drawing, for phones where the mark is small. */
+.site-mark::after { content: ""; position: absolute; inset: -5px; }
+.site-mark:focus-visible { outline-offset: 2px; }
+.site-mark svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.site-mark path { stroke: var(--mark-line); stroke-width: 4.2; stroke-linejoin: round; stroke-linecap: round; }
+.site-mark .mark-back { fill: var(--mark-back); }
+.site-mark .mark-mid, .site-mark .mark-front { fill: var(--mark-front); }
+.site-mark .mark-steel { fill: var(--mark-steel); }
+.site-mark .mark-groove { fill: none; stroke-width: 3.2; }
+/* Leaves and wrench turn and move around the base of the plant. */
+.site-mark .mark-leaf, .site-mark .mark-wrench { transform-box: view-box; transform-origin: 96px 168px; }
+/* Hover: the wrench rises out of the grass and the leaves open; it eases back when the pointer leaves. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .site-mark .mark-leaf, .site-mark .mark-wrench { transition: rotate .55s cubic-bezier(.34, 1.56, .64, 1), translate .55s cubic-bezier(.34, 1.56, .64, 1); }
+  .site-mark:hover .mark-wrench, .site-mark:focus-visible .mark-wrench { translate: 0 -14px; }
+  .site-mark:hover .mark-back.mark-r, .site-mark:focus-visible .mark-back.mark-r { rotate: 5deg; }
+  .site-mark:hover .mark-back.mark-l, .site-mark:focus-visible .mark-back.mark-l { rotate: -5deg; }
+  .site-mark:hover .mark-mid.mark-r, .site-mark:focus-visible .mark-mid.mark-r { rotate: 9deg; }
+  .site-mark:hover .mark-mid.mark-l, .site-mark:focus-visible .mark-mid.mark-l { rotate: -9deg; }
+  .site-mark:hover .mark-front.mark-r, .site-mark:focus-visible .mark-front.mark-r { rotate: 7deg; }
+  .site-mark:hover .mark-front.mark-l, .site-mark:focus-visible .mark-front.mark-l { rotate: -7deg; }
+}
 .hero { position: relative; display: grid; grid-template-columns: 56.5% 43.5%; align-items: center; padding: 39px 0 35px; }
 /* Below this width the illustration fills its column, so keep it clear of the frame's vertical line. */
 @media (max-width: 1100px) { .hero { padding-right: 28px; } }
@@ -99,7 +123,7 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
   .page-frame { margin: 18px; padding: 0 24px; }
   .site-header { margin-right: 40px; min-height: 60px; }
   nav { padding-right: 30px; gap: 20px; font-size: 15px; }
-  .pine { right: 4px; width: 52px; height: 48px; top: 11px; }
+  .site-mark { right: 4px; width: 52px; height: 48px; top: 11px; }
   .hero::after { top: -5px; }
   .hero { padding: 34px 24px 34px 0; grid-template-columns: 61% 39%; }
   h1 { font-size: 43px; letter-spacing: -1.7px; margin-bottom: 20px; }
@@ -134,7 +158,7 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
   .site-header nav a:focus-visible { outline-color: #fdfaf3; outline-offset: -3px; }
   .site-header nav a[aria-current="page"] { background: var(--paper); color: var(--green); text-decoration: none; }
   .site-header nav a::before { content: ""; width: 22px; height: 22px; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
-  .pine { top: 12px; width: 37px; height: 34px; right: 1px; }
+  .site-mark { top: 12px; width: 37px; height: 34px; right: 1px; }
   .hero::after { display: none; }
   .hero { display: flex; flex-direction: column; align-items: stretch; padding: 30px 0 25px; }
   h1 { font-size: clamp(32px, 8.8vw, 49px); letter-spacing: -1.5px; }
@@ -365,7 +389,9 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
   .signup-status[data-kind="error"], .signup-result-error { color: #f1a395; }
   .signup-done-check { background: var(--fill); color: var(--on-fill); }
   /* Artwork and the dark-green Tabler icons. */
-  .pine, .hero-illustration, .featured-pick > img, .project-illustration, .line-art { filter: var(--line-art); }
+  .hero-illustration, .featured-pick > img, .project-illustration, .line-art { filter: var(--line-art); }
+  /* The corner mark draws with the colors that filter gives the other art. */
+  .site-mark { --mark-line: #94a98b; --mark-back: #2f3b2b; --mark-front: #293425; --mark-steel: #202a1c; }
   /* Art drawn on white: after the filter the white is darker than the card, so lighten drops it. */
   .art-on-white { mix-blend-mode: lighten; }
   .link-icon, .store-icon { filter: invert(1) hue-rotate(180deg) brightness(1.05); }
