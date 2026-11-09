@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8">
+<!-- Source for assets/writing/claude-code-max-effort.webp and .jpg: an illustration built from the post's real numbers. Render at 1600x900 (e.g. Playwright screenshot), save as WebP and JPEG. -->
+<style>
+html,body{margin:0;width:1600px;height:900px;overflow:hidden;background:#f1f3e8;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:#111810}
+.wrap{position:relative;width:100%;height:100%;display:grid;grid-template-columns:640px 1fr;align-items:center;padding:0 110px 0 90px;box-sizing:border-box;gap:70px}
+.dial{width:640px;height:640px}
+.bars{display:grid;gap:64px}
+.row h3{margin:0 0 18px;font-size:34px;font-weight:700;letter-spacing:-.5px;color:#24452f}
+.stack{display:flex;height:92px;gap:4px}
+.seg{border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;color:#fffdf6}
+.s1{background:#c9d3bf}.s2{background:#a8b99f}.s3{background:#7f9a7a}.s4{background:#2e8b57}
+.note{margin-top:14px;font-size:28px;color:#3d4a3a}
+.note b{color:#124b30}
+</style></head><body><div class="wrap">
+<svg class="dial" viewBox="0 0 640 640" aria-hidden="true">
+  <circle cx="320" cy="320" r="292" fill="#fffdf6" stroke="#b7beaa" stroke-width="4"/>
+  <circle cx="320" cy="320" r="236" fill="none" stroke="#e1e4d3" stroke-width="34"/>
+  <!-- arc from 210deg (medium) to 330deg (max), clockwise across the top -->
+  <path d="M 115.6 438 A 236 236 0 1 1 524.4 438" fill="none" stroke="#c9d3bf" stroke-width="34" stroke-linecap="round"/>
+  <path d="M 437 115.6 A 236 236 0 0 1 524.4 438" fill="none" stroke="#2e8b57" stroke-width="34" stroke-linecap="round"/>
+  <g font-size="34" font-weight="700" fill="#24452f" text-anchor="middle">
+    <text x="152" y="347">medium</text>
+    <text x="229" y="186">high</text>
+    <text x="411" y="186">xhigh</text>
+    <text x="474" y="396" fill="#124b30" font-size="40">max</text>
+  </g>
+  <g transform="rotate(68 320 320)">
+    <line x1="320" y1="320" x2="320" y2="150" stroke="#124b30" stroke-width="16" stroke-linecap="round"/>
+  </g>
+  <circle cx="320" cy="320" r="34" fill="#124b30"/>
+  <circle cx="320" cy="320" r="12" fill="#fffdf6"/>
+  <text x="320" y="470" text-anchor="middle" font-size="40" font-weight="700" fill="#24452f">effort</text>
+</svg>
+<div class="bars">
+  <div class="row"><h3>Share of my prompts</h3>
+    <div class="stack"><div class="seg s1" style="flex:28"></div><div class="seg s2" style="flex:30"></div><div class="seg s3" style="flex:21"></div><div class="seg s4" style="flex:20">20%</div></div>
+  </div>
+  <div class="row"><h3>Share of tokens generated</h3>
+    <div class="stack"><div class="seg s1" style="flex:6"></div><div class="seg s2" style="flex:17"></div><div class="seg s3" style="flex:25"></div><div class="seg s4" style="flex:51">51%</div></div>
+    <p class="note">Dark green is <b>max</b></p>
+  </div>
+</div>
+</div></body></html>

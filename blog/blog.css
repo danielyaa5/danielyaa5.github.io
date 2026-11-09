@@ -100,3 +100,39 @@
  .article-body .temp-scale li { grid-template-columns: 64px 24px minmax(0, 1fr); column-gap: 10px; }
  .temp-scale b { font-size: 15px; }
 }
+
+/* Max effort post: a paired bar chart and data tables. Bars scale so 60% fills the track (72% on phones, leaving room for the value). */
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.effort-figure { margin: 30px 0 32px; padding: 22px 24px 18px; border: 1px solid #d0d4b9; border-radius: 8px; background: #fffdf6; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0 0 18px; font-size: 14px; line-height: 1.4; color: #3d4a3a; }
+.chart-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.chart-legend .key { width: 14px; height: 14px; border-radius: 3px; }
+.key-prompts, .bar-prompts { background: #d9a21b; }
+.key-tokens, .bar-tokens { background: #2e8b57; }
+.article-body .share-chart { list-style: none; margin: 0; padding: 0; }
+.article-body .share-chart li { display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: center; column-gap: 12px; margin: 0; padding: 7px 0; padding-left: 0; }
+.share-label { font-size: 15px; font-weight: 700; line-height: 1.2; color: var(--ink); text-align: right; white-space: nowrap; }
+.share-pair { display: grid; row-gap: 2px; border-left: 1px solid #a7b2a5; padding: 2px 0; }
+.share-line { display: flex; align-items: center; gap: 8px; min-height: 16px; }
+.share-chart { --scale: 60; }
+.share-bar { display: block; flex: none; width: calc(var(--v) * 100% / var(--scale)); height: 14px; border-radius: 0 4px 4px 0; }
+.share-value { flex: none; font-size: 13px; line-height: 1; font-variant-numeric: tabular-nums; color: #3d4a3a; }
+.effort-figure figcaption { margin-top: 14px; font-size: 14px; line-height: 1.6; color: #52604d; }
+.table-wrap { margin: 0 0 14px; overflow-x: auto; border: 1px solid #d0d4b9; border-radius: 8px; background: #fffdf6; }
+.table-wrap:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.data-table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.data-table caption { padding: 12px 14px 4px; text-align: left; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #455f3d; }
+.data-table th, .data-table td { padding: 9px 14px; text-align: right; white-space: nowrap; border-top: 1px solid #e1e4d3; }
+.data-table thead th { font-size: 13px; font-weight: 600; color: #52604d; border-top: 0; vertical-align: bottom; }
+.data-table th:first-child { text-align: left; }
+.data-table tbody th { font-weight: 700; }
+.article-body .table-note { margin: 0 0 24px; font-size: 14px; line-height: 1.6; color: #52604d; }
+@media (max-width: 620px) {
+ .effort-figure { padding: 18px 14px 14px; }
+ .article-body .share-chart li { grid-template-columns: 62px minmax(0, 1fr); column-gap: 10px; }
+ .share-label { font-size: 14px; }
+ .data-table { font-size: 14px; }
+ .share-chart { --scale: 72; }
+ .data-table th, .data-table td { padding: 8px; }
+ .data-table thead th, .data-table tbody th { white-space: normal; min-width: 4.5em; }
+}
