@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Source for assets/writing/multi-agent-orchestration-tile.webp: simplified high-legibility tile for blog/index.html. Render at 1600x900. -->
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    width: 1600px;
+    height: 900px;
+    overflow: hidden;
+    background: #f1f3e8;
+    color: #111810;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+  .canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 52px 48px;
+    background:
+      radial-gradient(circle at 14% 18%, rgba(18, 75, 48, 0.08), transparent 38%),
+      radial-gradient(circle at 86% 82%, rgba(99, 130, 108, 0.12), transparent 42%),
+      #f4f6ec;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+  }
+  .hub {
+    margin: 0 auto;
+    width: 1220px;
+    background: #fffdf6;
+    border: 3px solid #63826c;
+    border-radius: 22px;
+    box-shadow: 0 16px 38px rgba(17, 24, 16, 0.07);
+    overflow: hidden;
+  }
+  .bar {
+    height: 68px;
+    background: #e6eedf;
+    border-bottom: 2px solid #a7b2a5;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    gap: 14px;
+  }
+  .dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #63826c;
+  }
+  .bar-title {
+    margin-left: 10px;
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #124b30;
+  }
+  .bar-tag {
+    margin-left: auto;
+    font-size: 22px;
+    font-weight: 700;
+    color: #455f3d;
+    background: #f4f6ec;
+    border: 1.5px solid #a7b2a5;
+    padding: 8px 22px;
+    border-radius: 999px;
+  }
+  .hub-body {
+    padding: 48px 44px;
+    text-align: center;
+  }
+  .hub-body h1 {
+    margin: 0;
+    font-size: 56px;
+    line-height: 1.12;
+    letter-spacing: -1.3px;
+    color: #111810;
+  }
+  .connectors {
+    position: relative;
+    height: 96px;
+    width: 1060px;
+    margin: 0 auto;
+  }
+  .connectors svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .lanes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .lane {
+    background: #fffdf6;
+    border: 3px solid #a7b2a5;
+    border-radius: 22px;
+    padding: 36px 32px 40px;
+    box-shadow: 0 12px 30px rgba(17, 24, 16, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 24px;
+  }
+  .lane.qa {
+    background: #e6eedf;
+    border-color: #124b30;
+  }
+  .lane-kicker {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .step-label {
+    font-size: 26px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #455f3d;
+  }
+  .lane.qa .step-label {
+    color: #124b30;
+  }
+  .pill {
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: #edf1e3;
+    border: 1.5px solid #a7b2a5;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #124b30;
+  }
+  .lane.qa .pill {
+    background: #124b30;
+    border-color: #124b30;
+    color: #fffdf6;
+  }
+  .lane h2 {
+    margin: 6px 0 0;
+    font-size: 46px;
+    line-height: 1.12;
+    letter-spacing: -1px;
+    color: #111810;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="hub">
+      <div class="bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="bar-title">Coordinator Chat</span>
+        <span class="bar-tag">Single source of truth</span>
+      </div>
+      <div class="hub-body">
+        <h1>One coordinator, three separated roles</h1>
+      </div>
+    </div>
+
+    <div class="connectors">
+      <svg viewBox="0 0 1060 96" fill="none">
+        <path d="M530 0 V42 M530 42 H130 V90 M530 42 V90 M530 42 H930 V90" stroke="#63826c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <polygon points="130,96 119,78 141,78" fill="#63826c"/>
+        <polygon points="530,96 519,78 541,78" fill="#63826c"/>
+        <polygon points="930,96 919,78 941,78" fill="#63826c"/>
+      </svg>
+    </div>
+
+    <div class="lanes">
+      <div class="lane">
+        <div class="lane-kicker">
+          <span class="step-label">1 · Discovery &amp; Review</span>
+          <span class="pill">Read-only</span>
+        </div>
+        <h2>Claude Code</h2>
+      </div>
+
+      <div class="lane">
+        <div class="lane-kicker">
+          <span class="step-label">2 · Scoped Fixes</span>
+          <span class="pill">Workspace Edit</span>
+        </div>
+        <h2>Antigravity / Claude</h2>
+      </div>
+
+      <div class="lane qa">
+        <div class="lane-kicker">
+          <span class="step-label">3 · Adversarial QA</span>
+          <span class="pill">Extra-High Effort</span>
+        </div>
+        <h2>Codex Independent<br>QA</h2>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
