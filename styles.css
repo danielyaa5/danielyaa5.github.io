@@ -254,6 +254,20 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 .project-status { display: inline-block; padding: 3px 7px; border: 1px solid #b7beaa; border-radius: 4px; font-size: 12px; line-height: 1.2; color: #455f3d; margin-top: 5px; }
 .all-writing { display: inline-flex; align-items: center; min-height: 44px; margin-top: 16px; font-weight: 700; color: var(--green); }
 .all-writing:hover { text-decoration: underline; }
+
+/* Whole-tile links: a click anywhere on a project or writing tile opens its title link, whose ::after
+   stretches over the tile (z-index 1, above art that dark mode filters into its own layer). The tile's
+   other links (store, GitHub, stars, Read article) sit above that and keep their own destinations.
+   Keyboard focus stays on the title link but rings the whole tile. */
+.featured-pick, .project, .writing-card { position: relative; transition: border-color .15s; }
+.featured-pick .project-name::after, .project .project-name::after, .writing-card h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: 5px; }
+.featured-link, .star-count, .project-link, .writing-link { position: relative; z-index: 2; }
+.project .project-name:hover { text-decoration: underline; text-underline-offset: 3px; }
+.featured-pick .project-name:focus-visible, .project .project-name:focus-visible, .writing-card h3 a:focus-visible { outline: none; }
+.featured-pick .project-name:focus-visible::after, .project .project-name:focus-visible::after, .writing-card h3 a:focus-visible::after { outline: 2px solid var(--green); outline-offset: 3px; }
+@media (hover: hover) {
+  .featured-pick:has(.project-name:hover), .project:has(.project-name:hover), .writing-card:has(h3 a:hover) { border-color: #789182; }
+}
 @media (max-width: 620px) {
   .featured-grid { gap: 10px; }
   .featured-pick { grid-template-columns: minmax(0, 1fr) clamp(84px, 24vw, 140px); gap: 14px; padding: 18px; }
@@ -374,6 +388,9 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
   .project-footer { border-color: var(--card-line); }
   .project-preview, .filter-count { color: var(--soft); }
   .writing-card { border-color: var(--card-line); }
+  @media (hover: hover) {
+    .featured-pick:has(.project-name:hover), .project:has(.project-name:hover), .writing-card:has(h3 a:hover) { border-color: #5f8a6c; }
+  }
   .writing-thumb { border-color: var(--card-line); background: var(--card); }
   .featured-pick { border-color: var(--rule); background: #1a281f; }
   .project-filters button { border-color: var(--rule); }

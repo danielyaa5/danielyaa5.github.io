@@ -18,6 +18,12 @@ Before finishing any layout change, run `node tests/frame.cjs http://localhost:4
 
 For artwork changes, run `node tests/artwork.cjs http://localhost:4173`. This checks image resolution at 2× display density, chain-icon alignment and spacing, mobile fit, and the favicon. Screenshots and the report are saved to the ignored `test-results/` directory.
 
+## Tiles
+
+Every project tile (Featured and Other projects) and every Writings card on the home page opens from anywhere on the tile, not only its title. The title link is the tile's main link: its `::after` stretches over the whole tile, so clicks, middle-clicks, right-click menus and the link preview all use its address, and screen readers still hear one link per title. The tile's other links (the store, GitHub or Explore link, the star badge and Read article) sit above that layer with `position: relative; z-index: 2` and keep their own addresses (the layer itself is `z-index: 1`, so art that dark mode's filter lifts into its own layer stays under it). When a tile gets a new link, give it the same so it stays clickable. Hovering the tile underlines the title and darkens the tile's border; keyboard focus on the title rings the whole tile. A tile's main link is its title link, so change the title's `href` to change where the tile goes.
+
+After changing tiles, run `node tests/tiles.cjs http://localhost:4173`. At phone, tablet and desktop widths, in light and dark mode, it checks that the art, description and empty corners of every tile hit the title link, that each other link in a tile is still on top and keeps its address, the hover and keyboard focus styles, and that clicking a tile's description opens its title's address. Screenshots of a hovered and a focused tile go to `test-results/tiles-*.png`.
+
 ## Resume
 
 `resume/` is the web version of the resume, with the portfolio frame and a large download button for `assets/Daniel_Yakobian_Resume.pdf`. The navigation's Resume link opens it. The page repeats the PDF's wording, so when the resume changes, replace the PDF and update `resume/index.html` together.
@@ -59,12 +65,12 @@ After changing pages, sitemaps or structured data, run `node tests/seo.cjs http:
 
 ## Analytics
 
-`analytics.js` counts page views, link clicks, resume downloads and email sign-ups, and measures page speed (web vitals), with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment, including the ones inside web vitals and link click details; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=6" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
+`analytics.js` counts page views, link clicks, resume downloads and email sign-ups, and measures page speed (web vitals), with PostHog's US cloud in cookieless mode: no cookies or browser storage, no person profiles, no session recordings. It runs only on `danielyakobian.com` and `danielyaa5.github.io`, never on local previews. Addresses on this site are sent without their query string or fragment, including the ones inside web vitals and link click details; campaign tags such as `utm_source` are kept as their own properties. The guest gate page (`gate/`) and QuickDesk's privacy policy don't load it. New pages add `<script src="/analytics.js?v=7" defer></script>` to their `<head>`; raise the `v` number on every page when `analytics.js` changes so browsers fetch the new copy.
 
 Every link opened from a project tile on the home page also sends a `project_click` event with these properties:
 
 - `project`: the tile's project name, such as `Cloud Media Shrinker`
-- `link`: `title` for the project name, `button` for the tile's store, GitHub or Explore link, `stars` for the GitHub star badge
+- `link`: `title` for the project name, `tile` for a click anywhere else on the tile that opens the same link (see Tiles), `button` for the tile's store, GitHub or Explore link, `stars` for the GitHub star badge
 - `link_text` and `destination`: the link's words and address
 - `section` and `position`: `featured` or `other`, and the tile's place in that section, counting from 1
 - `filter`: for Other projects tiles, the filter that was on (`all`, `mac`, `ios`, `web`, `developer` or `printing`)

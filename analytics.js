@@ -47,9 +47,13 @@
     if (!tile) return;
     const featured = tile.matches('.featured-pick');
     const filter = document.querySelector('.project-filters [aria-pressed="true"]')?.dataset.filter;
+    // The title link stretches over the whole tile, so a pointer click outside the name's own box
+    // counts as `tile`. Keyboard clicks (detail 0) count as `title`.
+    const onName = !event.detail || [...link.getClientRects()].some(box =>
+      event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom);
     const properties = {
       project: (tile.querySelector('.project-name, h2, h3')?.textContent || '').trim(),
-      link: link.matches('.project-name') ? 'title' : link.matches('.star-count') ? 'stars' : 'button',
+      link: link.matches('.project-name') ? (onName ? 'title' : 'tile') : link.matches('.star-count') ? 'stars' : 'button',
       link_text: link.textContent.replace(/\s+/g, ' ').trim(),
       destination: link.href,
       section: featured ? 'featured' : 'other',
