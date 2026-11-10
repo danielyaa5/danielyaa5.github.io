@@ -65,7 +65,7 @@
             <img class="line-art" src="../assets/writing/multi-agent-orchestration.webp" width="1600" height="900" alt="Diagram of a coordinator chat dispatching bounded tasks to three separate lanes: Claude Code for read-only discovery, Antigravity or Claude for workspace edits, and Codex for independent QA">
             <figcaption>One coordinator chat tracks the release state and dispatches bounded briefs to provider workers without raising windows on my desktop.</figcaption>
           </figure>
-          <p>I turned one thread into the project coordinator and built a small local orchestration skill around it. Now I talk to the coordinator, and it routes discovery, implementation, and independent QA across Claude Code, Codex, and Google Antigravity.</p>
+          <p>I turned one thread into the project coordinator and built a small local orchestration skill (<a href="https://github.com/danielyaa5/orchestrate-agents"><code>orchestrate-agents</code></a>) around it. Now I talk to the coordinator, and it routes discovery, implementation, and independent QA across Claude Code, Codex, and Google Antigravity.</p>
 
           <h2>Separating discovery, editing, and verification</h2>
           <p>When the same model writes a fix and writes the test for that fix, both often share the same blind spot. Giving those jobs to different models with different permissions caught bugs that single-session reviews missed.</p>
@@ -107,23 +107,24 @@
           <h2>Keeping worker sessions resumable and out of the way</h2>
           <p>I didn't want orchestration to mean five terminal windows popping up on my screen or stealing keyboard focus while I work. Together with <a href="agent-qa-separate-macos-account.html">running visible GUI tests in a separate macOS account</a>, the local launcher script keeps background provider chats headless and locked to their workspace:</p>
           <pre><code>python3 provider_chat.py start --provider google --model gemini-4-argon-high --effort high \
-  --mode edit --workspace "$workspace" --record "$records/google-fix.json" &lt; "$records/fix-brief.md"
+  --mode edit --isolate apfs --verify-cmd "python3 -B -m unittest" \
+  --workspace "$workspace" --record "$records/google-fix.json" &lt; "$records/fix-brief.md"
 
 python3 provider_chat.py start --provider claude --model claude-fable-5-2 --effort high \
   --mode review --workspace "$workspace" --record "$records/claude-review.json" &lt; "$records/review-brief.md"
 
 python3 provider_chat.py resume --record "$records/google-fix.json" &lt; "$records/retest-brief.md"</code></pre>
-          <p>While building the launcher, I ran into four practical traps:</p>
+          <p>While building the launcher, I ran into five practical traps:</p>
           <ul>
             <li><strong>One-shot print mode can lose context.</strong> When I tested resuming a Google session after the first process exited, ordinary print mode returned the same session ID but forgot a value supplied in the first turn. Switching the Google adapter to Antigravity's JSON-RPC Agent Client Protocol (<code>agy acp</code> with <code>session/new</code> and <code>session/load</code>) preserved the conversation across turns.</li>
             <li><strong>Requested models need receipt verification.</strong> Passing a model flag on the command line doesn't prove the provider used it. The launcher inspects the turn receipt and token usage table after every run to confirm the exact model and thinking level that answered.</li>
             <li><strong>Failed turns leave partial edits behind.</strong> The launcher holds an <code>fcntl.flock</code> lock on a sibling <code>.lock</code> file and writes receipts atomically. If a worker is interrupted mid-turn, the record enters an <code>inspect</code> state and refuses a blind retry until the coordinator checks the transcript and working tree.</li>
             <li><strong>Workers stay caged to file tools.</strong> In <code>review</code> mode, a worker only gets read, glob, and grep tools. In <code>edit</code> mode, it can modify regular files inside the assigned workspace, while shell commands, network fetches, <code>.git</code> mutations, and browser launches are denied.</li>
+            <li><strong>Isolated APFS clones and host-side verification.</strong> Passing <code>--isolate apfs</code> gives an editor an instant copy-on-write clone of the repo (<code>cp -c</code>), and <code>--verify-cmd</code> runs a bounded test command on the host after the turn, automatically resuming the same worker session with the failure output if a check breaks.</li>
           </ul>
 
-          <h2>Where it goes next</h2>
-          <p>The current bottleneck is that a single uncommitted working tree forces editors to take turns when their files overlap. The next upgrade to the launcher adds APFS copy-on-write workspace snapshots (<code>cp -cR</code>) and a host-side <code>--verify-cmd</code> flag, so an editor can patch an isolated copy of the repo and auto-repair its own compiler or unit-test failures before handing a clean diff back to the coordinator.</p>
-          <p>Having one coordinator chat hasn't made the models infallible. It just means when one model makes an optimistic assumption, another one is already waiting to test it.</p>
+          <h2>Try the skill</h2>
+          <p>The skill, provider launcher, APFS workspace isolator, and verification harness are <a href="https://github.com/danielyaa5/orchestrate-agents">open source on GitHub under the MIT license</a>. Having one coordinator chat hasn't made the models infallible. It just means when one model makes an optimistic assumption, another one is already waiting to test it.</p>
         </div>
         <p class="article-back"><a href="./">← All posts</a></p>
       </article>
