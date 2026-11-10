@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Source for assets/writing/multi-agent-orchestration.webp and .jpg: render at 1600x900. -->
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    width: 1600px;
+    height: 900px;
+    overflow: hidden;
+    background: #f1f3e8;
+    color: #111810;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+  .canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 54px 68px;
+    background:
+      radial-gradient(circle at 14% 18%, rgba(18, 75, 48, 0.08), transparent 38%),
+      radial-gradient(circle at 86% 82%, rgba(99, 130, 108, 0.12), transparent 42%),
+      #f4f6ec;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .hub {
+    margin: 0 auto;
+    width: 980px;
+    background: #fffdf6;
+    border: 2px solid #63826c;
+    border-radius: 16px;
+    box-shadow: 0 14px 34px rgba(17, 24, 16, 0.07);
+    overflow: hidden;
+  }
+  .bar {
+    height: 40px;
+    background: #e6eedf;
+    border-bottom: 1.5px solid #a7b2a5;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    gap: 10px;
+  }
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #63826c;
+  }
+  .bar-title {
+    margin-left: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #124b30;
+  }
+  .bar-tag {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 600;
+    color: #455f3d;
+    background: #f4f6ec;
+    border: 1px solid #a7b2a5;
+    padding: 4px 12px;
+    border-radius: 999px;
+  }
+  .hub-body {
+    padding: 24px 30px;
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  .hub-copy h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+  }
+  .hub-copy p {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.45;
+    color: #455443;
+  }
+  .receipt-box {
+    background: #f1f3e8;
+    border: 1.5px solid #bbc4af;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #1d2b1f;
+  }
+  .receipt-box b {
+    color: #124b30;
+  }
+  .connectors {
+    position: relative;
+    height: 68px;
+    width: 1120px;
+    margin: 0 auto;
+  }
+  .connectors svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .lanes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .lane {
+    background: #fffdf6;
+    border: 2px solid #a7b2a5;
+    border-radius: 16px;
+    padding: 24px 26px;
+    box-shadow: 0 10px 26px rgba(17, 24, 16, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .lane.qa {
+    background: #e6eedf;
+    border-color: #124b30;
+  }
+  .lane-kicker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #455f3d;
+  }
+  .pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #edf1e3;
+    border: 1px solid #a7b2a5;
+    font-size: 12px;
+    color: #124b30;
+  }
+  .lane.qa .pill {
+    background: #124b30;
+    border-color: #124b30;
+    color: #fffdf6;
+  }
+  .lane h2 {
+    margin: 0;
+    font-size: 24px;
+    letter-spacing: -0.4px;
+  }
+  .lane p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #455443;
+  }
+  .lane-card {
+    margin-top: auto;
+    background: #f6f8f0;
+    border: 1px solid #c5cdbd;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #243326;
+  }
+  .lane.qa .lane-card {
+    background: #fffdf6;
+    border-color: #63826c;
+  }
+  .status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #e6eedf;
+    border: 1.5px solid #a7b2a5;
+    border-radius: 12px;
+    padding: 16px 26px;
+    font-size: 16px;
+    color: #1d2b1f;
+  }
+  .status-bar strong {
+    color: #124b30;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="hub">
+      <div class="bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="bar-title">Coordinator Chat</span>
+        <span class="bar-tag">Single source of truth · Background CLI workers</span>
+      </div>
+      <div class="hub-body">
+        <div class="hub-copy">
+          <h1>One coordinator, three separated roles</h1>
+          <p>Assigns bounded briefs, locks each worker session with <code>flock</code>, and requires independent test evidence before a change reaches the release build.</p>
+        </div>
+        <div class="receipt-box">
+          <div><b>record:</b> google-fix.json (.lock held)</div>
+          <div><b>protocol:</b> agy acp · session/load</div>
+          <div><b>mode:</b> edit (shell &amp; browser off)</div>
+          <div><b>state:</b> answered → queued for QA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connectors">
+      <svg viewBox="0 0 1120 68" fill="none">
+        <path d="M560 0 V28 M560 28 H175 V66 M560 28 V66 M560 28 H945 V66" stroke="#63826c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <polygon points="175,68 168,56 182,56" fill="#63826c"/>
+        <polygon points="560,68 553,56 567,56" fill="#63826c"/>
+        <polygon points="945,68 938,56 952,56" fill="#63826c"/>
+      </svg>
+    </div>
+
+    <div class="lanes">
+      <div class="lane">
+        <div class="lane-kicker">
+          <span>1 · Discovery &amp; Review</span>
+          <span class="pill">Read-only</span>
+        </div>
+        <h2>Claude Code</h2>
+        <p>Audits UX flows, cancellation edge cases, and disk-write hot paths without editing the working tree.</p>
+        <div class="lane-card">
+          --mode review<br>
+          tools: Read, Glob, Grep<br>
+          finding: idle index rewrite
+        </div>
+      </div>
+
+      <div class="lane">
+        <div class="lane-kicker">
+          <span>2 · Scoped Fixes</span>
+          <span class="pill">Workspace Edit</span>
+        </div>
+        <h2>Antigravity / Claude</h2>
+        <p>Routes well-defined bug fixes to spare subscription capacity and resumes the exact session ID on follow-up.</p>
+        <div class="lane-card">
+          --mode edit<br>
+          model: gemini-4-argon-high<br>
+          verified: 0 idle writes, 1 save
+        </div>
+      </div>
+
+      <div class="lane qa">
+        <div class="lane-kicker">
+          <span>3 · Adversarial QA</span>
+          <span class="pill">Extra-High Effort</span>
+        </div>
+        <h2>Codex Independent QA</h2>
+        <p>Tests frozen snapshots with counterfeit same-size movies and intercepts Trash calls before any file moves.</p>
+        <div class="lane-card">
+          fixture: same-size playable movie<br>
+          trash_intercepted: 16 / 16<br>
+          verdict: hold install until fixed
+        </div>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <span><strong>Rule:</strong> The model that writes the patch never signs off on the release candidate.</span>
+      <span><strong>Foreground focus:</strong> 0 windows raised</span>
+    </div>
+  </div>
+</body>
+</html>

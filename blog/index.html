@@ -32,6 +32,7 @@
     "inLanguage": "en",
     "author": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
     "blogPost": [
+      { "@type": "BlogPosting", "headline": "Coordinating Claude, GPT and Gemini on one codebase", "url": "https://danielyakobian.com/blog/multi-agent-orchestration.html", "datePublished": "2026-11-09" },
       { "@type": "BlogPosting", "headline": "Which AI CLI can actually search the web?", "url": "https://danielyakobian.com/blog/ai-cli-web-search.html", "datePublished": "2026-11-09" },
       { "@type": "BlogPosting", "headline": "Does max effort pay off? I checked 1,037 of my Claude Code prompts", "url": "https://danielyakobian.com/blog/claude-code-max-effort.html", "datePublished": "2026-11-08" },
       {"@type": "BlogPosting", "headline": "Bypassing Bambu’s MQTT signature check by masquerading as Bambu Studio", "url": "https://danielyakobian.com/blog/bambu-headless-cli.html", "datePublished": "2026-10-26"},
@@ -64,9 +65,16 @@
         <h1>Blog</h1>
         <article class="post-card">
           <p class="article-meta"><time datetime="2026-11-09">November 9, 2026</time></p>
+          <h2><a href="multi-agent-orchestration.html">Coordinating Claude, GPT and Gemini on one codebase</a></h2>
+          <p>How I use a single coordinator chat and a local launcher script to route discovery, implementation, and independent QA across Claude Code, Codex, and Google Antigravity.</p>
+          <img class="writing-thumb line-art" src="../assets/writing/multi-agent-orchestration.webp" width="1600" height="900" alt="Diagram of a coordinator chat dispatching bounded tasks to three separate lanes: Claude Code for read-only discovery, Antigravity or Claude for workspace edits, and Codex for independent QA">
+          <a class="read-post" href="multi-agent-orchestration.html">Read the post →</a>
+        </article>
+        <article class="post-card">
+          <p class="article-meta"><time datetime="2026-11-09">November 9, 2026</time></p>
           <h2><a href="ai-cli-web-search.html">Which AI CLI can actually search the web?</a></h2>
           <p>I gave Claude Code, Codex and Google&#x27;s Antigravity the same six web research questions, twice, and checked every link they cited. The tool mattered more than the model.</p>
-          <img class="writing-thumb line-art" src="../assets/writing/ai-cli-web-search.webp" width="1600" height="900" alt="Illustration of a magnifying glass over a browser window beside a chart of correct answers out of 12 and average minutes per pass: Claude Code 11 in 4 minutes, Gemini 4 Argon in Antigravity 11 in 27, Codex Astra 10 in 5, Codex Sol 10 in 6, Gemini 3.8 Flash in Antigravity 7 in 16, Claude in Antigravity 6 in 5">
+          <img class="writing-thumb line-art" src="../assets/writing/ai-cli-web-search.webp" width="1600" height="900" alt="Illustration of a magnifying glass over a browser window beside a chart of correct answers out of 12 and average minutes per pass: Claude Code 11 in 4 minutes, Gemini 4 Argon in Antigravity 11 in 27, Codex Astra 10 in 5, Codex Sol 10 in 6, Gemini 3.8 Flash in Antigravity 7 in 16, Claude in Antigravity 6 in 5" loading="lazy">
           <a class="read-post" href="ai-cli-web-search.html">Read the post →</a>
         </article>
         <article class="post-card">
