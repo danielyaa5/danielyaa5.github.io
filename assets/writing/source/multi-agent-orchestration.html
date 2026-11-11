@@ -201,18 +201,18 @@
       <div class="bar">
         <span class="dot"></span><span class="dot"></span><span class="dot"></span>
         <span class="bar-title">Coordinator Chat</span>
-        <span class="bar-tag">Single source of truth · Background CLI workers</span>
+        <span class="bar-tag">Live channel stays open · Background CLI workers</span>
       </div>
       <div class="hub-body">
         <div class="hub-copy">
           <h1>One coordinator, three separated roles</h1>
-          <p>Assigns bounded briefs, locks each worker session with <code>flock</code>, and requires independent test evidence before a change reaches the release build.</p>
+          <p>Delegates plans, audits, and isolated edits across quota pools, locks each session with <code>flock</code>, and gates risky changes on adversarial QA.</p>
         </div>
         <div class="receipt-box">
-          <div><b>record:</b> google-fix.json (.lock held)</div>
+          <div><b>record:</b> carbon-fix.json (.lock held)</div>
           <div><b>protocol:</b> agy acp · session/load</div>
-          <div><b>mode:</b> edit (shell &amp; browser off)</div>
-          <div><b>state:</b> answered → queued for QA</div>
+          <div><b>stage:</b> --isolate apfs + --verify-cmd</div>
+          <div><b>state:</b> verified → ready to integrate</div>
         </div>
       </div>
     </div>
@@ -229,13 +229,13 @@
     <div class="lanes">
       <div class="lane">
         <div class="lane-kicker">
-          <span>1 · Discovery &amp; Review</span>
+          <span>1 · Planning &amp; Discovery</span>
           <span class="pill">Read-only</span>
         </div>
-        <h2>Claude Code</h2>
-        <p>Audits UX flows, cancellation edge cases, and disk-write hot paths without editing the working tree.</p>
+        <h2>Claude / Gemini Carbon</h2>
+        <p>Drafts plans and audits UX flows, cancellation edge cases, and hot paths using healthy top-tier quota pools.</p>
         <div class="lane-card">
-          --mode review<br>
+          --mode review (high / xhigh)<br>
           tools: Read, Glob, Grep<br>
           finding: idle index rewrite
         </div>
@@ -244,13 +244,13 @@
       <div class="lane">
         <div class="lane-kicker">
           <span>2 · Scoped Fixes</span>
-          <span class="pill">Workspace Edit</span>
+          <span class="pill">APFS Stage</span>
         </div>
         <h2>Antigravity / Claude</h2>
-        <p>Routes well-defined bug fixes to spare subscription capacity and resumes the exact session ID on follow-up.</p>
+        <p>Splits disjoint file edits across copy-on-write clones and runs sandboxed host checks before returning a patch.</p>
         <div class="lane-card">
-          --mode edit<br>
-          model: gemini-4-argon-high<br>
+          --mode edit --isolate apfs<br>
+          model: gemini-4-carbon-medium<br>
           verified: 0 idle writes, 1 save
         </div>
       </div>
@@ -260,8 +260,8 @@
           <span>3 · Adversarial QA</span>
           <span class="pill">Extra-High Effort</span>
         </div>
-        <h2>Codex Independent QA</h2>
-        <p>Tests frozen snapshots with counterfeit same-size movies and intercepts Trash calls before any file moves.</p>
+        <h2>Cross-Family QA</h2>
+        <p>Tests high-blast-radius snapshots with counterfeit same-size movies and intercepts Trash calls before any file moves.</p>
         <div class="lane-card">
           fixture: same-size playable movie<br>
           trash_intercepted: 16 / 16<br>
