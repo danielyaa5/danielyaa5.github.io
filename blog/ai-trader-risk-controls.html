@@ -23,7 +23,7 @@
   <link rel="canonical" href="https://danielyakobian.com/blog/ai-trader-risk-controls.html">
   <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png?v=2">
   <link rel="stylesheet" href="../styles.css?v=mark-3">
-  <link rel="stylesheet" href="blog.css?v=10">
+  <link rel="stylesheet" href="blog.css?v=11">
   <script src="/analytics.js?v=7" defer></script>
   <script type="application/ld+json">
   {
@@ -61,7 +61,7 @@
 <p>The interesting engineering problem is deciding what an AI-generated proposal is allowed to do. A convincing explanation cannot override a position limit. Agreement between models cannot make an old quote current. An accepted order cannot be treated as a confirmed fill.</p>
 <p>The implementation stays private. This post documents the architecture and its limitations, without publishing source code, account information, or trading records.</p>
 <figure class="article-figure">
-<a href="../assets/writing/ai-trader/dashboard-overview.webp"><img src="../assets/writing/ai-trader/dashboard-overview.webp" width="1400" height="1020" alt="Desktop dashboard demo showing portfolio cards, fictional positions, review decisions, runtime events, and policy filters."></a>
+<a href="../assets/writing/ai-trader/dashboard-overview.webp"><img fetchpriority="high" decoding="async" src="../assets/writing/ai-trader/dashboard-overview.webp" width="1400" height="1020" alt="Desktop dashboard demo showing portfolio cards, fictional positions, review decisions, runtime events, and policy filters."></a>
 <figcaption>A public demo rendering of the dashboard. All balances, symbols, positions, events, and review text in these screenshots are fictional. Private labels are replaced and inline explanations are collapsed. These images show the interface, not a performance record or historical model output.</figcaption>
 </figure>
 <h2>The decision pipeline</h2>

@@ -23,7 +23,7 @@
   <link rel="canonical" href="https://danielyakobian.com/blog/bambu-headless-cli.html">
   <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png?v=2">
   <link rel="stylesheet" href="../styles.css?v=mark-3">
-  <link rel="stylesheet" href="blog.css?v=10">
+  <link rel="stylesheet" href="blog.css?v=11">
   <script src="/analytics.js?v=7" defer></script>
   <script type="application/ld+json">
   {
@@ -61,7 +61,7 @@
         <header class="article-header"><p class="eyebrow">Notes on 3D printing</p><h1>Bypassing Bambu’s MQTT signature check by masquerading as Bambu Studio</h1><p class="article-meta"><a href="../" rel="author">Daniel Yakobian</a> · <time datetime="2026-10-26">October 26, 2026</time></p></header>
         <div class="article-body">
           <p>I wanted to send an already sliced print to my Bambu H2D from a terminal, without opening Bambu Studio or giving up Handy. That became <a href="https://github.com/danielyaa5/bambu-headless">bambu-headless</a>: a small macOS CLI that loads Studio’s closed-source networking dylib through a C++ bridge and uses a <code>dyld</code> executable-path shim to sign print commands.</p>
-          <figure class="article-figure"><img class="line-art" src="../assets/writing/bambu-headless-cli.webp" width="1600" height="900" alt="Illustration of a terminal window holding a disguise mask to pass a signature checkpoint and reach an enclosed dual-nozzle 3D printer"><figcaption>Masquerading as Bambu Studio’s executable path so the networking plugin signs local MQTT print commands.</figcaption></figure>
+          <figure class="article-figure"><img class="line-art" fetchpriority="high" decoding="async" src="../assets/writing/bambu-headless-cli.webp" width="1600" height="900" alt="Illustration of a terminal window holding a disguise mask to pass a signature checkpoint and reach an enclosed dual-nozzle 3D printer"><figcaption>Masquerading as Bambu Studio’s executable path so the networking plugin signs local MQTT print commands.</figcaption></figure>
           <p>The printer keeps its cloud connection, Developer Mode stays off, and Studio can stay closed. The less obvious part is that the tool still depends on Studio's installed networking plugin.</p>
 
           <h2>Connecting was the easy part</h2>

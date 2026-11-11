@@ -24,7 +24,7 @@
   <link rel="canonical" href="https://danielyakobian.com/blog/multi-agent-orchestration.html">
   <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png?v=2">
   <link rel="stylesheet" href="../styles.css?v=mark-3">
-  <link rel="stylesheet" href="blog.css?v=10">
+  <link rel="stylesheet" href="blog.css?v=11">
   <script src="/analytics.js?v=7" defer></script>
   <script type="application/ld+json">
   {
@@ -64,7 +64,10 @@
         <div class="article-body">
           <p>While preparing the 1.2.1 update for <a href="https://danielyaa5.github.io/cloud-media-shrinker/">Cloud Media Shrinker</a>, I had six separate agent threads open across three providers. Two of them had nearly identical titles, one bug had already been fixed in a different chat, and I was spending too much time copying test results between windows.</p>
           <figure class="article-figure">
-            <img class="line-art" src="../assets/writing/multi-agent-orchestration.webp" width="1600" height="900" alt="Diagram of a coordinator chat dispatching bounded tasks to three separate lanes: read-only planning and discovery, isolated APFS workspace edits, and cross-family adversarial QA">
+            <picture>
+              <source srcset="../assets/writing/multi-agent-orchestration.avif" type="image/avif">
+              <img class="line-art" fetchpriority="high" decoding="async" src="../assets/writing/multi-agent-orchestration.webp" width="1600" height="900" alt="Diagram of a coordinator chat dispatching bounded tasks to three separate lanes: read-only planning and discovery, isolated APFS workspace edits, and cross-family adversarial QA">
+            </picture>
             <figcaption>One coordinator chat tracks the release state and dispatches bounded briefs to provider workers without raising windows on my desktop.</figcaption>
           </figure>
           <p>I turned one thread into the project coordinator and built a small local orchestration skill (<a href="https://github.com/danielyaa5/orchestrate-agents"><code>orchestrate-agents</code></a>) around it. Now I talk to the coordinator, and it routes planning, discovery, implementation, and independent QA across Claude Code, Codex, and Google Antigravity.</p>
@@ -160,6 +163,27 @@ python3 provider_chat.py resume \
           <h2>Try the skill</h2>
           <p>The skill, provider launcher, APFS workspace isolator, and verification harness are <a href="https://github.com/danielyaa5/orchestrate-agents">open source on GitHub under the MIT license</a>. Having one coordinator chat hasn't made the models infallible. It just means when one model makes an optimistic assumption, another one is already waiting to test it.</p>
         </div>
+        <nav class="article-related" aria-labelledby="related-heading">
+          <div class="article-related-header">
+            <h2 id="related-heading">Keep reading</h2>
+            <a class="related-work-link" href="../#work">Featured projects →</a>
+          </div>
+          <div class="article-related-grid">
+            <article class="related-card">
+              <p class="related-meta">November 8, 2026</p>
+              <h3><a href="claude-code-max-effort.html">Does max effort pay off? I checked 1,037 of my Claude Code prompts</a></h3>
+              <p>Max was 20% of my prompts and 51% of generated tokens, without saving me corrections over xhigh.</p>
+              <span class="related-cta" aria-hidden="true">Read post →</span>
+            </article>
+            <article class="related-card">
+              <p class="related-meta">November 9, 2026</p>
+              <h3><a href="ai-cli-web-search.html">Which AI CLI can actually search the web?</a></h3>
+              <p>Six web research questions across Claude Code, Codex CLI, and Antigravity showed the tool mattered more than the model.</p>
+              <span class="related-cta" aria-hidden="true">Read post →</span>
+            </article>
+          </div>
+          <p class="article-related-projects"><span>More to explore:</span> <a href="agent-qa-separate-macos-account.html">Separate Mac account for QA</a> <a href="https://github.com/danielyaa5/ai-usage">AI Usage</a> <a href="../#work">All projects →</a></p>
+        </nav>
         <p class="article-back"><a href="./">← All posts</a></p>
       </article>
     </main>
