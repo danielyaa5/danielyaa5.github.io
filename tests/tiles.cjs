@@ -133,7 +133,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
         await open(buyOrRent().locator('.project-illustration'), 'https://thebuyorrentcalculator.com/');
         await open(buyOrRent().locator('.project-link'), 'https://github.com/danielyaa5/buy-or-rent-web');
         await open(page.locator('.featured-lead .featured-copy > p'), 'https://danielyaa5.github.io/cloud-media-shrinker/');
-        await open(page.locator('.featured-lead .featured-link'), 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256');
+        await open(page.locator('.featured-lead .featured-link'), 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=12');
         await open(page.locator('.star-count'), 'https://github.com/danielyaa5/puml-for-markdown/stargazers');
         await open(page.locator('.writing-card').first().locator(':scope > p'), `${base}/blog/predictive-agent-qa.html`);
         runs.push(label);

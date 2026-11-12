@@ -130,7 +130,7 @@ const events = request => {
       const clicks = captured.slice(start).filter(e => e.event === 'project_click').map(e => e.properties);
       const pick = ({ project, link, link_text, destination, section, position, filter }) => ({ project, link, link_text, destination, section, position, filter });
       assert.deepEqual(clicks.map(pick), [
-        { project: 'Cloud Media Shrinker', link: 'button', link_text: 'View on the Mac App Store →', destination: 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256', section: 'featured', position: 1, filter: undefined },
+        { project: 'Cloud Media Shrinker', link: 'button', link_text: 'View on the Mac App Store →', destination: 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=12', section: 'featured', position: 1, filter: undefined },
         { project: 'puml-for-markdown', link: 'title', link_text: 'puml-for-markdown', destination: 'https://github.com/danielyaa5/puml-for-markdown', section: 'featured', position: 2, filter: undefined },
         { project: 'Beckon', link: 'tile', link_text: 'Beckon', destination: 'https://danielyaa5.github.io/beckon/', section: 'featured', position: 3, filter: undefined },
         { project: 'Netflix PiP Fixer', link: 'button', link_text: 'Get it on the Chrome Web Store →', destination: 'https://chromewebstore.google.com/detail/netflix-pip-fixer/ceiiadpnmbplofcefdafhfidmocjgikp', section: 'other', position: 4, filter: 'web' },
