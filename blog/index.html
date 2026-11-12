@@ -32,6 +32,7 @@
     "inLanguage": "en",
     "author": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
     "blogPost": [
+      { "@type": "BlogPosting", "headline": "How my local AI secretary chat works", "url": "https://danielyakobian.com/blog/secretary-chat-architecture.html", "datePublished": "2026-11-11" },
       { "@type": "BlogPosting", "headline": "Simulating myself to catch agent bugs before I prompt", "url": "https://danielyakobian.com/blog/predictive-agent-qa.html", "datePublished": "2026-11-11" },
       { "@type": "BlogPosting", "headline": "Coordinating Claude, GPT and Gemini on one codebase", "url": "https://danielyakobian.com/blog/multi-agent-orchestration.html", "datePublished": "2026-11-09", "dateModified": "2026-11-11" },
       { "@type": "BlogPosting", "headline": "Which AI CLI can actually search the web?", "url": "https://danielyakobian.com/blog/ai-cli-web-search.html", "datePublished": "2026-11-09" },
@@ -66,9 +67,16 @@
         <h1>Blog</h1>
         <article class="post-card">
           <p class="article-meta"><time datetime="2026-11-11">November 11, 2026</time></p>
+          <h2><a href="secretary-chat-architecture.html">How my local AI secretary chat works</a></h2>
+          <p>How a 15-minute Python sweep and a local SQLite ledger let Claude Code, Codex, and Antigravity triage 16 message, calendar, and bank streams on my Mac.</p>
+          <img class="writing-thumb line-art" fetchpriority="high" decoding="async" src="../assets/writing/secretary-chat-architecture.webp" width="1600" height="900" alt="Architecture diagram of a 15-minute Python launchd sweep feeding 16 read-only streams into a local SQLite WAL ledger, queried on demand by Claude Code, Codex, and Antigravity">
+          <a class="read-post" href="secretary-chat-architecture.html">Read the post →</a>
+        </article>
+        <article class="post-card">
+          <p class="article-meta"><time datetime="2026-11-11">November 11, 2026</time></p>
           <h2><a href="predictive-agent-qa.html">Simulating myself to catch agent bugs before I prompt</a></h2>
           <p>Codex Desktop's next-prompt predictor clones active threads with zero tools to guess human input. Here is how turning that mechanism into an autonomous QA critic cuts human verification loops.</p>
-          <img class="writing-thumb line-art" fetchpriority="high" decoding="async" src="../assets/writing/predictive-agent-qa.webp" width="1600" height="900" alt="Diagram showing an active agent session branching into an ephemeral tool-disabled predictor fork that generates verification checks and an abstention gate">
+          <img class="writing-thumb line-art" src="../assets/writing/predictive-agent-qa.webp" width="1600" height="900" alt="Diagram showing an active agent session branching into an ephemeral tool-disabled predictor fork that generates verification checks and an abstention gate" loading="lazy">
           <a class="read-post" href="predictive-agent-qa.html">Read the post →</a>
         </article>
         <article class="post-card">
