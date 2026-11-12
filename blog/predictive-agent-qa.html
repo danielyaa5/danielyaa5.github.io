@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous QA loop that catches UI regressions and edge cases before I ever see them.">
+  <meta name="description" content="How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous loop that simulates my design instincts, UI/UX critiques, and QA checks to cut human development round-trips.">
   <meta name="author" content="Daniel Yakobian">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
   <meta property="og:site_name" content="Daniel Yakobian">
-  <meta property="og:title" content="Simulating myself to catch agent bugs before I prompt">
-  <meta property="og:description" content="How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous QA loop that catches UI regressions and edge cases before I ever see them.">
+  <meta property="og:title" content="Simulating my own brain to cut down on development time. How I reverse engineered the Codex predictive text.">
+  <meta property="og:description" content="How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous loop that simulates my design instincts, UI/UX critiques, and QA checks to cut human development round-trips.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://danielyakobian.com/blog/predictive-agent-qa.html">
   <meta property="og:image" content="https://danielyakobian.com/assets/writing/predictive-agent-qa.jpg">
@@ -19,18 +19,18 @@
   <meta property="article:published_time" content="2026-11-11">
   <meta property="article:author" content="https://danielyakobian.com/">
   <meta name="twitter:card" content="summary_large_image">
-  <title>Simulating myself to catch agent bugs before I prompt | Daniel Yakobian</title>
+  <title>Simulating my own brain to cut down on development time. How I reverse engineered the Codex predictive text. | Daniel Yakobian</title>
   <link rel="canonical" href="https://danielyakobian.com/blog/predictive-agent-qa.html">
   <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png?v=2">
   <link rel="stylesheet" href="../styles.css?v=mark-3">
-  <link rel="stylesheet" href="blog.css?v=11">
+  <link rel="stylesheet" href="blog.css?v=12">
   <script src="/analytics.js?v=7" defer></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": "Simulating myself to catch agent bugs before I prompt",
-    "description": "How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous QA loop that catches UI regressions and edge cases before I ever see them.",
+    "headline": "Simulating my own brain to cut down on development time. How I reverse engineered the Codex predictive text.",
+    "description": "How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous loop that simulates my design instincts, UI/UX critiques, and QA checks to cut human development round-trips.",
     "url": "https://danielyakobian.com/blog/predictive-agent-qa.html",
     "mainEntityOfPage": "https://danielyakobian.com/blog/predictive-agent-qa.html",
     "image": "https://danielyakobian.com/assets/writing/predictive-agent-qa.jpg",
@@ -60,17 +60,18 @@
       <article class="blog-article">
         <header class="article-header">
           <p class="eyebrow">Notes on building software</p>
-          <h1>Simulating myself to catch agent bugs before I prompt</h1>
+          <h1>Simulating my own brain to cut down on development time. How I reverse engineered the Codex predictive text.</h1>
           <p class="article-meta"><a href="../" rel="author">Daniel Yakobian</a> · <time datetime="2026-11-11">November 11, 2026</time></p>
         </header>
 
         <div class="article-body">
-          <p>If you use Codex Desktop, you have probably noticed the gray ghost text that appears in your composer input right after the model finishes an answer. You look at what the agent just built, reach down to type <i>"wait, the cancel button doesn't work when offline"</i>, and notice that the exact sentence is already sitting there in gray letters waiting for you to press <kbd>Tab</kbd>.</p>
+          <p>If you use Codex Desktop, you have probably noticed the gray ghost text that appears in your composer input right after the model finishes an answer. You look at what the agent just built, reach down to type <i>"wait, the cancel button doesn't work when offline"</i> or <i>"consolidate those three buttons into one action"</i>, and notice that the exact sentence is already sitting there in gray letters waiting for you to press <kbd>Tab</kbd>.</p>
 
           <aside class="article-tldr" aria-label="Short summary">
             <p class="tldr-kicker">TL;DR</p>
-            <p>Codex Desktop predicts your next prompt by cloning the thread as a tool-disabled fork with ~99% cache hits. I turned that predictive trick into an autonomous QA loop: instead of showing me ghost text to approve, an isolated critic model predicts my likely critique, pairs it with an automated test runner, and kicks broken patches back to the builder agent before I ever look. An abstention valve stops the loop the moment the code passes.</p>
+            <p>Codex Desktop predicts your next prompt by cloning the thread as a tool-disabled fork with ~99% cache hits. I turned that mechanism into an autonomous development loop that simulates my own brain across Claude Code, Codex, and Antigravity: an isolated critic model predicts my routine UI/UX critiques, steers design and scope trade-offs, and executes negative-path QA tests against the build before I ever look. An abstention valve (<a href="https://github.com/danielyaa5/simulate-user"><code>simulate-user</code> on GitHub</a>) stops the loop the instant the work passes, while hard safety and taste gates pause for the real human on outbound actions or open aesthetic choices.</p>
             <p class="tldr-links">
+              <a href="https://github.com/danielyaa5/simulate-user">simulate-user on GitHub →</a>
               <a href="multi-agent-orchestration.html">Multi-agent coordinator →</a>
               <a href="claude-code-max-effort.html">Max effort study →</a>
               <a href="../#work">Featured projects →</a>
@@ -82,10 +83,12 @@
               <source srcset="../assets/writing/predictive-agent-qa.avif" type="image/avif">
               <img class="line-art" fetchpriority="high" decoding="async" src="../assets/writing/predictive-agent-qa.webp" width="1600" height="900" alt="Diagram showing an active agent session branching into an ephemeral tool-disabled predictor fork that generates verification checks and an abstention gate">
             </picture>
-            <figcaption>Predictive QA branches off the active agent turn, predicts the user's instinctive negative test, and executes an automated check before dispatching fixes.</figcaption>
+            <figcaption>Predictive simulation branches off the active agent turn, predicts the user's design critiques and negative-path QA checks, and executes automated verification before dispatching fixes.</figcaption>
           </figure>
 
-          <p>The first few times it happened, it felt like mind reading. Then I checked how it was implemented. When an agent can guess your reaction before you type it, the obvious engineering question is: <i>why am I still the one running the test?</i></p>
+          <p>The first few times it happened, it felt like mind reading. Then I checked how it was implemented. When an agent can guess your reaction before you type it, the obvious engineering question is: <i>why am I still the one running the test, critiquing the UI, and steering the design?</i></p>
+
+          <p>I packaged this workflow as an open-source skill (<a href="https://github.com/danielyaa5/simulate-user"><code>simulate-user</code> on GitHub</a>) for Claude Code, OpenAI Codex, and Google Antigravity. Here is how reverse engineering that ghost text turned into a full-cycle development accelerator.</p>
 
           <h2>Reverse-engineering ghost text in Codex</h2>
           <p>Inside the Rust engine behind Codex (<code>codex-rs</code>), next-prompt prediction is not powered by a separate, small autocomplete model running in the background. It is powered by the exact same frontier model you are chatting with, using an elegant architecture trick.</p>
@@ -119,42 +122,45 @@ let prediction_stream = fork.sample(SampleConfig {
 
           <p><strong>2. Forced nitpicking.</strong> You tell an agent: <i>"Perform 3 rounds of adversarial critique."</i> By Round 3, every real bug has already been discussed, but the prompt forces the agent to keep talking. It starts inventing busywork: renaming private helper functions, suggesting extra TypeScript interfaces that wrap single strings, or adding docstrings to self-explanatory five-line functions.</p>
 
-          <h2>The predictive QA architecture</h2>
-          <p>To turn prompt prediction into a reliable autonomous review cycle across Claude Code, Codex, and Google Antigravity, I built an adversarial verification loop around five rules.</p>
+          <h2>The predictive development &amp; verification architecture</h2>
+          <p>To turn prompt prediction into a reliable autonomous review cycle across Claude Code, Codex, and Google Antigravity, I built an adversarial verification loop around five rules that govern both design decisions and code quality.</p>
 
           <figure class="qa-figure" id="qa-flow" aria-labelledby="flow-caption">
             <div class="qa-diagram">
               <div class="context-source">
                 <span class="diagram-kicker">Architecture overview</span>
-                <strong>Predictive verification pipeline</strong>
+                <strong>Predictive development &amp; verification loop</strong>
                 <span>Runs asynchronously on turn completion · Zero desktop focus theft</span>
               </div>
-              <div class="session-grid">
-                <div class="session-card">
-                  <div class="window-bar"><i></i><i></i><i></i><span>1 · Builder turn</span></div>
-                  <p><strong>Builder Agent</strong></p>
-                  <p>Implements feature in isolated workspace. Runs standard build and unit tests.</p>
+              <div class="pipeline-grid">
+                <div class="pipeline-card">
+                  <span class="pipeline-badge">Step 1 · Build &amp; Design</span>
+                  <h3>Builder &amp; Designer turn</h3>
+                  <p>Implements UI layout, features, or architectural refactors in an isolated workspace. Runs standard build and lint checks.</p>
+                  <div class="pipeline-meta">Files &amp; UI tokens updated · Hands off to critic</div>
                 </div>
-                <div class="session-card">
-                  <div class="window-bar"><i></i><i></i><i></i><span>2 · Predictor</span></div>
-                  <p><strong>Cross-Model Critic</strong></p>
-                  <p>Runs in tool-disabled fork. Predicts user reaction: <code>pushback</code>, <code>abstain</code>, or <code>needs_real_user</code>.</p>
+                <div class="pipeline-card active-critic">
+                  <span class="pipeline-badge">Step 2 · Simulated Critic</span>
+                  <h3>Simulated User Critic</h3>
+                  <p>Tool-disabled fork evaluates candidate diff. Predicts human reactions: UI/UX critique, scope calls, or negative-state QA.</p>
+                  <div class="pipeline-meta">Verdicts: <code>suggest</code> · <code>pushback</code> · <code>abstain</code> · <code>needs_real_user</code></div>
                 </div>
-                <div class="session-card qa-session">
-                  <div class="window-bar"><i></i><i></i><i></i><span>3 · Execution</span></div>
-                  <p><strong>Verification Runner</strong></p>
-                  <p>Executes headless test hook. Feeds failure logs back to Builder until passing.</p>
+                <div class="pipeline-card active-execution">
+                  <span class="pipeline-badge">Step 3 · Iterate &amp; Verify</span>
+                  <h3>Autonomous iteration &amp; tests</h3>
+                  <p>Refines layout hierarchy, fixes friction, and executes headless test hooks. Loops back to builder until passing or abstaining.</p>
+                  <div class="pipeline-meta">Exits: <code>abstain</code> ships cleanly · taste ties ask real human</div>
                 </div>
               </div>
             </div>
-            <figcaption id="flow-caption">The critic predicts the user's instinctive negative test and executes it against the build. The loop only stops when the critic abstains or a hard security boundary is reached.</figcaption>
+            <figcaption id="flow-caption">The critic simulates the user's design critique and edge-case testing, iterating with the builder agent until the work passes cleanly or reaches a real human decision gate.</figcaption>
           </figure>
 
           <h3>1. An isolated cross-model critic</h3>
-          <p>The simulator never runs inside the builder's conversation context. When a builder model (for example, Gemini in Antigravity or Claude in Claude Code) finishes writing code, an independent critic model inspects the commit diff. Using a different model family breaks the author blindness: Claude often spots the race conditions that Gemini glossed over, and Codex spots edge cases in shell pipes that Claude assumed were safe.</p>
+          <p>The simulator never runs inside the builder's conversation context. When a builder model (for example, Gemini in Antigravity or Claude in Claude Code) finishes writing code or designing a layout, an independent critic model inspects the commit diff. Using a different model family breaks author blindness: Claude often spots the race conditions or awkward desktop button groupings that Gemini glossed over, and Codex spots edge cases in shell pipes and mobile wrapping that Claude assumed were safe.</p>
 
           <h3>2. Upgrading ghost text with real verification hooks</h3>
-          <p>Codex's composer predictor has a strict one-second timeout and cannot touch any tools. But an asynchronous QA agent has plenty of time. When the critic predicts a human complaint, it does not just return a complaint string—it is required to attach an executable verification check.</p>
+          <p>Codex's composer predictor has a strict one-second timeout and cannot touch any tools. But an asynchronous development loop has plenty of time. When the critic predicts a human complaint, it does not just return a complaint string; it is required to attach an executable verification check or DOM inspection test.</p>
 
           <pre><code>{
   "action": "pushback",
@@ -180,47 +186,52 @@ let prediction_stream = fork.sample(SampleConfig {
               <tbody>
                 <tr>
                   <th scope="row"><code>pushback</code></th>
-                  <td>A concrete defect, regression, or UI glitch was predicted and verified.</td>
-                  <td>Dispatches error log to builder agent for fix round.</td>
+                  <td>A concrete defect, layout overflow, stale control, or verified regression.</td>
+                  <td>Dispatches critique and error log to builder agent for fix round.</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>suggest</code></th>
-                  <td>The code works, but an obvious UX friction or missing follow-up exists.</td>
-                  <td>Queues a non-blocking suggestion for human review.</td>
+                  <td>The code works, but an obvious UI polish or small follow-up exists.</td>
+                  <td>Queues a non-blocking suggestion for review.</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>abstain</code></th>
-                  <td>The build is clean, tests pass, and no regression is found.</td>
+                  <td>The build is clean, tokens match, tests pass, and no regression is found.</td>
                   <td>Terminates the loop immediately. Zero nitpicking.</td>
                 </tr>
                 <tr>
                   <th scope="row"><code>needs_real_user</code></th>
-                  <td>Action touches irreversible boundaries: billing, emails, hardware, releases.</td>
-                  <td>Hard stop. Presents verified draft and waits for approval.</td>
+                  <td>Sensitive gates (billing, emails, hardware, releases) or open taste ties.</td>
+                  <td>Hard stop. Presents verified options and waits for approval.</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <p>The <code>abstain</code> action is what makes the loop usable. In testing across 140 autonomous tasks, introducing an explicit abstention valve dropped false-positive critique loops from 38% down to under 4%. The moment the code is solid, the critic returns <code>prediction: null</code> and exits.</p>
+          <p>The <code>abstain</code> action is what makes the loop usable. In testing across 140 autonomous tasks, introducing an explicit abstention valve dropped false-positive critique loops from 38% down to under 4%. The moment the work is solid, the critic returns <code>prediction: null</code> and exits.</p>
+
+          <p>When high-level aesthetic choices are genuinely open, rather than guessing forever, the critic directs the builder to prepare two or three clean mockups (A/B/C at desktop and phone widths with one recommended direction) and pauses with <code>needs_real_user</code> so the human makes the final taste call.</p>
 
           <h3>4. Cold-start seeding from local conversation transcripts</h3>
           <p>Teaching an LLM how you think sounds like it requires weeks of prompt tuning. In reality, every developer who uses AI coding tools already has their personal training dataset sitting on their hard drive.</p>
 
-          <p>Between <code>~/.claude/projects</code>, <code>~/.codex/sessions</code>, and Antigravity logs, I had over 2,800 real conversation transitions formatted as <code>[Assistant finishes turn] → [Daniel replies]</code>. Extracting those transitions into structured examples revealed four clear buckets of instincts:</p>
+          <p>Between <code>~/.claude/projects</code>, <code>~/.codex/sessions</code>, and Antigravity logs, I had over 2,800 real conversation transitions formatted as <code>[Assistant finishes turn] → [Daniel replies]</code>. Extracting those transitions into structured examples revealed five clear buckets of instincts:</p>
 
           <ol class="flow-steps">
+            <li>
+              <strong>UI/UX and design critique:</strong> <i>"Table clips on my phone; stack it into one column and reuse our house tokens"</i> or <i>"Consolidate those three buttons into one action."</i>
+            </li>
             <li>
               <strong>Negative-path verification:</strong> <i>"What happens if the network drops halfway through?"</i> or <i>"Did you verify this doesn't steal window focus?"</i>
             </li>
             <li>
-              <strong>Friction removal:</strong> <i>"Make those phone numbers clickable links so I don't have to copy them."</i>
+              <strong>Friction removal:</strong> <i>"Make those terminal commands 1-click execution pills so I don't have to copy-paste."</i>
             </li>
             <li>
-              <strong>Scope discipline:</strong> <i>"Don't build a new database migration for this, just read the existing JSON file."</i>
+              <strong>Scope discipline:</strong> <i>"Work in smaller steps"</i> or <i>"Don't build a new database migration for this, just read the existing JSON file."</i>
             </li>
             <li>
-              <strong>Direct execution:</strong> <i>"Run the test now and show me the exact failure."</i>
+              <strong>Direct execution:</strong> <i>"Give me which slot to plug this into now without the explanation."</i>
             </li>
           </ol>
 
@@ -231,14 +242,14 @@ let prediction_stream = fork.sample(SampleConfig {
 
           <ul>
             <li><strong>Hit:</strong> If I accept the work without complaint, the critic's <code>abstain</code> verdict was correct.</li>
-            <li><strong>Edited:</strong> If I run a slightly different test than the one predicted, the test runner updates its fixture library.</li>
-            <li><strong>Overridden:</strong> If I spot a bug that the critic completely missed, that exact transition becomes a new few-shot seed example in the critic's prompt file.</li>
+            <li><strong>Edited:</strong> If I run a slightly different test or tweak spacing, the test runner updates its fixture library.</li>
+            <li><strong>Overridden:</strong> If I spot a design glitch or bug that the critic completely missed, that exact transition becomes a new few-shot seed example in the critic's prompt file.</li>
           </ul>
 
           <h2>What this changes in practice</h2>
-          <p>Before using predictive QA, working with AI agents had an annoying cadence: the agent would announce it was done, I would open the browser, click the third tab, find a broken link, copy the console error, paste it back into the chat, and wait. The human was the slowest link in the test harness.</p>
+          <p>Before using predictive simulation, working with AI agents had an exhausting cadence: the agent would announce it was done, I would open the browser, spot a clipped table on mobile, find an obsolete Delete button left behind after deletion, copy the console error, type three paragraphs of critique into the chat, and wait. The human was the slowest link in the iteration harness.</p>
 
-          <p>With predictive QA running in the background, by the time my phone buzzes or the terminal rings to tell me an agent is finished, the critic has usually already caught the missing error state, handed it back to the builder, and verified the fix. The agent arrives with working code because it already argued with a simulated version of me before I got there.</p>
+          <p>With predictive simulation running in the background, by the time my phone buzzes or the terminal rings to tell me an agent is finished, the critic has already caught the missing mobile breakpoint, consolidated the cluttered controls, verified the negative cancel path, and handed it back to the builder. The agent arrives with finished, verified work because it already iterated with a simulated version of my brain before I ever arrived.</p>
         </div>
 
         <nav class="article-related" aria-labelledby="related-heading">
