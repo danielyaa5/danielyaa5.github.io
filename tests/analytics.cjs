@@ -27,7 +27,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=\d+" defer><\/script>/g)?.length, 1, `${file} loads analytics once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=8" defer><\/script>/g)?.length, 1, `${file} loads analytics v=8 once`);
   }
   for (const file of untracked) {
     assert.doesNotMatch(fs.readFileSync(path.join(root, file), 'utf8'), /analytics\.js/, `${file} has no analytics`);
@@ -194,6 +194,67 @@ const events = request => {
       await resume.close();
     }
 
+    // Blog articles send suggested_blog_click for recommended post cards and tldr_link_click for TL;DR links.
+    for (const width of [390, 820, 1440]) {
+      const blog = await context.newPage();
+      await blog.setViewportSize({ width, height: 900 });
+      await blog.goto(`${site}/blog/secretary-chat-architecture.html`, { waitUntil: 'networkidle' });
+      await blog.waitForFunction(() => window.posthog?.__loaded === true);
+      await blog.evaluate(() => {
+        for (const type of ['click', 'auxclick']) window.addEventListener(type, event => { if (event.target.closest?.('a[href]')) event.preventDefault(); });
+      });
+      const start = captured.length;
+
+      // TL;DR anchor link clicked with left click, another with middle click
+      await blog.locator('.article-tldr a[href="#two-loops"]').click();
+      await blog.locator('.article-tldr a[href="#prompts"]').click({ button: 'middle' });
+
+      // Recommended post cards clicked in the article-related grid: left click on card 1, middle click on card 2
+      const cards = blog.locator('.article-related .related-card');
+      await cards.nth(0).locator('h3 a').click();
+      await cards.nth(1).locator('h3 a').click({ button: 'middle' });
+
+      // Clicks outside related cards and TL;DR (e.g. "More to explore" and footer link) send none
+      await blog.locator('.article-related-projects a').first().click();
+      await blog.locator('.article-back a').click();
+
+      await blog.waitForTimeout(1500);
+
+      const tldrEvents = captured.slice(start).filter(e => e.event === 'tldr_link_click').map(e => e.properties);
+      const suggestedEvents = captured.slice(start).filter(e => e.event === 'suggested_blog_click').map(e => e.properties);
+
+      assert.deepEqual(tldrEvents.map(({ source, destination, label, is_anchor }) => ({ source, destination, label, is_anchor })), [
+        { source: '/blog/secretary-chat-architecture.html', destination: `${site}/blog/secretary-chat-architecture.html`, label: 'Two-loop split →', is_anchor: true },
+        { source: '/blog/secretary-chat-architecture.html', destination: `${site}/blog/secretary-chat-architecture.html`, label: 'Copyable prompts →', is_anchor: true },
+      ], `tldr clicks at ${width}px; outside links send none`);
+
+      assert.deepEqual(suggestedEvents.map(({ source, destination, title, position }) => ({ source, destination, title, position })), [
+        { source: '/blog/secretary-chat-architecture.html', destination: `${site}/blog/multi-agent-orchestration.html`, title: 'Coordinating Claude, GPT and Gemini on one codebase', position: 1 },
+        { source: '/blog/secretary-chat-architecture.html', destination: `${site}/blog/agent-qa-separate-macos-account.html`, title: 'Giving my AI agent its own Mac account for QA', position: 2 },
+      ], `suggested blog clicks at ${width}px; outside links send none`);
+
+      assert.ok(tldrEvents.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/blog/secretary-chat-architecture.html`), `cookieless tldr clicks at ${width}px`);
+      assert.ok(suggestedEvents.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/blog/secretary-chat-architecture.html`), `cookieless suggested blog clicks at ${width}px`);
+
+      await blog.close();
+    }
+
+    // Test a non-anchor TL;DR link on claude-code-max-effort.html to verify is_anchor: false
+    const effortBlog = await context.newPage();
+    await effortBlog.goto(`${site}/blog/claude-code-max-effort.html`, { waitUntil: 'networkidle' });
+    await effortBlog.waitForFunction(() => window.posthog?.__loaded === true);
+    await effortBlog.evaluate(() => {
+      for (const type of ['click', 'auxclick']) window.addEventListener(type, event => { if (event.target.closest?.('a[href]')) event.preventDefault(); });
+    });
+    const effortStart = captured.length;
+    await effortBlog.locator('.article-tldr a[href="multi-agent-orchestration.html"]').click();
+    await effortBlog.waitForTimeout(1500);
+    const effortTldr = captured.slice(effortStart).filter(e => e.event === 'tldr_link_click').map(e => e.properties);
+    assert.deepEqual(effortTldr.map(({ source, destination, label, is_anchor }) => ({ source, destination, label, is_anchor })), [
+      { source: '/blog/claude-code-max-effort.html', destination: `${site}/blog/multi-agent-orchestration.html`, label: 'Multi-agent follow-up →', is_anchor: false },
+    ], 'non-anchor tldr link click sends is_anchor: false');
+    await effortBlog.close();
+
     // Email sign-ups send email_signup with the ticked topics, and a failed one sends email_signup_failed.
     // The address itself never reaches PostHog. The sign-up function is faked here.
     for (const width of [390, 820, 1440]) {
@@ -233,7 +294,7 @@ const events = request => {
     await gate.goto(`${site}/gate/`, { waitUntil: 'networkidle' });
     assert.ok(!gateRequests.some(url => /analytics\.js|posthog/.test(url)), 'gate page loads no analytics');
     assert.equal(captured.length, before, 'gate page sends nothing');
-    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, web vitals, project clicks, rental clicks, resume downloads and sign-up events at 3 widths.`);
+    console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, web vitals, project clicks, rental clicks, resume downloads, suggested blog clicks, TL;DR link clicks and sign-up events at 3 widths.`);
   } finally {
     await browser.close();
   }

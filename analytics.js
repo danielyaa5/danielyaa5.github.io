@@ -1,4 +1,4 @@
-/* Anonymous page views, page speed (web vitals), project and rental clicks and email sign-up counts with PostHog,
+/* Anonymous page views, page speed (web vitals), project, rental, blog suggestion and TL;DR clicks, resume downloads and email sign-up counts with PostHog,
    without cookies or browser storage. It runs only on the published hosts, so local previews and tests send nothing,
    and the guest gate page never loads it. */
 (() => {
@@ -95,6 +95,37 @@
   };
   document.addEventListener('click', resumeClick);
   document.addEventListener('auxclick', resumeClick);
+
+  // A suggested_blog_click event when a reader clicks a recommended post card at the end of an article.
+  const suggestedBlogClick = event => {
+    if (event.type === 'auxclick' && event.button !== 1) return;
+    const link = event.target.closest?.('a[href]');
+    const card = link?.closest('.article-related .related-card');
+    if (!card) return;
+    track('suggested_blog_click', {
+      source: location.pathname,
+      destination: link.href,
+      title: (card.querySelector('h3')?.textContent || '').trim(),
+      position: [...document.querySelectorAll('.article-related .related-card')].indexOf(card) + 1,
+    });
+  };
+  document.addEventListener('click', suggestedBlogClick);
+  document.addEventListener('auxclick', suggestedBlogClick);
+
+  // A tldr_link_click event for clicks on jump links and references inside an article's TL;DR summary box.
+  const tldrClick = event => {
+    if (event.type === 'auxclick' && event.button !== 1) return;
+    const link = event.target.closest?.('a[href]');
+    if (!link?.closest('.article-tldr')) return;
+    track('tldr_link_click', {
+      source: location.pathname,
+      destination: link.href,
+      label: (link.textContent || '').trim(),
+      is_anchor: (link.getAttribute('href') || '').startsWith('#'),
+    });
+  };
+  document.addEventListener('click', tldrClick);
+  document.addEventListener('auxclick', tldrClick);
 
   // Email sign-ups from the home page form, with the topics ticked. The address itself is never sent.
   const topicProperties = topics => ({
