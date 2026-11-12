@@ -21,7 +21,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
         await page.route(url => !url.href.startsWith(base), route => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>stub</title>' }));
         await page.goto(`${base}/`, { waitUntil: 'networkidle' });
         const count = await page.locator(TILES).count();
-        assert.equal(count, 16, `3 featured, 10 other and 3 writing tiles at ${label}`);
+        assert.equal(count, 19, `3 featured, 13 other and 3 writing tiles at ${label}`);
 
         // Hit-test each tile: its corners, art, description and chips open the title link;
         // each other link in the tile is on top at its own center.
@@ -60,7 +60,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
           });
           assert.deepEqual(result.misses, [], `${result.name}: every part of the tile opens the title link at ${label}`);
           for (const other of result.others) assert.ok(other.onTop, `${result.name}: "${other.text}" stays clickable at ${label}`);
-          if (i < 13) assert.ok(result.others.length >= 1, `${result.name} keeps its own button link`);
+          if (i < 16) assert.ok(result.others.length >= 1, `${result.name} keeps its own button link`);
         }
 
         // Hover: the tile body underlines the title and darkens the border; the tile's other links don't.
@@ -88,7 +88,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
         // Keyboard: Tab reaches every tile link in order; a title link rings the whole tile, other links ring themselves.
         await page.locator('.hero-actions a').last().focus();
         const seen = [];
-        for (let step = 0; step < 80; step++) {
+        for (let step = 0; step < 100; step++) {
           await page.keyboard.press('Tab');
           const focus = await page.evaluate(selector => {
             const link = document.activeElement;
@@ -119,7 +119,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
             assert.equal(focus.own, 'solid', `"${focus.text}" rings itself at ${label}`);
           }
         }
-        assert.equal(seen.filter(item => item.main).length, 16, `every tile title is reachable by Tab at ${label}`);
+        assert.equal(seen.filter(item => item.main).length, 19, `every tile title is reachable by Tab at ${label}`);
 
         // Real clicks: a tile's description opens the title's address; its button keeps its own.
         const open = async (locator, expected) => {
@@ -131,9 +131,13 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
         const buyOrRent = () => page.locator('#project-list .project', { hasText: 'Buy or Rent' });
         await open(buyOrRent().locator('.project-benefit'), 'https://thebuyorrentcalculator.com/');
         await open(buyOrRent().locator('.project-illustration'), 'https://thebuyorrentcalculator.com/');
-        await open(buyOrRent().locator('.project-link'), 'https://github.com/danielyaa5/buy-or-rent-web');
+        await open(buyOrRent().locator('.project-link'), 'https://thebuyorrentcalculator.com/');
         await open(page.locator('.featured-lead .featured-copy > p'), 'https://danielyaa5.github.io/cloud-media-shrinker/');
-        await open(page.locator('.featured-lead .featured-link'), 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=12');
+        await open(page.locator('.featured-lead .featured-link'), 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=8');
+        await page.locator('[data-filter="ios"]').click();
+        await open(page.locator('#project-list .project', { hasText: 'Cloud Media Shrinker' }).locator('.project-benefit'), 'https://danielyaa5.github.io/cloud-media-shrinker/');
+        await page.locator('[data-filter="ios"]').click();
+        await open(page.locator('#project-list .project', { hasText: 'Cloud Media Shrinker' }).locator('.project-link'), 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=8');
         await open(page.locator('.star-count'), 'https://github.com/danielyaa5/puml-for-markdown/stargazers');
         await open(page.locator('.writing-card').first().locator(':scope > p'), `${base}/blog/predictive-agent-qa.html`);
         runs.push(label);

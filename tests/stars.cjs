@@ -1,7 +1,11 @@
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
 const repoAPI = 'https://api.github.com/repos/danielyaa5/puml-for-markdown';
+const indexHtml = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const fallbackStars = (indexHtml.match(/<span data-star-number>([^<]+)<\/span>/) || [])[1] || '344';
 
 (async () => {
   const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}) });
@@ -19,7 +23,7 @@ const repoAPI = 'https://api.github.com/repos/danielyaa5/puml-for-markdown';
       await page.goto(base, { waitUntil: 'networkidle' });
       const badges = page.locator('[data-github-stars="danielyaa5/puml-for-markdown"]');
       assert.equal(await badges.count(), 1, 'PUML appears once, in the featured section');
-      const expected = scenario === 'live-count' ? '1,234' : '343';
+      const expected = scenario === 'live-count' ? '1,234' : fallbackStars;
       assert.deepEqual(await badges.locator('[data-star-number]').allTextContents(), [expected]);
       for (const badge of await badges.all()) {
         assert.equal(await badge.getAttribute('aria-label'), `${expected} GitHub stars`);

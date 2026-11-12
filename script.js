@@ -18,7 +18,76 @@ document.querySelectorAll('[data-github-stars]').forEach(async badge => {
 
 const filters = document.querySelector('.project-filters');
 if (filters) {
-  const projects = [...document.querySelectorAll('#project-list .project')];
+  const list = document.querySelector('#project-list');
+  const title = document.querySelector('#other-projects-title');
+  const defaultTitle = title?.textContent || 'Other projects';
+  const staticProjects = [...list.querySelectorAll('.project')];
+  const featuredMirrors = [...document.querySelectorAll('.featured-pick[data-category]')].map(pick => {
+    const art = pick.querySelector('img');
+    const nameLink = pick.querySelector('.project-name');
+    const description = pick.querySelector('.featured-copy > p');
+    const actionLink = pick.querySelector('.featured-link');
+    const storeIcon = actionLink?.querySelector('.store-icon');
+    const ratio = (Number(art?.getAttribute('width')) / Number(art?.getAttribute('height'))) || 1;
+    const artWidth = Math.round(Math.min(134, Math.max(112, 118 * ratio)));
+
+    const article = document.createElement('article');
+    article.className = 'project';
+    article.dataset.category = pick.dataset.category;
+    article.dataset.featuredMirror = 'true';
+    article.hidden = true;
+
+    const main = document.createElement('div');
+    main.className = 'project-main';
+    const artWrap = document.createElement('div');
+    artWrap.className = 'project-art';
+    const img = document.createElement('img');
+    img.className = 'project-illustration';
+    img.loading = 'lazy';
+    img.src = art.getAttribute('src');
+    img.width = Number(art.getAttribute('width'));
+    img.height = Number(art.getAttribute('height'));
+    img.style.setProperty('--art-width', `${artWidth}px`);
+    img.alt = '';
+    artWrap.append(img);
+
+    const copy = document.createElement('div');
+    copy.className = 'project-copy';
+    const h2 = document.createElement('h2');
+    const titleAnchor = document.createElement('a');
+    titleAnchor.className = 'project-name';
+    titleAnchor.href = nameLink.getAttribute('href');
+    titleAnchor.textContent = nameLink.textContent.trim();
+    h2.append(titleAnchor);
+    const benefit = document.createElement('p');
+    benefit.className = 'project-benefit';
+    benefit.textContent = description.textContent.trim();
+    const badge = document.createElement('span');
+    badge.className = 'category';
+    badge.textContent = 'Featured';
+    copy.append(h2, benefit, badge);
+    main.append(artWrap, copy);
+
+    const footer = document.createElement('div');
+    footer.className = 'project-footer';
+    const footerLink = document.createElement('a');
+    footerLink.className = 'project-link';
+    footerLink.href = actionLink.getAttribute('href');
+    const icon = document.createElement('img');
+    icon.className = storeIcon ? 'link-icon store-icon' : 'link-icon';
+    icon.src = storeIcon ? storeIcon.getAttribute('src') : 'assets/illustrations/link.svg';
+    icon.width = storeIcon ? 25 : 14;
+    icon.height = storeIcon ? 25 : 14;
+    icon.alt = '';
+    const label = document.createElement('span');
+    label.textContent = actionLink.textContent.trim();
+    footerLink.append(icon, label);
+    footer.append(footerLink);
+
+    article.append(main, footer);
+    return article;
+  });
+
   const count = document.querySelector('.filter-count');
   filters.hidden = false;
   count.hidden = false;
@@ -29,10 +98,19 @@ if (filters) {
     filters.querySelectorAll('button').forEach(item => {
       item.setAttribute('aria-pressed', String(item === button));
     });
-    projects.forEach(project => {
+    featuredMirrors.forEach(mirror => mirror.remove());
+    const matchingFeatured = category === 'all'
+      ? []
+      : featuredMirrors.filter(mirror => mirror.dataset.category.split(/\s+/).includes(category));
+    featuredMirrors.forEach(mirror => {
+      mirror.hidden = !matchingFeatured.includes(mirror);
+    });
+    if (matchingFeatured.length) list.prepend(...matchingFeatured);
+    staticProjects.forEach(project => {
       project.hidden = category !== 'all' && !project.dataset.category.split(/\s+/).includes(category);
     });
-    const visible = projects.filter(project => !project.hidden).length;
+    if (title) title.textContent = category === 'all' ? defaultTitle : button.textContent;
+    const visible = matchingFeatured.length + staticProjects.filter(project => !project.hidden).length;
     count.textContent = `${visible} ${visible === 1 ? 'project' : 'projects'}${category === 'all' ? '' : ` in ${button.textContent}`}`;
   });
 }

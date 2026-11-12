@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 160 160" fill="none" stroke="#1e2f20" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Top coordinator terminal -->
+  <rect x="34" y="10" width="92" height="50" rx="9" fill="#f7f5e8" />
+  <path d="M34 26h92" />
+  <rect x="36" y="12" width="88" height="12" rx="6" fill="#a8b58e" stroke="none" />
+  <path d="M34 26h92" />
+  <rect x="34" y="10" width="92" height="50" rx="9" />
+  <g fill="#1e2f20" stroke="none">
+    <circle cx="46" cy="18" r="2.6" />
+    <circle cx="55" cy="18" r="2.6" />
+    <circle cx="64" cy="18" r="2.6" />
+  </g>
+  <path d="m48 37 8 6-8 6M62 49h14" />
+  <rect x="86" y="36" width="26" height="12" rx="4" fill="#a8b58e" stroke-width="3.2" />
+
+  <!-- Routing branches from coordinator to 3 isolated worker lanes -->
+  <path d="M80 60v16" />
+  <path d="M80 76H28a6 6 0 0 0-6 6v12" />
+  <path d="M80 76v18" />
+  <path d="M80 76h52a6 6 0 0 1 6 6v12" />
+  <circle cx="80" cy="76" r="4.5" fill="#a8b58e" stroke-width="3.4" />
+
+  <!-- Worker 1: Discovery / Plan -->
+  <rect x="8" y="94" width="42" height="54" rx="8" fill="#f7f5e8" />
+  <rect x="14" y="102" width="30" height="8" rx="3" fill="#a8b58e" stroke-width="3" />
+  <circle cx="27" cy="126" r="8" fill="#cbd6b8" stroke-width="3.4" />
+  <path d="m33 132 7 7" stroke-width="3.6" />
+
+  <!-- Worker 2: Scoped Edit -->
+  <rect x="59" y="94" width="42" height="54" rx="8" fill="#f7f5e8" />
+  <rect x="65" y="102" width="30" height="8" rx="3" fill="#a8b58e" stroke-width="3" />
+  <path d="m75 121-6 6 6 6M85 121l6 6-6 6" stroke-width="3.4" />
+
+  <!-- Worker 3: Independent QA -->
+  <rect x="110" y="94" width="42" height="54" rx="8" fill="#f7f5e8" />
+  <rect x="116" y="102" width="30" height="8" rx="3" fill="#a8b58e" stroke-width="3" />
+  <circle cx="131" cy="127" r="10.5" fill="#a8b58e" stroke-width="3.4" />
+  <path d="m126.5 127 3.2 3.4 6.3-6.8" stroke-width="3.4" />
+</svg>

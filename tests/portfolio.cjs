@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer','Price Watch','QuickDesk','H2D Custom Dashboard','TagTracker','qtfaststart2','bambu-headless'];
+const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer','Gate Opener Widget','Price Watch','QuickDesk','orchestrate-agents','simulate-user','H2D Custom Dashboard','TagTracker','qtfaststart2','bambu-headless'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -34,14 +34,14 @@ const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer
 
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
-    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===10 && images.every(img=>img.complete && img.naturalWidth>0)));
+    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===13 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
-    assert.equal(await page.locator('.project-link').count(),10);
+    assert.equal(await page.locator('.project-link').count(),13);
     assert.equal(await page.locator('.featured-pick').count(),3);
     assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','Beckon']);
     assert.equal(await page.locator('.featured-lead h3').innerText(), 'Cloud Media Shrinker');
     assert.equal(await page.locator('#other-projects-title').innerText(), 'Other projects');
-    assert.equal(await page.locator('.filter-count').innerText(), '10 projects');
+    assert.equal(await page.locator('.filter-count').innerText(), '13 projects');
     assert.equal(await page.locator('.featured-link').count(), 3);
     assert.equal(await page.locator('.featured-pick a a').count(), 0);
     assert.ok(await page.locator('.star-count').evaluate(badge=>{
@@ -54,17 +54,28 @@ const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer
     assert.equal(await page.locator('.writing-card').count(),3);
     assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
     const groups = {
-      mac: ['3D Print Monitor','QuickDesk','TagTracker'],
-      ios: ['3D Print Monitor'],
-      web: ['Buy or Rent','Netflix PiP Fixer'],
-      developer: ['AI Usage','Price Watch','qtfaststart2'],
+      mac: ['Cloud Media Shrinker','Beckon','3D Print Monitor','AI Usage','Buy or Rent','Gate Opener Widget','QuickDesk','TagTracker'],
+      ios: ['Cloud Media Shrinker','3D Print Monitor','Buy or Rent','Gate Opener Widget'],
+      web: ['Buy or Rent','Netflix PiP Fixer','H2D Custom Dashboard'],
+      developer: ['puml-for-markdown','AI Usage','Price Watch','orchestrate-agents','simulate-user','qtfaststart2','bambu-headless'],
       printing: ['3D Print Monitor','H2D Custom Dashboard','bambu-headless']
+    };
+    const featuredByFilter = {
+      mac: ['Cloud Media Shrinker','Beckon'],
+      ios: ['Cloud Media Shrinker'],
+      web: [],
+      developer: ['puml-for-markdown'],
+      printing: []
     };
     for (const width of [1440,320]) {
       await page.setViewportSize({width,height:1000});
       for (const [category,names] of Object.entries(groups)) {
-        await page.locator(`[data-filter="${category}"]`).click();
+        const filterBtn = page.locator(`[data-filter="${category}"]`);
+        const filterLabel = await filterBtn.innerText();
+        await filterBtn.click();
         assert.deepEqual(await page.locator('.project:visible h2').allTextContents(),names);
+        assert.deepEqual(await page.locator('.project[data-featured-mirror="true"]:visible h2').allTextContents(), featuredByFilter[category]);
+        assert.equal(await page.locator('#other-projects-title').innerText(), filterLabel);
         assert.equal(await page.locator('[aria-pressed="true"]').count(),1);
         assert.match(await page.locator('.filter-count').innerText(),new RegExp(`^${names.length} ${names.length === 1 ? 'project' : 'projects'}`));
         if (width >= 621 && names.length % 2 === 1) {
@@ -79,6 +90,8 @@ const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer
       }
       await page.locator('[data-filter="all"]').focus();
       await page.keyboard.press('Enter');
+      assert.equal(await page.locator('.project[data-featured-mirror="true"]').count(), 0, 'Featured mirror cards stay hidden/unmounted on All');
+      assert.equal(await page.locator('#other-projects-title').innerText(), 'Other projects');
       assert.deepEqual(await page.locator('.project:visible h2').allTextContents(),expected);
       if (width >= 621 && expected.length % 2 === 1) {
         assert.ok(await page.evaluate(() => {

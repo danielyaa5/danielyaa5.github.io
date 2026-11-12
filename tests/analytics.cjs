@@ -125,16 +125,19 @@ const events = request => {
       await tiles.locator('[data-filter="web"]').click();
       await tiles.locator('#project-list .project', { hasText: 'Netflix PiP Fixer' }).locator('.project-link').click();
       await tiles.locator('#project-list .project', { hasText: 'Buy or Rent' }).locator('.project-benefit').click({ force: true, button: 'middle' });
+      await tiles.locator('[data-filter="ios"]').click();
+      await tiles.locator('#project-list .project', { hasText: 'Cloud Media Shrinker' }).locator('.project-benefit').click({ force: true });
       await tiles.locator('.hero-actions a', { hasText: 'GitHub' }).click();
       await tiles.waitForTimeout(1500);
       const clicks = captured.slice(start).filter(e => e.event === 'project_click').map(e => e.properties);
       const pick = ({ project, link, link_text, destination, section, position, filter }) => ({ project, link, link_text, destination, section, position, filter });
       assert.deepEqual(clicks.map(pick), [
-        { project: 'Cloud Media Shrinker', link: 'button', link_text: 'View on the Mac App Store →', destination: 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=12', section: 'featured', position: 1, filter: undefined },
+        { project: 'Cloud Media Shrinker', link: 'button', link_text: 'View on the App Store →', destination: 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=8', section: 'featured', position: 1, filter: undefined },
         { project: 'puml-for-markdown', link: 'title', link_text: 'puml-for-markdown', destination: 'https://github.com/danielyaa5/puml-for-markdown', section: 'featured', position: 2, filter: undefined },
         { project: 'Beckon', link: 'tile', link_text: 'Beckon', destination: 'https://danielyaa5.github.io/beckon/', section: 'featured', position: 3, filter: undefined },
         { project: 'Netflix PiP Fixer', link: 'button', link_text: 'Get it on the Chrome Web Store →', destination: 'https://chromewebstore.google.com/detail/netflix-pip-fixer/ceiiadpnmbplofcefdafhfidmocjgikp', section: 'other', position: 4, filter: 'web' },
         { project: 'Buy or Rent', link: 'tile', link_text: 'Buy or Rent', destination: 'https://thebuyorrentcalculator.com/', section: 'other', position: 3, filter: 'web' },
+        { project: 'Cloud Media Shrinker', link: 'tile', link_text: 'Cloud Media Shrinker', destination: 'https://danielyaa5.github.io/cloud-media-shrinker/', section: 'other', position: 1, filter: 'ios' },
       ], `project clicks at ${width}px; links outside the tiles send none`);
       assert.ok(clicks.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/`), `cookieless project clicks at ${width}px`);
       await tiles.close();
