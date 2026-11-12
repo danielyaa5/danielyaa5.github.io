@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Source for assets/writing/predictive-agent-qa.webp, .jpg, and .avif: render at 1600x900. -->
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    width: 1600px;
+    height: 900px;
+    overflow: hidden;
+    background: #f1f3e8;
+    color: #111810;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  }
+  .canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 44px 56px;
+    background:
+      radial-gradient(circle at 12% 16%, rgba(18, 75, 48, 0.09), transparent 36%),
+      radial-gradient(circle at 88% 84%, rgba(99, 130, 108, 0.13), transparent 40%),
+      #f4f6ec;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Top Hero Bar */
+  .top-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: stretch;
+  }
+  .panel-card {
+    background: #fffdf6;
+    border: 2px solid #63826c;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(17, 24, 16, 0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .window-bar {
+    height: 42px;
+    background: #e6eedf;
+    border-bottom: 1.5px solid #a7b2a5;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    gap: 10px;
+  }
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #63826c;
+  }
+  .window-title {
+    margin-left: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #124b30;
+  }
+  .window-tag {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 700;
+    color: #3f5938;
+    background: #f4f6ec;
+    border: 1px solid #a7b2a5;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .panel-body {
+    padding: 20px 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .panel-body h2 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    letter-spacing: -0.4px;
+  }
+  .panel-body p {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: #455443;
+  }
+  .code-snippet {
+    margin-top: 14px;
+    background: #f1f3e8;
+    border: 1.5px solid #bbc4af;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #1d2b1f;
+  }
+  .code-snippet b {
+    color: #124b30;
+  }
+  .ghost-prompt {
+    color: #6a7c66;
+    font-style: italic;
+    background: #e9eee2;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px dashed #95a691;
+  }
+
+  /* Mid SVG Connector */
+  .connectors {
+    position: relative;
+    height: 64px;
+    width: 1240px;
+    margin: 0 auto;
+  }
+  .connectors svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* Bottom Three Outcome Columns */
+  .lanes {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr 1fr;
+    gap: 24px;
+  }
+  .lane {
+    background: #fffdf6;
+    border: 2px solid #a7b2a5;
+    border-radius: 16px;
+    padding: 22px 24px;
+    box-shadow: 0 10px 24px rgba(17, 24, 16, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .lane.pushback {
+    background: #e6eedf;
+    border-color: #124b30;
+  }
+  .lane-kicker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #455f3d;
+  }
+  .pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #edf1e3;
+    border: 1px solid #a7b2a5;
+    font-size: 12px;
+    font-weight: 700;
+    color: #124b30;
+  }
+  .lane.pushback .pill {
+    background: #124b30;
+    border-color: #124b30;
+    color: #fffdf6;
+  }
+  .lane h3 {
+    margin: 0;
+    font-size: 21px;
+    letter-spacing: -0.3px;
+  }
+  .lane p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.48;
+    color: #455443;
+  }
+  .lane-code {
+    margin-top: auto;
+    background: #f6f8f0;
+    border: 1px solid #c5cdbd;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #243326;
+  }
+  .lane.pushback .lane-code {
+    background: #fffdf6;
+    border-color: #63826c;
+  }
+
+  /* Bottom status summary */
+  .footer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #e6eedf;
+    border: 1.5px solid #a7b2a5;
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 15.5px;
+    color: #1d2b1f;
+  }
+  .footer-bar strong {
+    color: #124b30;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <!-- Top Two Panels: Builder Session -> Fork Prediction -->
+    <div class="top-panel">
+      <div class="panel-card">
+        <div class="window-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="window-title">Builder Agent (Coding Lane)</span>
+          <span class="window-tag">Turn Complete</span>
+        </div>
+        <div class="panel-body">
+          <div>
+            <h2>Implementation Finished</h2>
+            <p>Agent reports: <i>"Fixed data save logic in <code>store.ts</code>. All local unit tests passing."</i></p>
+          </div>
+          <div class="code-snippet">
+            <div><b>status:</b> build_succeeded (exit 0)</div>
+            <div><b>files:</b> src/store.ts, src/types.ts</div>
+            <div><b>human_turn_pending:</b> true</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="window-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="window-title">Predictive Fork (Cross-Model Critic)</span>
+          <span class="window-tag">~99% Prompt Cache Hit</span>
+        </div>
+        <div class="panel-body">
+          <div>
+            <h2>Ephemeral Next-Prompt Prediction</h2>
+            <p>Clones thread with <code>disable_tools: true</code>. Predicts the user's immediate instinctual reaction:</p>
+          </div>
+          <div class="code-snippet">
+            <div><b>predicted_input:</b> <span class="ghost-prompt">"offline queue drops unsaved edits on abort"</span></div>
+            <div><b>verification_check:</b> <code>node tests/offline-abort.cjs</code></div>
+            <div><b>cost:</b> sub-second · tool-disabled fork</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connectors -->
+    <div class="connectors">
+      <svg viewBox="0 0 1240 64" fill="none">
+        <path d="M620 0 V24 M620 24 H210 V60 M620 24 V60 M620 24 H1030 V60" stroke="#63826c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <polygon points="210,64 203,50 217,50" fill="#63826c"/>
+        <polygon points="620,64 613,50 627,50" fill="#63826c"/>
+        <polygon points="1030,64 1023,50 1037,50" fill="#63826c"/>
+      </svg>
+    </div>
+
+    <!-- Three Output Decisions -->
+    <div class="lanes">
+      <div class="lane pushback">
+        <div class="lane-kicker">
+          <span>Verdict 1 · Pushback</span>
+          <span class="pill">Auto-Fix Loop</span>
+        </div>
+        <h3>Regression Caught &amp; Re-dispatched</h3>
+        <p>Verification test reproduced failure. Dispatches error logs straight back to builder agent before human ever sees the broken state.</p>
+        <div class="lane-code">
+          action: "pushback"<br>
+          test_exit: 1 (offline timeout)<br>
+          cycle: auto_refine (round 1/2)
+        </div>
+      </div>
+
+      <div class="lane">
+        <div class="lane-kicker">
+          <span>Verdict 2 · Abstain</span>
+          <span class="pill">prediction: null</span>
+        </div>
+        <h3>Clean Pass (Zero Busywork)</h3>
+        <p>The abstention valve rewards returning <code>null</code> when the build is solid. Prevents nagging hallucinations or forced round-3 nitpicks.</p>
+        <div class="lane-code">
+          action: "abstain"<br>
+          prediction: null<br>
+          outcome: human delivery ready
+        </div>
+      </div>
+
+      <div class="lane">
+        <div class="lane-kicker">
+          <span>Verdict 3 · Hard Gate</span>
+          <span class="pill">Real Human Only</span>
+        </div>
+        <h3>Safety &amp; Taste Boundary</h3>
+        <p>Hard stop when changes touch outbound sends, purchases, hardware moves, or subjective visual taste calls.</p>
+        <div class="lane-code">
+          action: "needs_real_daniel"<br>
+          boundary: outbound_comms / pay<br>
+          agent_action: pause &amp; notify
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom summary -->
+    <div class="footer-bar">
+      <span><strong>Core Rule:</strong> If the model can predict your next complaint before you type it, give it verification tools and fix it before you look.</span>
+      <span><strong>Token Efficiency:</strong> ~99% cache hit · 0 tool loops</span>
+    </div>
+  </div>
+</body>
+</html>

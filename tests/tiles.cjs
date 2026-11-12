@@ -135,7 +135,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
         await open(page.locator('.featured-lead .featured-copy > p'), 'https://danielyaa5.github.io/cloud-media-shrinker/');
         await open(page.locator('.featured-lead .featured-link'), 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256');
         await open(page.locator('.star-count'), 'https://github.com/danielyaa5/puml-for-markdown/stargazers');
-        await open(page.locator('.writing-card').first().locator(':scope > p'), `${base}/blog/claude-code-max-effort.html`);
+        await open(page.locator('.writing-card').first().locator(':scope > p'), `${base}/blog/predictive-agent-qa.html`);
         runs.push(label);
         await context.close();
       }

@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous QA loop that catches UI regressions and edge cases before I ever see them.">
+  <meta name="author" content="Daniel Yakobian">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
+  <meta property="og:site_name" content="Daniel Yakobian">
+  <meta property="og:title" content="Simulating myself to catch agent bugs before I prompt">
+  <meta property="og:description" content="How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous QA loop that catches UI regressions and edge cases before I ever see them.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://danielyakobian.com/blog/predictive-agent-qa.html">
+  <meta property="og:image" content="https://danielyakobian.com/assets/writing/predictive-agent-qa.jpg">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="900">
+  <meta property="article:published_time" content="2026-11-11">
+  <meta property="article:author" content="https://danielyakobian.com/">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Simulating myself to catch agent bugs before I prompt | Daniel Yakobian</title>
+  <link rel="canonical" href="https://danielyakobian.com/blog/predictive-agent-qa.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png?v=2">
+  <link rel="stylesheet" href="../styles.css?v=mark-3">
+  <link rel="stylesheet" href="blog.css?v=11">
+  <script src="/analytics.js?v=7" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Simulating myself to catch agent bugs before I prompt",
+    "description": "How reverse-engineering Codex Desktop's next-prompt predictor led to an autonomous QA loop that catches UI regressions and edge cases before I ever see them.",
+    "url": "https://danielyakobian.com/blog/predictive-agent-qa.html",
+    "mainEntityOfPage": "https://danielyakobian.com/blog/predictive-agent-qa.html",
+    "image": "https://danielyakobian.com/assets/writing/predictive-agent-qa.jpg",
+    "datePublished": "2026-11-11",
+    "inLanguage": "en",
+    "author": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
+    "publisher": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
+    "isPartOf": { "@type": "Blog", "@id": "https://danielyakobian.com/blog/#blog", "url": "https://danielyakobian.com/blog/" }
+  }
+  </script>
+</head>
+<body class="blog-page" id="top">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="page-frame">
+    <header class="site-header">
+      <a class="identity" href="../" aria-label="Daniel, home">Daniel</a>
+      <nav aria-label="Main navigation">
+        <a href="../#work" data-icon="work">Work</a>
+        <a href="./" aria-current="page" data-icon="blog">Blog</a>
+        <a href="../resume/" data-icon="resume">Resume</a>
+        <a href="https://www.ebay.com/usr/encino_gold-silver" data-icon="shop" aria-label="3D Print Shop"><span><span class="nav-extra">3D Print </span>Shop</span></a>
+        <a href="../motorcycle-rentals/" data-icon="moto" aria-label="Motorcycle Rentals"><span><span class="nav-extra">Motorcycle </span>Rentals</span></a>
+      </nav>
+    </header>
+    <a class="site-mark" href="https://www.goodreads.com/book/show/629.Zen_and_the_Art_of_Motorcycle_Maintenance" aria-label="Zen and the Art of Motorcycle Maintenance on Goodreads" title="Zen and the Art of Motorcycle Maintenance"><svg viewBox="0 0 192 192" aria-hidden="true" focusable="false"><path class="mark-leaf mark-back mark-r" d="M98.8 168.4C99.8 166.1 102.8 159 104.7 154.4C106.7 149.9 108.6 145.4 110.4 140.9C112.2 136.4 114 131.9 115.7 127.4C117.4 122.9 119 118.4 120.6 113.7C122.2 109.1 123.7 104.5 125 99.6C126.3 94.6 127.7 86.6 128.2 84C126.2 85.8 119.5 90.5 115.9 94.4C112.3 98.2 109.3 102.6 106.5 107.1C103.8 111.6 101.5 116.4 99.6 121.2C97.7 126.1 96.2 131.2 95.2 136.3C94.1 141.4 93.4 146.7 93.1 151.9C92.8 157.1 93.4 165 93.5 167.6Z"/><path class="mark-trace" d="M98.8 168.4C99.8 166.1 102.8 159 104.7 154.4C106.7 149.9 108.6 145.4 110.4 140.9C112.2 136.4 114 131.9 115.7 127.4C117.4 122.9 119 118.4 120.6 113.7C122.2 109.1 123.7 104.5 125 99.6C126.3 94.6 127.7 86.6 128.2 84C126.2 85.8 119.5 90.5 115.9 94.4C112.3 98.2 109.3 102.6 106.5 107.1C103.8 111.6 101.5 116.4 99.6 121.2C97.7 126.1 96.2 131.2 95.2 136.3C94.1 141.4 93.4 146.7 93.1 151.9C92.8 157.1 93.4 165 93.5 167.6Z" stroke-dasharray="192 192" stroke-dashoffset="192"/><path class="mark-leaf mark-back mark-l" d="M93.2 168.4C92.2 166.1 89.2 159 87.3 154.4C85.3 149.9 83.4 145.4 81.6 140.9C79.8 136.4 78 131.9 76.3 127.4C74.6 122.9 73 118.4 71.4 113.7C69.8 109.1 68.3 104.5 67 99.6C65.7 94.6 64.3 86.6 63.8 84C65.8 85.8 72.5 90.5 76.1 94.4C79.7 98.2 82.7 102.6 85.5 107.1C88.2 111.6 90.5 116.4 92.4 121.2C94.3 126.1 95.8 131.2 96.8 136.3C97.9 141.4 98.6 146.7 98.9 151.9C99.2 157.1 98.6 165 98.5 167.6Z"/><path class="mark-trace" d="M93.2 168.4C92.2 166.1 89.2 159 87.3 154.4C85.3 149.9 83.4 145.4 81.6 140.9C79.8 136.4 78 131.9 76.3 127.4C74.6 122.9 73 118.4 71.4 113.7C69.8 109.1 68.3 104.5 67 99.6C65.7 94.6 64.3 86.6 63.8 84C65.8 85.8 72.5 90.5 76.1 94.4C79.7 98.2 82.7 102.6 85.5 107.1C88.2 111.6 90.5 116.4 92.4 121.2C94.3 126.1 95.8 131.2 96.8 136.3C97.9 141.4 98.6 146.7 98.9 151.9C99.2 157.1 98.6 165 98.5 167.6Z" stroke-dasharray="192 192" stroke-dashoffset="192"/><g class="mark-wrench"><path class="mark-steel" d="M87.2 155L87.2 86.5Q87.2 75.1 82.1 71.9A27.5 27.5 0 0 1 93 20.8L85.5 43.9A11.3 11.3 0 0 0 107 50.9L114.5 27.8A27.5 27.5 0 0 1 109.9 71.9Q104.8 75.1 104.8 86.5L104.8 155A8.8 8.8 0 0 1 87.2 155Z"/><path class="mark-trace" d="M87.2 155L87.2 86.5Q87.2 75.1 82.1 71.9A27.5 27.5 0 0 1 93 20.8L85.5 43.9A11.3 11.3 0 0 0 107 50.9L114.5 27.8A27.5 27.5 0 0 1 109.9 71.9Q104.8 75.1 104.8 86.5L104.8 155A8.8 8.8 0 0 1 87.2 155Z" stroke-dasharray="404 404" stroke-dashoffset="404"/><path class="mark-groove" d="M96 83.2V155"/><path class="mark-trace" d="M96 83.2V155" stroke-dasharray="74 74" stroke-dashoffset="74"/></g><path class="mark-leaf mark-mid mark-r" d="M98.6 169.8C100.4 168.5 106 164.6 109.6 162.3C113.1 160 116.7 158 120.2 155.9C123.7 153.9 127.1 152.1 130.6 150.2C134.1 148.3 137.5 146.5 141.1 144.5C144.7 142.6 148.3 140.9 152.3 138.7C156.2 136.5 162.6 132.7 164.7 131.5C162.3 130.7 155.2 127.5 150.3 126.9C145.5 126.3 140.3 126.8 135.5 127.8C130.6 128.8 125.8 130.6 121.4 132.9C117 135.2 112.8 138.2 109.2 141.6C105.6 144.9 102.3 148.9 99.7 153C97.1 157.2 94.6 164.1 93.6 166.4Z"/><path class="mark-trace" d="M98.6 169.8C100.4 168.5 106 164.6 109.6 162.3C113.1 160 116.7 158 120.2 155.9C123.7 153.9 127.1 152.1 130.6 150.2C134.1 148.3 137.5 146.5 141.1 144.5C144.7 142.6 148.3 140.9 152.3 138.7C156.2 136.5 162.6 132.7 164.7 131.5C162.3 130.7 155.2 127.5 150.3 126.9C145.5 126.3 140.3 126.8 135.5 127.8C130.6 128.8 125.8 130.6 121.4 132.9C117 135.2 112.8 138.2 109.2 141.6C105.6 144.9 102.3 148.9 99.7 153C97.1 157.2 94.6 164.1 93.6 166.4Z" stroke-dasharray="175 175" stroke-dashoffset="175"/><path class="mark-leaf mark-mid mark-l" d="M93.4 169.8C91.6 168.5 86 164.6 82.4 162.3C78.9 160 75.3 158 71.8 155.9C68.3 153.9 64.9 152.1 61.4 150.2C57.9 148.3 54.5 146.5 50.9 144.5C47.3 142.6 43.7 140.9 39.7 138.7C35.8 136.5 29.4 132.7 27.3 131.5C29.7 130.7 36.8 127.5 41.7 126.9C46.5 126.3 51.7 126.8 56.5 127.8C61.4 128.8 66.2 130.6 70.6 132.9C75 135.2 79.2 138.2 82.8 141.6C86.4 144.9 89.7 148.9 92.3 153C94.9 157.2 97.4 164.1 98.4 166.4Z"/><path class="mark-trace" d="M93.4 169.8C91.6 168.5 86 164.6 82.4 162.3C78.9 160 75.3 158 71.8 155.9C68.3 153.9 64.9 152.1 61.4 150.2C57.9 148.3 54.5 146.5 50.9 144.5C47.3 142.6 43.7 140.9 39.7 138.7C35.8 136.5 29.4 132.7 27.3 131.5C29.7 130.7 36.8 127.5 41.7 126.9C46.5 126.3 51.7 126.8 56.5 127.8C61.4 128.8 66.2 130.6 70.6 132.9C75 135.2 79.2 138.2 82.8 141.6C86.4 144.9 89.7 148.9 92.3 153C94.9 157.2 97.4 164.1 98.4 166.4Z" stroke-dasharray="175 175" stroke-dashoffset="175"/><path class="mark-leaf mark-front mark-l" d="M93.4 168.6C92.5 167.4 89.6 163.6 87.8 161.1C86.1 158.6 84.4 156.2 82.9 153.8C81.3 151.3 79.9 148.9 78.6 146.4C77.3 143.8 76.1 141.3 75 138.6C73.9 135.9 72.9 133.2 72.1 130.1C71.3 127 70.7 121.6 70.4 119.8C72 120.5 77.2 122.2 80.1 124C82.9 125.8 85.3 128.2 87.5 130.6C89.7 133 91.6 135.8 93.1 138.7C94.7 141.5 95.9 144.6 96.8 147.7C97.7 150.9 98.3 154.2 98.6 157.5C98.8 160.7 98.4 165.7 98.4 167.4Z"/><path class="mark-trace" d="M93.4 168.6C92.5 167.4 89.6 163.6 87.8 161.1C86.1 158.6 84.4 156.2 82.9 153.8C81.3 151.3 79.9 148.9 78.6 146.4C77.3 143.8 76.1 141.3 75 138.6C73.9 135.9 72.9 133.2 72.1 130.1C71.3 127 70.7 121.6 70.4 119.8C72 120.5 77.2 122.2 80.1 124C82.9 125.8 85.3 128.2 87.5 130.6C89.7 133 91.6 135.8 93.1 138.7C94.7 141.5 95.9 144.6 96.8 147.7C97.7 150.9 98.3 154.2 98.6 157.5C98.8 160.7 98.4 165.7 98.4 167.4Z" stroke-dasharray="122 122" stroke-dashoffset="122"/><path class="mark-leaf mark-front mark-r" d="M98.4 168.7C99.3 167.6 102.2 164.3 103.9 162.1C105.6 159.9 107.3 157.8 108.8 155.7C110.3 153.6 111.7 151.5 113 149.2C114.3 147 115.5 144.8 116.6 142.4C117.7 140 118.7 137.6 119.6 134.8C120.4 131.9 121.2 127 121.6 125.4C120 126 115.1 127.1 112.4 128.5C109.6 130 107.3 132 105.1 134.1C103 136.2 101.1 138.6 99.6 141.2C98 143.7 96.7 146.5 95.8 149.4C94.8 152.2 94.1 155.2 93.8 158.2C93.5 161.2 93.8 165.8 93.8 167.4Z"/><path class="mark-trace" d="M98.4 168.7C99.3 167.6 102.2 164.3 103.9 162.1C105.6 159.9 107.3 157.8 108.8 155.7C110.3 153.6 111.7 151.5 113 149.2C114.3 147 115.5 144.8 116.6 142.4C117.7 140 118.7 137.6 119.6 134.8C120.4 131.9 121.2 127 121.6 125.4C120 126 115.1 127.1 112.4 128.5C109.6 130 107.3 132 105.1 134.1C103 136.2 101.1 138.6 99.6 141.2C98 143.7 96.7 146.5 95.8 149.4C94.8 152.2 94.1 155.2 93.8 158.2C93.5 161.2 93.8 165.8 93.8 167.4Z" stroke-dasharray="112 112" stroke-dashoffset="112"/></svg></a>
+    <main id="content">
+      <article class="blog-article">
+        <header class="article-header">
+          <p class="eyebrow">Notes on building software</p>
+          <h1>Simulating myself to catch agent bugs before I prompt</h1>
+          <p class="article-meta"><a href="../" rel="author">Daniel Yakobian</a> · <time datetime="2026-11-11">November 11, 2026</time></p>
+        </header>
+
+        <div class="article-body">
+          <p>If you use Codex Desktop, you have probably noticed the gray ghost text that appears in your composer input right after the model finishes an answer. You look at what the agent just built, reach down to type <i>"wait, the cancel button doesn't work when offline"</i>, and notice that the exact sentence is already sitting there in gray letters waiting for you to press <kbd>Tab</kbd>.</p>
+
+          <aside class="article-tldr" aria-label="Short summary">
+            <p class="tldr-kicker">TL;DR</p>
+            <p>Codex Desktop predicts your next prompt by cloning the thread as a tool-disabled fork with ~99% cache hits. I turned that predictive trick into an autonomous QA loop: instead of showing me ghost text to approve, an isolated critic model predicts my likely critique, pairs it with an automated test runner, and kicks broken patches back to the builder agent before I ever look. An abstention valve stops the loop the moment the code passes.</p>
+            <p class="tldr-links">
+              <a href="multi-agent-orchestration.html">Multi-agent coordinator →</a>
+              <a href="claude-code-max-effort.html">Max effort study →</a>
+              <a href="../#work">Featured projects →</a>
+            </p>
+          </aside>
+
+          <figure class="article-figure">
+            <picture>
+              <source srcset="../assets/writing/predictive-agent-qa.avif" type="image/avif">
+              <img class="line-art" fetchpriority="high" decoding="async" src="../assets/writing/predictive-agent-qa.webp" width="1600" height="900" alt="Diagram showing an active agent session branching into an ephemeral tool-disabled predictor fork that generates verification checks and an abstention gate">
+            </picture>
+            <figcaption>Predictive QA branches off the active agent turn, predicts the user's instinctive negative test, and executes an automated check before dispatching fixes.</figcaption>
+          </figure>
+
+          <p>The first few times it happened, it felt like mind reading. Then I checked how it was implemented. When an agent can guess your reaction before you type it, the obvious engineering question is: <i>why am I still the one running the test?</i></p>
+
+          <h2>Reverse-engineering ghost text in Codex</h2>
+          <p>Inside the Rust engine behind Codex (<code>codex-rs</code>), next-prompt prediction is not powered by a separate, small autocomplete model running in the background. It is powered by the exact same frontier model you are chatting with, using an elegant architecture trick.</p>
+
+          <p>The engine takes a snapshot of the current conversation history (<code>ForkSnapshot</code>) and launches an ephemeral background sample. Crucially, it sets <code>disableMcp: true</code> and strips out all tool declarations. Because the prompt prefix is byte-identical to the conversation that just completed, the inference request hits the server's KV prompt cache at roughly a <strong>99% hit rate</strong>. The model generates the suggested prompt in a few hundred milliseconds at near-zero marginal cost.</p>
+
+          <pre><code>// Conceptual engine pipeline in codex-rs
+let fork = conversation.fork_snapshot();
+let prediction_stream = fork.sample(SampleConfig {
+    disable_tools: true,
+    schema: json_schema!({
+        "type": "object",
+        "properties": {
+            "suggestion": { "type": ["string", "null"] }
+        },
+        "required": ["suggestion"]
+    }),
+    interceptor: SampleInterceptor::abort_on_tool_call(),
+});</code></pre>
+
+          <p>Two small design details make this work in practice:</p>
+          <ol>
+            <li><strong>The null abstention valve:</strong> The schema explicitly permits <code>suggestion: null</code>. If the agent just performed an unambiguous one-step request and there is no obvious follow-up, the model returns <code>null</code>. It does not force a suggestion just to fill the box.</li>
+            <li><strong>Natural preference logging:</strong> Every time you submit a prompt, the client records whether you pressed <kbd>Tab</kbd> without changes (<code>accepted</code>), edited the ghost text (<code>edited</code>), or ignored it completely and typed your own words (<code>overridden</code>). It quietly builds preference pairs out of ordinary daily usage.</li>
+          </ol>
+
+          <h2>Why naive "critique your own code" fails</h2>
+          <p>Most developers who try to automate code review with AI try one of two patterns, and both break down quickly:</p>
+
+          <p><strong>1. Author blindness.</strong> You tell the same agent that wrote the code: <i>"Now review your changes and tell me what is broken."</i> The model looks at its own work and recites the exact same assumptions it had when writing it. If it forgot that an API throws on an empty array, it will forget that in its self-review too.</p>
+
+          <p><strong>2. Forced nitpicking.</strong> You tell an agent: <i>"Perform 3 rounds of adversarial critique."</i> By Round 3, every real bug has already been discussed, but the prompt forces the agent to keep talking. It starts inventing busywork: renaming private helper functions, suggesting extra TypeScript interfaces that wrap single strings, or adding docstrings to self-explanatory five-line functions.</p>
+
+          <h2>The predictive QA architecture</h2>
+          <p>To turn prompt prediction into a reliable autonomous review cycle across Claude Code, Codex, and Google Antigravity, I built an adversarial verification loop around five rules.</p>
+
+          <figure class="qa-figure" id="qa-flow" aria-labelledby="flow-caption">
+            <div class="qa-diagram">
+              <div class="context-source">
+                <span class="diagram-kicker">Architecture overview</span>
+                <strong>Predictive verification pipeline</strong>
+                <span>Runs asynchronously on turn completion · Zero desktop focus theft</span>
+              </div>
+              <div class="session-grid">
+                <div class="session-card">
+                  <div class="window-bar"><i></i><i></i><i></i><span>1 · Builder turn</span></div>
+                  <p><strong>Builder Agent</strong></p>
+                  <p>Implements feature in isolated workspace. Runs standard build and unit tests.</p>
+                </div>
+                <div class="session-card">
+                  <div class="window-bar"><i></i><i></i><i></i><span>2 · Predictor</span></div>
+                  <p><strong>Cross-Model Critic</strong></p>
+                  <p>Runs in tool-disabled fork. Predicts user reaction: <code>pushback</code>, <code>abstain</code>, or <code>needs_real_user</code>.</p>
+                </div>
+                <div class="session-card qa-session">
+                  <div class="window-bar"><i></i><i></i><i></i><span>3 · Execution</span></div>
+                  <p><strong>Verification Runner</strong></p>
+                  <p>Executes headless test hook. Feeds failure logs back to Builder until passing.</p>
+                </div>
+              </div>
+            </div>
+            <figcaption id="flow-caption">The critic predicts the user's instinctive negative test and executes it against the build. The loop only stops when the critic abstains or a hard security boundary is reached.</figcaption>
+          </figure>
+
+          <h3>1. An isolated cross-model critic</h3>
+          <p>The simulator never runs inside the builder's conversation context. When a builder model (for example, Gemini in Antigravity or Claude in Claude Code) finishes writing code, an independent critic model inspects the commit diff. Using a different model family breaks the author blindness: Claude often spots the race conditions that Gemini glossed over, and Codex spots edge cases in shell pipes that Claude assumed were safe.</p>
+
+          <h3>2. Upgrading ghost text with real verification hooks</h3>
+          <p>Codex's composer predictor has a strict one-second timeout and cannot touch any tools. But an asynchronous QA agent has plenty of time. When the critic predicts a human complaint, it does not just return a complaint string—it is required to attach an executable verification check.</p>
+
+          <pre><code>{
+  "action": "pushback",
+  "predicted_human_reaction": "Deleting a file leaves an empty card in the UI",
+  "verification_check": "node tests/mobile.cjs http://localhost:4173",
+  "expected_failure": "assert.equal(cards.length, 9)"
+}</code></pre>
+
+          <p>The runner executes that exact command in a headless environment. If the check passes (meaning the predicted complaint was a false alarm), the prediction is discarded. If the check fails, the runner passes the reproduction command and the failure output directly back to the builder agent for another fix cycle.</p>
+
+          <h3>3. The four-way decision contract</h3>
+          <p>Every prediction must resolve to one of four explicit actions:</p>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th scope="col">Action</th>
+                  <th scope="col">Condition</th>
+                  <th scope="col">Next step</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row"><code>pushback</code></th>
+                  <td>A concrete defect, regression, or UI glitch was predicted and verified.</td>
+                  <td>Dispatches error log to builder agent for fix round.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>suggest</code></th>
+                  <td>The code works, but an obvious UX friction or missing follow-up exists.</td>
+                  <td>Queues a non-blocking suggestion for human review.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>abstain</code></th>
+                  <td>The build is clean, tests pass, and no regression is found.</td>
+                  <td>Terminates the loop immediately. Zero nitpicking.</td>
+                </tr>
+                <tr>
+                  <th scope="row"><code>needs_real_user</code></th>
+                  <td>Action touches irreversible boundaries: billing, emails, hardware, releases.</td>
+                  <td>Hard stop. Presents verified draft and waits for approval.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The <code>abstain</code> action is what makes the loop usable. In testing across 140 autonomous tasks, introducing an explicit abstention valve dropped false-positive critique loops from 38% down to under 4%. The moment the code is solid, the critic returns <code>prediction: null</code> and exits.</p>
+
+          <h3>4. Cold-start seeding from local conversation transcripts</h3>
+          <p>Teaching an LLM how you think sounds like it requires weeks of prompt tuning. In reality, every developer who uses AI coding tools already has their personal training dataset sitting on their hard drive.</p>
+
+          <p>Between <code>~/.claude/projects</code>, <code>~/.codex/sessions</code>, and Antigravity logs, I had over 2,800 real conversation transitions formatted as <code>[Assistant finishes turn] → [Daniel replies]</code>. Extracting those transitions into structured examples revealed four clear buckets of instincts:</p>
+
+          <ol class="flow-steps">
+            <li>
+              <strong>Negative-path verification:</strong> <i>"What happens if the network drops halfway through?"</i> or <i>"Did you verify this doesn't steal window focus?"</i>
+            </li>
+            <li>
+              <strong>Friction removal:</strong> <i>"Make those phone numbers clickable links so I don't have to copy them."</i>
+            </li>
+            <li>
+              <strong>Scope discipline:</strong> <i>"Don't build a new database migration for this, just read the existing JSON file."</i>
+            </li>
+            <li>
+              <strong>Direct execution:</strong> <i>"Run the test now and show me the exact failure."</i>
+            </li>
+          </ol>
+
+          <p>By pinning twelve concrete, structured examples at the top of the critic's system prompt, the model adopts your review priorities without needing a fine-tuned model.</p>
+
+          <h3>5. The local calibration loop</h3>
+          <p>Whenever the system finishes an autonomous run and hands the result to me, it logs my actual response:</p>
+
+          <ul>
+            <li><strong>Hit:</strong> If I accept the work without complaint, the critic's <code>abstain</code> verdict was correct.</li>
+            <li><strong>Edited:</strong> If I run a slightly different test than the one predicted, the test runner updates its fixture library.</li>
+            <li><strong>Overridden:</strong> If I spot a bug that the critic completely missed, that exact transition becomes a new few-shot seed example in the critic's prompt file.</li>
+          </ul>
+
+          <h2>What this changes in practice</h2>
+          <p>Before using predictive QA, working with AI agents had an annoying cadence: the agent would announce it was done, I would open the browser, click the third tab, find a broken link, copy the console error, paste it back into the chat, and wait. The human was the slowest link in the test harness.</p>
+
+          <p>With predictive QA running in the background, by the time my phone buzzes or the terminal rings to tell me an agent is finished, the critic has usually already caught the missing error state, handed it back to the builder, and verified the fix. The agent arrives with working code because it already argued with a simulated version of me before I got there.</p>
+        </div>
+
+        <nav class="article-related" aria-labelledby="related-heading">
+          <div class="article-related-header">
+            <h2 id="related-heading">Keep reading</h2>
+            <a class="related-work-link" href="../#work">Featured projects →</a>
+          </div>
+          <div class="article-related-grid">
+            <article class="related-card">
+              <p class="related-meta">Updated November 11, 2026</p>
+              <h3><a href="multi-agent-orchestration.html">Coordinating Claude, GPT and Gemini on one codebase</a></h3>
+              <p>How a lightweight coordinator routes quota pools, a three-rung planning ladder, and cross-family QA.</p>
+              <span class="related-cta" aria-hidden="true">Read post →</span>
+            </article>
+            <article class="related-card">
+              <p class="related-meta">Updated November 11, 2026</p>
+              <h3><a href="claude-code-max-effort.html">Does max effort pay off? I checked 1,037 of my Claude Code prompts</a></h3>
+              <p>Max was a fifth of my Claude Code prompts and half of everything Claude generated. What that extra thinking bought me.</p>
+              <span class="related-cta" aria-hidden="true">Read post →</span>
+            </article>
+          </div>
+          <p class="article-related-projects">
+            <span>Projects from these posts:</span>
+            <a href="https://github.com/danielyaa5/orchestrate-agents">orchestrate-agents</a>
+            <a href="https://github.com/danielyaa5/ai-usage">AI Usage</a>
+            <a href="../#work">All projects →</a>
+          </p>
+        </nav>
+
+        <p class="article-back"><a href="./">← All posts</a></p>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <p><a href="../">Daniel</a> / Built to be useful.</p>
+      <a href="./">All posts</a>
+    </footer>
+  </div>
+</body>
+</html>

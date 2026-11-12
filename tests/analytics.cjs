@@ -118,7 +118,10 @@ const events = request => {
       await tiles.locator('.featured-lead .featured-link').click();
       await tiles.locator('.featured-pick').nth(1).locator('.project-name').click({ button: 'middle' });
       // A click on the tile's description lands on the title link's stretched layer and counts as `tile`.
-      await tiles.locator('.featured-pick').nth(2).locator('.featured-copy > p').click({ force: true });
+      const beckonP = tiles.locator('.featured-pick').nth(2).locator('.featured-copy > p');
+      await beckonP.evaluate(node => node.scrollIntoView({ block: 'center', behavior: 'instant' }));
+      const beckonBox = await beckonP.boundingBox();
+      await tiles.mouse.click(beckonBox.x + beckonBox.width / 2, beckonBox.y + beckonBox.height / 2);
       await tiles.locator('[data-filter="web"]').click();
       await tiles.locator('#project-list .project', { hasText: 'Netflix PiP Fixer' }).locator('.project-link').click();
       await tiles.locator('#project-list .project', { hasText: 'Buy or Rent' }).locator('.project-benefit').click({ force: true, button: 'middle' });

@@ -32,6 +32,7 @@
     "inLanguage": "en",
     "author": { "@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/" },
     "blogPost": [
+      { "@type": "BlogPosting", "headline": "Simulating myself to catch agent bugs before I prompt", "url": "https://danielyakobian.com/blog/predictive-agent-qa.html", "datePublished": "2026-11-11" },
       { "@type": "BlogPosting", "headline": "Coordinating Claude, GPT and Gemini on one codebase", "url": "https://danielyakobian.com/blog/multi-agent-orchestration.html", "datePublished": "2026-11-09", "dateModified": "2026-11-11" },
       { "@type": "BlogPosting", "headline": "Which AI CLI can actually search the web?", "url": "https://danielyakobian.com/blog/ai-cli-web-search.html", "datePublished": "2026-11-09" },
       { "@type": "BlogPosting", "headline": "Does max effort pay off? I checked 1,037 of my Claude Code prompts", "url": "https://danielyakobian.com/blog/claude-code-max-effort.html", "datePublished": "2026-11-08", "dateModified": "2026-11-11" },
@@ -64,10 +65,17 @@
         <p class="eyebrow">Notes on building software</p>
         <h1>Blog</h1>
         <article class="post-card">
+          <p class="article-meta"><time datetime="2026-11-11">November 11, 2026</time></p>
+          <h2><a href="predictive-agent-qa.html">Simulating myself to catch agent bugs before I prompt</a></h2>
+          <p>Codex Desktop's next-prompt predictor clones active threads with zero tools to guess human input. Here is how turning that mechanism into an autonomous QA critic cuts human verification loops.</p>
+          <img class="writing-thumb line-art" fetchpriority="high" decoding="async" src="../assets/writing/predictive-agent-qa.webp" width="1600" height="900" alt="Diagram showing an active agent session branching into an ephemeral tool-disabled predictor fork that generates verification checks and an abstention gate">
+          <a class="read-post" href="predictive-agent-qa.html">Read the post →</a>
+        </article>
+        <article class="post-card">
           <p class="article-meta"><time datetime="2026-11-09">November 9, 2026</time></p>
           <h2><a href="multi-agent-orchestration.html">Coordinating Claude, GPT and Gemini on one codebase</a></h2>
           <p>How I use a single coordinator chat and a local launcher script to route discovery, implementation, and independent QA across Claude Code, Codex, and Google Antigravity.</p>
-          <img class="writing-thumb line-art" fetchpriority="high" decoding="async" src="../assets/writing/multi-agent-orchestration-tile.webp" width="1600" height="900" alt="Diagram of a coordinator chat dispatching bounded tasks to three separate lanes: Claude Code for read-only discovery, Antigravity or Claude for workspace edits, and Codex for independent QA">
+          <img class="writing-thumb line-art" src="../assets/writing/multi-agent-orchestration-tile.webp" width="1600" height="900" alt="Diagram of a coordinator chat dispatching bounded tasks to three separate lanes: Claude Code for read-only discovery, Antigravity or Claude for workspace edits, and Codex for independent QA" loading="lazy">
           <a class="read-post" href="multi-agent-orchestration.html">Read the post →</a>
         </article>
         <article class="post-card">

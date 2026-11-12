@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Pages on danielyakobian.com. Project sites on danielyaa5.github.io are listed in sitemap-projects.xml. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://danielyakobian.com/</loc><lastmod>2026-11-09</lastmod></url>
+  <url><loc>https://danielyakobian.com/</loc><lastmod>2026-11-11</lastmod></url>
   <url><loc>https://danielyakobian.com/resume/</loc><lastmod>2026-11-06</lastmod></url>
   <url><loc>https://danielyakobian.com/motorcycle-rentals/</loc><lastmod>2026-11-07</lastmod></url>
   <url><loc>https://danielyakobian.com/blog/</loc><lastmod>2026-11-11</lastmod></url>
+  <url><loc>https://danielyakobian.com/blog/predictive-agent-qa.html</loc><lastmod>2026-11-11</lastmod></url>
   <url><loc>https://danielyakobian.com/blog/multi-agent-orchestration.html</loc><lastmod>2026-11-11</lastmod></url>
   <url><loc>https://danielyakobian.com/blog/ai-cli-web-search.html</loc><lastmod>2026-11-09</lastmod></url>
   <url><loc>https://danielyakobian.com/blog/claude-code-max-effort.html</loc><lastmod>2026-11-11</lastmod></url>
