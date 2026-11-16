@@ -13,7 +13,7 @@ const root = path.join(__dirname, '..');
 const site = 'http://danielyakobian.com';
 const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html', 'motorcycle-rentals/index.html',
   ...fs.readdirSync(path.join(root, 'blog')).filter(name => name.endsWith('.html') && name !== 'index.html').map(name => `blog/${name}`)];
-const untracked = ['gate/index.html', 'quickdesk/privacy.html', 'bubcal/index.html'];
+const untracked = ['gate/index.html', 'quickdesk/privacy.html', 'bubcal/index.html', 'bubcal/astra-v1/index.html', 'bubcal/astra-v2/index.html'];
 
 const events = request => {
   const raw = request.postDataBuffer();
