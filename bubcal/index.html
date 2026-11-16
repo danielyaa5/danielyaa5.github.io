@@ -614,7 +614,7 @@ html,body{width:100%;height:100%;min-width:320px;overflow:hidden}
 .moon.fxh{visibility:hidden}
 .moon.fresh:not(.ghost){animation:fxin .45s cubic-bezier(.3,1.4,.5,1)}
 @keyframes fxin{from{opacity:0;transform:scale(.55)}}
-.fxw,.fxz,.fxp,.fxo,.fx-core,.fx-star,.fx-comet,.fx-glint,.fx-plane,.fx-stamp,.fx-tag,.fx-combo,.fx-chip{position:absolute;pointer-events:none;font-style:normal}
+.fxw,.fxz,.fxp,.fxo,.fx-core,.fx-star,.fx-comet,.fx-glint,.fx-spaceship,.fx-stamp,.fx-tag,.fx-combo,.fx-chip{position:absolute;pointer-events:none;font-style:normal}
 .fxw,.fxz{width:0;height:0}.fxz{left:0;top:0}.fxw .moon{transition:none;pointer-events:none}
 .fxp,.fxo,.fx-core,.fx-comet,.fx-glint{border-radius:50%}
 .fxo{box-sizing:border-box;border:2.5px solid var(--k,#2f8f5b)}
@@ -629,8 +629,8 @@ line.fx-th{stroke-linecap:butt}                    /* snapped halves: pixel dash
 .fx-thg{fill:none;stroke:#ffb020;stroke-width:11;stroke-linecap:round;opacity:.45}
 .fx-tag{padding:3px 9px;border-radius:10px;font:700 11px/1.2 var(--sans);white-space:nowrap;color:#5a3d05;background:#ffe9a8;border:1px solid #e0a92e;box-shadow:0 4px 10px -4px rgba(120,80,10,.6)}
 .fx-stamp{padding:.25em .6em;border:.2em solid #1f7a4a;border-radius:.4em;font:900 1em/1 var(--sans);letter-spacing:.08em;white-space:nowrap;color:#1f7a4a;background:rgba(255,253,247,.55);box-shadow:inset 0 0 0 .08em rgba(31,122,74,.5)}
-.fx-plane{width:26px;height:26px;margin:-13px 0 0 -13px;filter:drop-shadow(0 4px 4px rgba(60,40,20,.35))}
-.fx-plane svg{display:block}
+.fx-spaceship{width:48px;height:40px;margin:-20px 0 0 -24px;filter:drop-shadow(0 3px 3px rgba(35,48,60,.4))}
+.fx-spaceship svg{display:block;overflow:visible}
 .fx-chip{white-space:nowrap}
 .fx-rib,.fx-tail{fill:none;stroke-linecap:round;stroke-linejoin:round}
 .fx-rib{opacity:.9}
@@ -1206,7 +1206,7 @@ function fireLaser(t,cb){
 /* ───────── Resolve FX · 8 selectable animations ─────────
    Every run animates a detached clone of the moon in the overlays (#fx › #fxr for SVG, #fxd inside the canvas, #fxa above the whole app),
    so a redraw never interrupts it. The real moon keeps its place in the layout but stays hidden (.fxh) until the run ends. */
-const FXS=[['seed','1 · Supernova Seed'],['slingshot','2 · Slingshot to the Sun'],['bubble','3 · Soap-Bubble Pop'],['tether','4 · Tether Snap Chain'],['stamp','5 · Stamp &amp; Paper Plane'],['forge','6 · Saturn Ring Forge'],['streak','7 · Streak Comet'],['whitestar','8 · White Star Morph (Moon → Star → Moon)']];
+const FXS=[['seed','1 · Supernova Seed'],['slingshot','2 · Slingshot to the Sun'],['bubble','3 · Soap-Bubble Pop'],['tether','4 · Tether Snap Chain'],['stamp','5 · Stamp &amp; Spaceship'],['forge','6 · Saturn Ring Forge'],['streak','7 · Streak Comet'],['whitestar','8 · White Star Morph (Moon → Star → Moon)']];
 let resolveFx='seed',streakCount=0,streakT=0,streakTm=0;
 const FXR=new Map(),FD=$('#fxd'),FG=$('#fxr'),FA=document.createElement('div'),CB=document.createElement('b'),SVGNS='http://www.w3.org/2000/svg';
 FA.id='fxa';app.appendChild(FA);CB.id='combo';$('#dock').appendChild(CB);
@@ -1226,7 +1226,17 @@ const fxPending=t=>{const R=FXR.get(t.id);return!!R&&R.mode==='real'&&!R.counted
   arcD=(cx,cy,r,a0,a1)=>`M${(cx+Math.cos(a0)*r).toFixed(1)} ${(cy+Math.sin(a0)*r).toFixed(1)}A${r.toFixed(1)} ${r.toFixed(1)} 0 ${a1-a0>Math.PI?1:0} 1 ${(cx+Math.cos(a1)*r).toFixed(1)} ${(cy+Math.sin(a1)*r).toFixed(1)}`;
 const STAR=(()=>{let d='';for(let i=0;i<16;i++){const r=i%4===0?50:i%2?12.5:27,a=i*Math.PI/8-Math.PI/2;d+=(i?'L':'M')+(Math.cos(a)*r).toFixed(1)+' '+(Math.sin(a)*r).toFixed(1)}
   return`<svg viewBox="-56 -56 112 112"><path d="${d}Z" fill="#fff" stroke="#b8862f" stroke-width="2.2" stroke-linejoin="round"/><g class="ry" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M-40 -40L-31 -31M40 -40L31 -31M-40 40L-31 31M40 40L31 31"/></g><circle r="9" fill="#fff"/></svg>`})();
-const PLANE='<svg viewBox="0 0 32 32" width="26" height="26"><path d="M2 15L30 3L21 29L14 19Z" fill="#fffdf8" stroke="#2b241d" stroke-width="1.6" stroke-linejoin="round"/><path d="M30 3L14 19L13 27L17.5 22.5" fill="#efe4d0" stroke="#2b241d" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+/* 37px hull: nose at +X, engine at -X. SVG attributes keep the plume safe in WebKit. */
+const SPACESHIP=`<svg viewBox="-24 -20 48 40" width="48" height="40" aria-hidden="true">
+  <g class="fx-thruster" transform="translate(-17 0)"><path d="M0 -3.5 Q-8 -5 -17 0 Q-8 5 0 3.5Z" fill="#ffb64d" opacity=".9"/><path d="M0 -2 Q-5 -2.8 -11 0 Q-5 2.8 0 2Z" fill="#edffff" stroke="#70e5ff" stroke-width=".8"/></g>
+  <path d="M8 -3 L-14 -15 L-11 -4 L-17 -7 L-18 0 L-17 7 L-11 4 L-14 15 L8 3Z" fill="#c1d2dd" stroke="#273e50" stroke-width="1.1" stroke-linejoin="round"/>
+  <path d="M3 -4 L-12 -12 M3 4 L-12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M-13 -5 Q5 -7 19 0 Q5 7 -13 5 L-10 0Z" fill="#f0f6f6" stroke="#273e50" stroke-width="1.1"/>
+  <path d="M-10 0 L16 0 L-9 3Z" fill="#9cb6c8"/>
+  <path d="M2 -3 Q8 -4 13 0 Q8 3 2 2Z" fill="#37c5e5" stroke="#185770" stroke-width=".9"/><path d="M4 -2 L9 -1" stroke="#e9ffff" stroke-width="1.2" stroke-linecap="round"/>
+  <rect x="-17" y="-3" width="5" height="6" rx="1" fill="#263b50" stroke="#6edcf1" stroke-width=".8"/>
+  <path d="M-9 -2 L-2 -1" stroke="#fff" stroke-width="1"/><circle cx="-13" cy="-12" r="1" fill="#95f3ff"/><circle cx="-13" cy="12" r="1" fill="#ffcb71"/>
+</svg>`;
 function setFx(k){if(!FXS.some(f=>f[0]===k))return;resolveFx=k;['#rfx','#rfxp'].forEach(q=>{const e=$(q);if(e)e.value=k});if(booted)try{history.replaceState(null,'','?state='+app.dataset.state+'&fx='+k)}catch(e){}}
 /* forged notches: one arc per resolved task of the category; all resolved → one continuous gold-accented trophy ring */
 function forgeSVG(ci,cx,cy,r,w){
@@ -1340,25 +1350,37 @@ const FXP={
       if(e)e.animate([{transform:'scale(1)',filter:'brightness(1)'},{transform:`scale(${pr?1.12:1.05})`,filter:'brightness(1.12) drop-shadow(0 0 10px #f6c453)'},{transform:'scale(1)',filter:'brightness(1)'}],{duration:480,easing:'ease-out'});
       if(pr)an(R.el('fx-tag',`left:${f(B.x)}px;top:${f(B.y-B.r-6)}px`,0,'Unblocked ✓'),[{transform:'translate(-50%,-60%) scale(.5)',opacity:0},{transform:'translate(-50%,-100%) scale(1.08)',opacity:1,offset:.25},{transform:'translate(-50%,-100%) scale(1)',opacity:1,offset:.8},{transform:'translate(-50%,-150%) scale(1)',opacity:0}],{duration:620})});
     return 1300},
-  /* 5 · RESOLVED ✓ stamp slams down (squash + dust), holds 200ms, folds into a paper plane that glides to the dock chip */
+  /* 5 · RESOLVED ✓ stamp slams down (squash + dust), holds 200ms, ignites a spaceship that flies nose-first into the dock chip */
   stamp(R,G,t){
     const{M}=G,real=R.mode==='real',st=R.el('fx-stamp',`left:${M.x.toFixed(1)}px;top:${M.y.toFixed(1)}px;font-size:${Math.max(9,M.r*.3).toFixed(1)}px`,0,'RESOLVED ✓'),S='translate(-50%,-50%) rotate(-8deg) ';
     if(real){const s=staged.find(s=>s.k==='res'&&s.id===t.id);if(s)s.wait=true}
     an(st,[{transform:'translate(-50%,-140%) rotate(-8deg) scale(2.1)',opacity:0},{transform:S+'scale(1)',opacity:1}],{duration:150,easing:'cubic-bezier(.6,0,.9,.3)'});
     an(R.w,[{transform:'scale(1)'},{transform:'scale(.9)'},{transform:'scale(1)'}],{duration:190,delay:140});
     R.at(150,()=>{for(let i=0;i<9;i++){const q=Math.PI*2*i/9;an(dot(R,M.x+Math.cos(q)*M.r*.9,M.y+Math.sin(q)*M.r*.9,5+Math.random()*4,'rgba(201,165,110,.55)'),[{transform:tr(0,0,1),opacity:.9},{transform:tr(Math.cos(q)*16,Math.sin(q)*16-4,1.8),opacity:0}],{duration:380})}});
-    an(R.w,[{transform:'scale(1,1)',opacity:1},{transform:'scale(.5,.08)',opacity:0}],{duration:170,delay:350,easing:'ease-in'});
-    an(st,[{transform:S+'scale(1,1)',opacity:1},{transform:S+'scale(.5,.08)',opacity:0}],{duration:170,delay:350,easing:'ease-in'});
+    an(R.w,[{transform:'scale(1)',opacity:1},{transform:'scale(.22)',opacity:0}],{duration:170,delay:350,easing:'ease-in'});
+    an(st,[{transform:S+'scale(1)',opacity:1},{transform:S+'scale(.22)',opacity:0}],{duration:170,delay:350,easing:'ease-in'});
     R.at(505,()=>{
       const ar=app.getBoundingClientRect(),chip=real&&$(`#stg [data-sid="res${t.id}"]`),lr=(chip||$('#stg').lastElementChild||$('#stg')).getBoundingClientRect(),
         a=[M.x+G.ox,M.y+G.oy],b=[chip?lr.left+lr.width/2-ar.left:Math.min(ar.width-70,lr.right+56-ar.left),lr.top+lr.height/2-ar.top],
-        pts=qb(a,[a[0]+(b[0]-a[0])*.3,a[1]-80],b,16),pl=R.el('fx-plane','left:0;top:0',FA,PLANE);
-      an(pl,pts.map((p,i)=>{const q=pts[Math.min(16,i+1)],o=pts[Math.max(0,i-1)];return{transform:tr(p[0],p[1],i?(i<16?1:.55):.3,Math.atan2(q[1]-o[1],q[0]-o[0])*180/Math.PI+45),opacity:i<16?1:.2}}),{duration:640,easing:'cubic-bezier(.4,0,.5,1)'});
-      R.at(640,()=>{pl.remove();R.count();
+        ctrl=[a[0]+(b[0]-a[0])*.3+(Math.abs(b[0]-a[0])<60?80:0),a[1]-80],ship=R.el('fx-spaceship',`left:0;top:0;opacity:0;color:${G.c}`,FA,SPACESHIP),flame=ship.querySelector('.fx-thruster');
+      let lastSpark=-1;
+      R.tw(0,780,p=>{
+        const u=p*p*(3-2*p),v=1-u,x=v*v*a[0]+2*v*u*ctrl[0]+u*u*b[0],y=v*v*a[1]+2*v*u*ctrl[1]+u*u*b[1],
+          dx=2*(v*(ctrl[0]-a[0])+u*(b[0]-ctrl[0])),dy=2*(v*(ctrl[1]-a[1])+u*(b[1]-ctrl[1])),angle=Math.atan2(dy,dx),
+          size=(.35+.65*Math.min(1,p/.13))*(1-.6*Math.max(0,(p-.86)/.14)),pulse=.87+.22*Math.sin(p*109)+.1*Math.sin(p*251);
+        ship.style.transform=tr(x,y,size,angle*180/Math.PI);ship.style.opacity=String(Math.min(1,(1-p)/.08));
+        flame.setAttribute('transform',`translate(-17 0) scale(${pulse.toFixed(3)} 1)`);
+        flame.setAttribute('opacity',(.8+.2*Math.sin(p*163)).toFixed(3));
+        /* Time-gated emissions: the rAF/interval fallback can never double-spawn a spark. */
+        if(p-lastSpark>.045&&p<.96){lastSpark=p;const ux=Math.cos(angle),uy=Math.sin(angle),n=(Math.random()-.5)*5,
+          spark=dot(R,x-ux*19*size-uy*n,y-uy*19*size+ux*n,2+Math.random()*.8,p%.1<.05?'#7de5f4':'#ffc777',FA);
+          an(spark,[{transform:tr(0,0,1),opacity:.7},{transform:tr(-ux*18-uy*n,-uy*18+ux*n,.15),opacity:0}],{duration:250});R.at(260,()=>spark.remove())}
+      });
+      R.at(790,()=>{ship.remove();R.count();
         if(chip){const s=staged.find(s=>s.k==='res'&&s.id===t.id);if(s){s.wait=false;renderDock()}const c2=$(`#stg [data-sid="res${t.id}"]`);
           if(c2)c2.animate([{transform:'scale(.4)',opacity:0},{transform:'scale(1.15)',opacity:1,boxShadow:'0 0 0 4px rgba(47,143,91,.3),0 0 16px 4px rgba(246,196,83,.7)'},{transform:'scale(1)',opacity:1}],{duration:480,easing:'ease-out'})}
-        else an(R.el('sc fx-chip',`left:${b[0].toFixed(1)}px;top:${b[1].toFixed(1)}px;--k:#2f8f5b`,FA,`✓ Resolve #${t.id} <em>preview</em>`),[{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:'translate(-50%,-50%) scale(1.12)',opacity:1,offset:.3},{transform:'translate(-50%,-50%) scale(1)',opacity:1,offset:.75},{transform:'translate(-50%,-50%) scale(1)',opacity:0}],{duration:900})})});
-    return real?1650:2100},
+        else an(R.el('sc fx-chip',`left:${b[0].toFixed(1)}px;top:${b[1].toFixed(1)}px;--k:#2f8f5b`,FA,`✓ Resolve #${t.id} <em>preview</em>`),[{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:'translate(-50%,-50%) scale(1.12)',opacity:1,boxShadow:'0 0 0 4px rgba(47,143,91,.3),0 0 16px 4px rgba(246,196,83,.7)',offset:.3},{transform:'translate(-50%,-50%) scale(1)',opacity:1,boxShadow:'none',offset:.75},{transform:'translate(-50%,-50%) scale(1)',opacity:0}],{duration:900})})});
+    return real?1850:2250},
   /* 6 · moon melts into a comet of category-coloured light, sweeps 360° round its planet and cools into the next ring notch */
   forge(R,G,t){
     const{M,P,c,solar}=G,ts=CATS[t.ci].t.filter(x=>!x.gone&&!x.ghost),n=ts.length,k=ts.filter(x=>x!==t&&x.done).length,full=k+1>=n,TAU=Math.PI*2,f=v=>v.toFixed(1),
