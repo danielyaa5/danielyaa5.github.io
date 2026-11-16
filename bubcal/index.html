@@ -534,16 +534,57 @@ html,body{width:100%;height:100%;min-width:320px;overflow:hidden}
 #fxd{position:absolute;inset:0;pointer-events:none;z-index:31;overflow:hidden}
 .lz-g{filter:drop-shadow(0 0 5px #22c55e)}
 #fxl.out .lz-g{opacity:0;transition:opacity .26s ease-out}
-.lz-dish{fill:rgba(6,78,59,.8);stroke:#6ee7b7;stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:lzdish .3s ease-out both}
-.lz-rim{fill:none;stroke:#34d399;stroke-width:1;opacity:.75}
-.lz-trib{stroke:#86efac;stroke-width:1.7;stroke-dasharray:1 2;stroke-dashoffset:1;animation:lzdraw .24s ease-in forwards}
-.lz-focal{fill:#ecfdf5;transform-box:fill-box;transform-origin:center;animation:lzfocal .42s ease-in both}
-.lz-beam{stroke-dasharray:1 2;stroke-dashoffset:1;animation:lzdraw .11s .3s linear forwards}
-.lz-a{stroke:#10b981;stroke-width:24;opacity:.16}.lz-o{stroke:#10b981;stroke-width:14;opacity:.42}.lz-m{stroke:#22c55e;stroke-width:7.5}.lz-c{stroke:#ecfdf5;stroke-width:3}
-.lz-soft line{animation:lzsoft .9s ease-in-out both}
+/* Death Star (DS-1, always upright, trench horizontal). Drops out of hyperspace INTO the ring (0–220ms, a short streak) → 8 razor-thin rays
+   leave the dish's rim pips and meet at a focal point just off the dish (180–440ms; the dish itself stays grey) → the superlaser fires from
+   that point (420–580ms, impact ≈470ms) → the beam fades, the station holds in the ring → hyperspace jump (1100–1320ms).
+   .ds sits at (--x,--y) in canvas px; everything inside is drawn round its own origin. (--hx,--hy) = offset to the far end of its hyperspace lane. */
+.ds{transform-origin:0 0;transform:translate(var(--x),var(--y));animation:dsin .2s cubic-bezier(.2,.8,.25,1) both}
+#fxl.away .ds{animation:dsout .22s cubic-bezier(.55,0,.9,.35) forwards}
+.ds-body{filter:drop-shadow(0 5px 7px rgba(40,26,10,.36))}
+.ds-edge{fill:none;stroke:#2f3845;stroke-width:.9}
+/* hyperspace lane: three hairline streaks that run into the station on arrival and out of it on the jump — no warp circle */
+.ds-streak{fill:none;stroke:#77859a;stroke-width:1.4;stroke-dasharray:1 2;stroke-dashoffset:1;animation:dsstreak .2s ease-out both}
+.ds-streak.s{stroke:#9aa5b4;stroke-width:.9}
+#fxl.away .ds-streak{animation:dsjump .22s ease-in both}
+/* hull: tinted armour bands, staggered plates in three greys, stepped city-grid cut-outs, horizontal band lines + the two grooves beside the trench */
+.ds-arm{fill:none;stroke:#566171;stroke-opacity:.12}
+.ds-pl.a{fill:#c5cdd8;fill-opacity:.62}.ds-pl.b{fill:#9aa5b4;fill-opacity:.5}.ds-pl.c{fill:#687486;fill-opacity:.42}
+.ds-cut{fill:#3d4756;fill-opacity:.5}
+.ds-lat,.ds-groove{fill:none;stroke:#3a4452;stroke-opacity:.36;stroke-width:.45}
+.ds-groove{stroke:#2b3340;stroke-opacity:.62;stroke-width:.55}
+.ds-trench{fill:none;stroke:#1b222c;stroke-linecap:butt}                               /* recessed equatorial trench, horizontal from limb to limb */
+.ds-tlip,.ds-tled,.ds-bay{fill:none;stroke:#2b3340;stroke-opacity:.5;stroke-width:.6}   /* shadowed upper lip · sunlit lower ledge · docking-bay pinprick lights */
+.ds-tled{stroke:#e2e8f0;stroke-opacity:1;stroke-width:.8}.ds-bay{stroke:#fff6d0;stroke-opacity:1;stroke-width:.75;stroke-dasharray:.75 3.3}
+.lz-dish{stroke:#2b3340;stroke-width:.7;stroke-linejoin:round}                         /* concave superlaser dish, upper hemisphere: crater rim (filled dark upper-left → bright lower-right) */
+.ds-lip{fill:none;stroke:#f8fafc;stroke-opacity:.8;stroke-width:.6}                    /* raised outer lip */
+.ds-bull{fill:#1b222c;fill-opacity:.22}.ds-ring{fill:none;stroke-width:.5}             /* bullseye floor · 3 targeting rings + 8 ribs (gradient stroke) */
+.ds-lens{fill:#1b222c;stroke:#aab4c2;stroke-width:.5}.ds-eye{fill:#7d8898}.ds-glint{fill:#f8fafc}
+.ds-pip{fill:#f1f5f9;stroke:#2b3340;stroke-width:.35}                                  /* 8 rim emitter pips */
+.ds-pen{fill:#3a4452;fill-opacity:.42}.ds-umb{fill:#2b3340;fill-opacity:.86}           /* far-side shadow: terminator band + crisp crescent */
+/* charge: only the rim, the innermost ring, the lens and the pips pick up an emerald glint — the grey crater and its rings stay fully visible */
+.ds-glow{filter:drop-shadow(0 0 2.5px #22c55e);animation:dsglow .2s .16s ease-in both}
+.ds-glow path{fill:none}.ds-glow .gr{stroke:#34d399;stroke-width:.9;stroke-opacity:.8}.ds-glow .gi{stroke:#a7f3d0;stroke-width:.6}.ds-glow .gn{fill:#ecfdf5}.ds-glow .gp{fill:#bbf7d0}
+#fxl.out .ds-glow{animation:dsfadeo .3s ease-out forwards}
+.lz-ray{stroke:#86efac;stroke-width:1.3}.lz-ray.k{stroke:#ecfdf5;stroke-width:.5}       /* tributary ray + its white-hot core */
+.lz-trib{stroke-dasharray:1 2;stroke-dashoffset:1;animation:lzdraw .13s ease-in forwards}
+.lz-focal{fill:#ecfdf5;transform-box:fill-box;transform-origin:center;animation:lzfocal .6s linear both}
+.lz-beam{stroke-linecap:round;stroke-dasharray:1 2;stroke-dashoffset:1;opacity:0;animation:lzfire .05s .42s linear forwards}   /* hidden outright until it fires at 420ms */
+.lz-a{stroke:#10b981;stroke-width:24;stroke-opacity:.16}.lz-o{stroke:#10b981;stroke-width:14;stroke-opacity:.42}.lz-m{stroke:#22c55e;stroke-width:7.5}.lz-c{stroke:#ecfdf5;stroke-width:3}
+.lz-soft line{animation:lzsoft .9s .24s ease-in-out both}
+/* reduced motion: the station, its rays and its beam only fade — no hyperspace streaks, no scale pops, no flashes */
+.ds.rm{animation:dsfade .24s ease-out both}
+.ds.rm .ds-glow{animation:dsglow .45s .2s ease-in-out both}                            /* (no streak lines are drawn at all under reduced motion) */
+#fxl.away .ds.rm{animation:dsfadeo .3s ease-in forwards}
+@keyframes dsin{from{opacity:0;transform:translate(calc(var(--x) + var(--hx)),calc(var(--y) + var(--hy))) scale(.12)}45%{opacity:1}}
+@keyframes dsout{from{opacity:1;transform:translate(var(--x),var(--y)) scale(1)}70%{opacity:1}to{opacity:0;transform:translate(calc(var(--x) + var(--hx)),calc(var(--y) + var(--hy))) scale(.06)}}
+@keyframes dsstreak{from{stroke-dashoffset:1;opacity:.95}60%{opacity:.8}to{stroke-dashoffset:-1;opacity:0}}    /* lane end → station */
+@keyframes dsjump{from{stroke-dashoffset:-1;opacity:.95}60%{opacity:.8}to{stroke-dashoffset:1;opacity:0}}      /* station → lane end */
+@keyframes dsglow{from{opacity:0}}
+@keyframes dsfade{from{opacity:0}}
+@keyframes dsfadeo{to{opacity:0}}
 @keyframes lzdraw{to{stroke-dashoffset:0}}
-@keyframes lzdish{from{opacity:0;transform:scale(.3)}}
-@keyframes lzfocal{0%,30%{opacity:0;transform:scale(0)}68%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1.9)}}
+@keyframes lzfire{from{stroke-dashoffset:1;opacity:1}to{stroke-dashoffset:0;opacity:1}}
+@keyframes lzfocal{0%,50%{opacity:0;transform:scale(0);fill:#6ee7b7}70%{opacity:1;transform:scale(1);fill:#a7f3d0}77%{opacity:1;transform:scale(2.3);fill:#ecfdf5}100%{opacity:1;transform:scale(1.8);fill:#ecfdf5}}
 @keyframes lzsoft{0%,100%{opacity:0}45%{opacity:.85}}
 .moon.nuked{animation:nuke .32s ease-in forwards!important;pointer-events:none;z-index:9}
 @keyframes nuke{25%{filter:brightness(2.4) saturate(.3);background:#ecfdf5;box-shadow:0 0 0 4px #ecfdf5,0 0 40px 16px #22c55e;transform:scale(1.14)}100%{filter:brightness(3);background:#ecfdf5;transform:scale(.05);opacity:0}}
@@ -969,33 +1010,139 @@ function burst(x,y,R){
   for(let i=0;i<n;i++){const p=document.createElement('i'),a=Math.PI*2*i/n,l=R*.5+22+Math.random()*34;p.className='spark';
     p.style.cssText=`left:${(x+Math.cos(a)*R*.7).toFixed(1)}px;top:${(y+Math.sin(a)*R*.7).toFixed(1)}px;background:${['#2f8f5b','#f6c453','#c8553d','#2f9fd0'][i%4]};--dx:${(Math.cos(a)*l).toFixed(0)}px;--dy:${(Math.sin(a)*l).toFixed(0)}px`;
     app.appendChild(p);setTimeout(()=>p.remove(),720)}}
-/* delete: dish charges on the hub's rim → 5 tributary rays converge → superlaser → planet-buster → cb() leaves the ghost ring */
+/* ───────── Death Star ─────────
+   deathStar(R,side,id) → the DS-1 battle station as SVG, drawn round its own origin (sphere radius R). It always stands UPRIGHT and never
+   tilts to aim: the north pole is only tipped 4° toward the viewer, so the equatorial trench runs horizontally from limb to limb with a
+   faint sag and every armour band lies parallel to it. The concave superlaser dish sits in the upper hemisphere at (side·.30R, −.34R) —
+   side = ±1, whichever faces the target — and is projected from the sphere, so it foreshortens into the right ellipse. Key light: upper-left.
+   The dish is shaded the other way round (dark upper-left wall, bright lower-right wall), which is what makes it read as a crater.
+   id prefixes every gradient / clip id, so no two shots ever share one.
+   Returns {svg, rays, aim}: rays = the 8 emitter pips on the dish rim, aim(dx,dy) = the focal point for a target at (dx,dy); all station-local. */
+function deathStar(R,side,id){
+  const f=v=>v.toFixed(2),D=Math.PI/180,st=Math.sin(4*D),ct=Math.cos(4*D),LX=.651,LY=.759,   /* 4° tip toward the viewer · (LX,LY) = unit vector pointing away from the key light */
+    /* latitude, longitude in degrees (longitude 0 faces the viewer) → [x, y, depth] */
+    P=(la,lo)=>{const c=Math.cos(la*D),s=Math.sin(la*D),z=c*Math.cos(lo*D);return[R*c*Math.sin(lo*D),R*(z*st-s*ct),s*st+z*ct]},
+    /* one rectangular hull plate between two latitudes and two longitudes; dropped where it would round the limb */
+    quad=(a,b,l,m)=>{const q=[P(a,l),P(a,m),P(b,m),P(b,l)];return q.every(v=>v[2]>.12)?'M'+q.map(v=>f(v[0])+' '+f(v[1])).join('L')+'Z':''},
+    /* the visible half of a circle of latitude: limb to limb, sagging by the 4° tip (la 0 = the trench) */
+    band=la=>{const c=R*Math.cos(la*D),y=-R*Math.sin(la*D)*ct;return`M${f(-c)} ${f(y)}A${f(c)} ${f(c*st)} 0 0 0 ${f(c)} ${f(y)}`},
+    hash=(k,j)=>{const v=Math.sin(k*12.9898+j*78.233)*43758.5453;return(v-Math.floor(v))*16|0},
+    /* far-side shadow: the limb's half-circle closed by the terminator's half-ellipse (m = how far the light still reaches; 1 = no shadow) */
+    cres=m=>{let d='';for(let i=0;i<=48;i++){const t=Math.PI*(i>24?48-i:i)/24,c=Math.cos(t),s=Math.sin(t)*(i>24?m:1);d+=(i?'L':'M')+f(R*(LX*s-LY*c))+' '+f(R*(LY*s+LX*c))}return d+'Z'},
+    /* dish: axis n (z toward the viewer) through (side·.30R, −.34R), rim radius .29R; (ex,ey) = the rim's major axis on screen, AL = its angular radius */
+    nx=side*.3,ny=-.34,nz=Math.sqrt(1-nx*nx-ny*ny),nh=Math.hypot(nx,ny),ex=-ny/nh,ey=nx/nh,AL=Math.asin(.29),rot=Math.atan2(ey,ex)/D,
+    sink=x=>x<1?1-.13*(1-x*x):1,                 /* parabolic recess: the dish floor lies .13R below the hull */
+    /* point on the dish at x × the rim radius, turned t round the axis · the whole ring at x, as an exact ellipse */
+    dp=(x,t)=>{const w=AL*x,k=R*sink(x),c=Math.cos(w),a=Math.cos(t)*Math.sin(w),b=Math.sin(t)*Math.sin(w)*nz/nh;return[k*(nx*c+ex*a-nx*b),k*(ny*c+ey*a-ny*b)]},
+    ring=x=>{const a=dp(x,0),b=dp(x,Math.PI),r=R*sink(x)*Math.sin(AL*x),A=`A${f(r)} ${f(r*nz)} ${f(rot)} 0 1 `;return`M${f(a[0])} ${f(a[1])}${A}${f(b[0])} ${f(b[1])}${A}${f(a[0])} ${f(a[1])}Z`},
+    dcx=R*Math.cos(AL)*nx,dcy=R*Math.cos(AL)*ny,ra=R*.29,                                                /* the rim's centre + major radius on screen */
+    /* focal point: from the rim centre toward the target at (tx,ty), .28R beyond the rim — off the dish, so the dish is never covered */
+    aim=(tx,ty)=>{const q=unit(tx-dcx,ty-dcy),d=ra*nz/(Math.hypot(nz*(q[0]*ex+q[1]*ey),(q[0]*nx+q[1]*ny)/nh)||1)+R*.28;return[dcx+q[0]*d,dcy+q[1]*d]},
+    rays=[0,1,2,3,4,5,6,7].map(i=>dp(1,(i+.5)*Math.PI/4)),ribs=rays.map((b,i)=>{const a=dp(.33,(i+.5)*Math.PI/4);return`M${f(a[0])} ${f(a[1])}L${f(b[0])} ${f(b[1])}`}).join(''),
+    le=dp(0,0),lr=Math.max(1.5,R*.045),pr=Math.max(.8,R*.024),tw=Math.max(2.4,R*.075),dl=Math.asin((tw/2+.5)/R)/D,   /* lens centre + radius · pip radius · trench width · latitude of its two lips */
+    sto=(o,col,a)=>`<stop offset="${o}" stop-color="${col}"${a==null?'':` stop-opacity="${a}"`}/>`,
+    rg=(k,x,y,r,s)=>`<radialGradient id="${id+k}" gradientUnits="userSpaceOnUse" cx="${f(x)}" cy="${f(y)}" r="${f(r)}">${s}</radialGradient>`,
+    lg=(k,s)=>`<linearGradient id="${id+k}" gradientUnits="userSpaceOnUse" x1="${f(dcx-LX*ra)}" y1="${f(dcy-LY*ra)}" x2="${f(dcx+LX*ra)}" y2="${f(dcy+LY*ra)}">${s}</linearGradient>`,
+    url=k=>`url(#${id+k})`,dot=(c,p,r)=>`<circle class="${c}" cx="${f(p[0])}" cy="${f(p[1])}" r="${f(r)}"/>`,ball=`<circle r="${f(R)}"`,pl=['','',''];
+  let cut='',lat='';                  /* pl = plates in three greys · stepped cut-outs · horizontal band lines */
+  [[6,16,24],[16,28,20],[28,41,16],[41,55,12],[55,70,8]].forEach(([a,b,n],j)=>{for(const sg of[1,-1]){                         /* armour: five bands per hemisphere (north, then south), each cut into staggered plates — nothing runs pole to pole */
+    const w=360/n,A=sg*a,B=sg*b,M=sg*(a+b)/2;lat+=band(B);
+    for(let k=0,l=-97+(j*11+(sg>0?0:7))%w;l<90;k++,l+=w){const q=hash(k,j+(sg>0?0:5));
+      if(q<7)pl[q<2?0:q<5?1:2]+=quad(A,B,l+.5,l+w-.5);                                   /* a plate: light, mid or dark grey, hairline seam either side */
+      else if(q===7)cut+=quad(A,M,l,l+w*.66)+quad(M,B,l+w*.33,l+w*.66);                  /* or a stepped city-grid cut-out */
+      else if(q===8)cut+=quad(A,M,l+w*.5,l+w)+quad(M,B,l,l+w)}}});
+  return{rays,aim,svg:
+    `<defs>${rg('H',-.36*R,-.42*R,R*1.56,sto(0,'#eef2f6')+sto(.22,'#d5dce5')+sto(.48,'#b4becb')+sto(.76,'#8793a3')+sto(1,'#566171'))}`+                 /* light battleship-grey durasteel, studio highlight upper-left */
+    rg('L',0,0,R,sto(.8,'#141b26',0)+sto(1,'#141b26',.32))+                                                               /* limb darkening */
+    lg('D',sto(0,'#2e3744')+sto(.42,'#667283')+sto(.78,'#b9c3d0')+sto(1,'#dde4ee'))+               /* dish walls, inverted: dark upper-left, bright lower-right — the eye reads a crater */
+    lg('K',sto(0,'#d5dce5')+sto(.5,'#7d8898')+sto(1,'#2b3340'))+   /* rings + ribs: reversed once more, so they show on both walls */
+    `<clipPath id="${id}C">${ball}/></clipPath></defs>`+
+    `<g class="ds-body">${ball} class="ds-hull" fill="${url('H')}"/><g clip-path="${url('C')}">`+
+    `<path class="ds-arm" d="${band(34.5)}" stroke-width="${f(R*.19)}"/><path class="ds-arm" d="${band(-22)}" stroke-width="${f(R*.19)}"/>`+
+    `<path class="ds-pl a" d="${pl[0]}"/><path class="ds-pl b" d="${pl[1]}"/><path class="ds-pl c" d="${pl[2]}"/><path class="ds-cut" d="${cut}"/>`+
+    `<path class="ds-lat" d="${lat}"/><path class="ds-groove" d="${band(6)+band(-6)}"/>`+
+    `<path class="ds-trench" d="${band(0)}" stroke-width="${f(tw)}"/><path class="ds-tlip" d="${band(dl)}"/><path class="ds-tled" d="${band(-dl)}"/>`+
+    `<path class="ds-lip" d="${ring(1.1)}"/><path class="lz-dish" d="${ring(1)}" fill="${url('D')}"/><path class="ds-bull" d="${ring(.33)}"/>`+
+    `<path class="ds-ring" d="${ring(.77)+ring(.55)+ring(.33)+ribs}" stroke="${url('K')}"/>${dot('ds-lens',le,lr)+dot('ds-eye',le,lr*.5)+dot('ds-glint',[le[0]-lr*.22,le[1]-lr*.26],lr*.2)}`+
+    `<path class="ds-pen" d="${cres(.5)}"/><path class="ds-umb" d="${cres(.7)}"/>${ball} fill="${url('L')}"/><path class="ds-bay" d="${band(0)}"/></g>`+   /* shadow lies over the plates, the trench's pinprick lights over the shadow */
+    rays.map(p=>dot('ds-pip',p,pr)).join('')+
+    `<g class="ds-glow"><path class="gr" d="${ring(1)}"/><path class="gi" d="${ring(.33)}"/>${dot('gn',le,lr*.55)+rays.map(p=>dot('gp',p,pr*1.15)).join('')}</g>`+
+    `${ball} class="ds-edge"/></g>`}}
+/* Spawn spot — the station parks IN the ring, at a fresh place on every delete.
+   Solar: ON the planets' orbit ellipse (the ellipse's radius at that angle × .92–1.08), in the cleanest gap between the planet clusters.
+   Category: on the moon ring round the planet (mean moon distance × .92–1.08), or out on the outer orbit ring when the moons pack theirs —
+   never on the planet. 120 angles round the hub × those radial steps are all scored: bubbles covered (costs the most), distance off the ring
+   line, room to the target, a line of fire that crosses neither the hub nor the station's own hull, inside the window, not under a floating
+   panel. Angles within 60° of the previous spawn (lastDs) are skipped and one of the near-best candidates is taken at random, so two shots
+   in a row never come from the same place. All of g is in canvas px. */
+let lastDs=null;
+function dsSpot(g){
+  const T=Math.PI*2,N=120,R=g.R,j0=Math.random()*T/N,need=g.mR+R*1.6+30,pad=R+8,C=[],
+    /* radial steps [factor of the ring radius, cost of leaving the ring line] — solar: the orbit ellipse · category: the moon ring, last the outer orbit ring */
+    RAD=g.solar?[1,.97,1.03,.94,1.06,.92,1.08].map(k=>[k,Math.abs(k-1)*160]):[[1,0],[.96,6],[1.04,6],[.92,13],[1.08,13],[g.out/(g.ring||1),9]];
+  for(let i=0;i<N;i++){
+    const th=j0+i*T/N,cs=Math.cos(th),sn=Math.sin(th),rr=g.solar?g.a*g.b/(Math.hypot(g.b*cs,g.a*sn)||1):g.ring;   /* solar: the orbit ellipse's own radius at this angle */
+    if(lastDs&&Math.abs(((th-lastDs.a)%T+T+Math.PI)%T-Math.PI)<T/6)continue;                                      /* ≥60° round the hub from the previous spawn */
+    for(const[k,rp]of RAD){
+    const x=g.hx+cs*rr*k,y=g.hy+sn*rr*k,dm=Math.hypot(g.mx-x,g.my-y),u=unit(g.mx-x,g.my-y),side=g.mx>=x?1:-1,
+      q=unit(g.mx-x-side*.287*R,g.my-y+.325*R),los=q[0]*side*.662-q[1]*.75,                                       /* dish → target, measured against the way the dish faces */
+      off=Math.max(pad-x,pad-y,x-g.W+pad,y-g.H+pad),hd=Math.hypot(x-g.hx,y-g.hy),tt=Math.max(0,Math.min(dm,(g.hx-x)*u[0]+(g.hy-y)*u[1]));
+    let sc=rp+Math.max(0,.2-los)*45,cov=0;                                               /* off the ring line · beam would cross the station's own hull */
+    if(dm<need)sc+=1e4+(need-dm)*10;                                                     /* room for the focal point and a visible beam */
+    if(off>0)sc+=2e3+off*8;                                                              /* stay inside the window */
+    if(g.ov.some(r=>x>r.l-g.R&&x<r.r+g.R&&y>r.t-g.R&&y<r.b+g.R))sc+=1500;                  /* not under the HUD / legend / minimap */
+    if(Math.hypot(x+u[0]*tt-g.hx,y+u[1]*tt-g.hy)<g.hR+6)sc+=250;                          /* don't fire straight through the hub */
+    if(hd<g.hR+R+10)sc+=3e3+(g.hR+R+10-hd)*10;                                           /* never on top of the Sun / the hub planet */
+    for(const o of g.obs)cov+=Math.max(0,g.R+o.r+5-Math.hypot(o.x-x,o.y-y));             /* px of overlap with planets + other moons */
+    C.push({sc:sc+cov*4,x,y,u,side,a:(th%T+T)%T})}}                                      /* covering a bubble costs the most, so the cleanest gap in the ring wins */
+  C.sort((p,q)=>p.sc-q.sc);
+  const pool=C.filter(c=>c.sc<=C[0].sc+24);                                              /* the near-best few — one of them at random */
+  return lastDs=pool[Math.random()*pool.length|0]}
+/* delete: the Death Star drops out of hyperspace into the ring → 8 rays leave the dish rim and converge just off it → superlaser → planet-buster
+   → cb() leaves the ghost ring → the station holds a beat in the ring, then jumps back to hyperspace */
 function fireLaser(t,cb){
-  const me=moonEl(t.id),he=document.querySelector(app.dataset.state==='solar'?'.sun':'.hubp'),fx=$('#fxl'),fd=$('#fxdl'),tok=fireLaser.n=(fireLaser.n||0)+1;
+  const solar=app.dataset.state==='solar'&&!!L,me=moonEl(t.id),he=document.querySelector(app.dataset.state==='solar'?'.sun':'.hubp'),fx=$('#fxl'),fd=$('#fxdl'),tok=fireLaser.n=(fireLaser.n||0)+1;
   if(!me||!he){cb();return}
-  const cr=cv.getBoundingClientRect(),mr=me.getBoundingClientRect(),hr=he.getBoundingClientRect(),f=v=>v.toFixed(1),
-    mx=mr.left+mr.width/2-cr.left,my=mr.top+mr.height/2-cr.top,mR=mr.width/2,hx=hr.left+hr.width/2-cr.left,hy=hr.top+hr.height/2-cr.top,hR=hr.width/2,
-    u=unit(mx-hx,my-hy),n=[-u[1],u[0]],dR=Math.max(9,hR*.21),ex=hx+u[0]*(hR-dR*.8),ey=hy+u[1]*(hR-dR*.8),px=ex+u[0]*dR*1.9,py=ey+u[1]*dR*1.9,
+  const cr=cv.getBoundingClientRect(),f=v=>v.toFixed(1),
+    disk=e=>{const r=e.getBoundingClientRect();return{x:r.left+r.width/2-cr.left,y:r.top+r.height/2-cr.top,r:r.width/2}},
+    mn=disk(me),hb=disk(he),mx=mn.x,my=mn.y,mR=mn.r,R=Math.max(33,Math.min(42,hb.r*.46)),                                   /* station ⌀ 66–84px */
+    obs=[...document.querySelectorAll('#nodes .moon,#nodes .planet:not(.hubp)')].filter(e=>e!==me).map(disk),
+    ov=[...document.querySelectorAll(OVL)].map(e=>e.getBoundingClientRect()).filter(r=>r.width&&r.height).map(r=>({l:r.left-cr.left,r:r.right-cr.left,t:r.top-cr.top,b:r.bottom-cr.top})),
+    far=o=>Math.hypot(o.x-hb.x,o.y-hb.y),
+    sp=dsSpot({solar,hx:hb.x,hy:hb.y,hR:hb.r,mx,my,mR,R,a:solar?L.a*z:0,b:solar?L.b*z:0,obs,W:cr.width,H:cr.height,
+      ov:ov.concat({l:cr.width/2-260,r:cr.width/2+260,t:cr.height-112,b:cr.height}),                                                    /* + the strip where the Undo toast is about to rise */
+      ring:[mn,...obs].reduce((q,o)=>q+far(o),0)/(obs.length+1),out:Math.max(hb.r,far(mn)+mR,...obs.map(o=>far(o)+o.r))+14*hb.r/PR1}),   /* category: mean moon distance · the outer orbit ring (C.ext) */
+    u=sp.u,sx=sp.x,sy=sp.y,hx=-u[0]*R*2.3,hy=-u[1]*R*2.3,wx=-u[1]*R*.5,wy=u[0]*R*.5,   /* hyperspace lane: in from behind (away from the target), out the same way · w = the streaks' spread */
+    ds=deathStar(R,sp.side,'ds'+tok),fo=ds.aim(mx-sx,my-sy),px=sx+fo[0],py=sy+fo[1],v=unit(mx-px,my-py),                                           /* focal point hovers just off the dish, toward the target · v = the beam's direction */
     ln=(c,x1,y1,x2,y2,st)=>`<line class="${c}" pathLength="1" x1="${f(x1)}" y1="${f(y1)}" x2="${f(x2)}" y2="${f(y2)}"${st||''}/>`,
-    done=()=>{cb();busy=false},clean=d=>setTimeout(()=>{if(tok===fireLaser.n){fx.innerHTML='';fd.innerHTML=''}},d);
-  busy=true;vel=0;fx.classList.remove('out');fd.innerHTML='';
-  if(RM.matches){                                                       /* reduced motion: one soft green beam fade, no flashes or debris */
-    fx.innerHTML=`<g class="lz-g lz-soft">${ln('lz-o',ex,ey,mx,my)}${ln('lz-c',ex,ey,mx,my)}</g>`;
-    me.style.transition='opacity .45s';me.style.opacity='.15';setTimeout(done,460);clean(950);return}
-  let g=`<circle class="lz-dish" cx="${f(ex)}" cy="${f(ey)}" r="${f(dR)}"/><circle class="lz-rim" cx="${f(ex)}" cy="${f(ey)}" r="${f(dR*.5)}"/>`;
-  [-1,-.5,0,.5,1].forEach((q,i)=>{g+=ln('lz-trib',ex+n[0]*q*dR*.92-u[0]*(1-q*q)*dR*.3,ey+n[1]*q*dR*.92-u[1]*(1-q*q)*dR*.3,px,py,` style="animation-delay:${i*16}ms"`)});
-  ['lz-a','lz-o','lz-m','lz-c'].forEach(c=>{g+=ln('lz-beam '+c,px,py,mx,my)});
-  g+=`<circle class="lz-focal" cx="${f(px)}" cy="${f(py)}" r="${f(dR*.42)}"/>`;
-  fx.innerHTML=`<g class="lz-g">${g}</g>`;
-  setTimeout(()=>{                                                      /* impact at ~420ms */
+    hull=`<g class="ds${RM.matches?' rm':''}" data-a="${(sp.a*180/Math.PI).toFixed(0)}" style="--x:${f(sx)}px;--y:${f(sy)}px;--hx:${f(hx)}px;--hy:${f(hy)}px">${ds.svg}</g>`,
+    live=()=>tok===fireLaser.n,at=(d,fn)=>setTimeout(()=>{if(live())fn()},d),away=d=>at(d,()=>fx.classList.add('away')),   /* every timed step is dropped if a newer shot has taken over */
+    done=()=>{cb();busy=false},clean=d=>at(d,()=>{fx.innerHTML='';fd.innerHTML=''});
+  busy=true;vel=0;fx.classList.remove('out','away');fd.innerHTML='';
+  if(RM.matches){                                                       /* reduced motion: station, rays, beam and moon only fade — no streaks, flashes or debris */
+    fx.innerHTML=hull+`<g class="lz-g lz-soft">${ds.rays.map(p=>ln('lz-ray',sx+p[0],sy+p[1],px,py)).join('')}${ln('lz-o',px,py,mx,my)}${ln('lz-c',px,py,mx,my)}</g>`;
+    at(420,()=>{const m2=moonEl(t.id);if(m2){m2.style.transition='opacity .45s';m2.style.opacity='.15'}});
+    setTimeout(done,900);away(1250);clean(1650);return}
+  let g='';
+  /* 180–440ms: 8 razor-thin tributary rays (each with a white core), dish-rim pips → focal point */
+  ds.rays.forEach((p,i)=>{const d=` style="animation-delay:${180+i*14}ms"`;g+=ln('lz-ray lz-trib',sx+p[0],sy+p[1],px,py,d)+ln('lz-ray k lz-trib',sx+p[0],sy+p[1],px,py,d)});
+  /* 420ms: the beam, focal point → moon centre. Every layer is round-nosed and starts half its own width down the line, so each nose tip sits exactly on the focal point */
+  [['lz-a',12],['lz-o',7],['lz-m',3.75],['lz-c',1.5]].forEach(([c,o])=>{g+=ln('lz-beam '+c,px+v[0]*o,py+v[1]*o,mx,my)});
+  g+=`<circle class="lz-focal" cx="${f(px)}" cy="${f(py)}" r="${f(Math.max(2.6,R*.085))}"/>`;
+  /* 0–220ms: three hairline streaks down the hyperspace lane, drawn under the hull */
+  fx.innerHTML=ln('ds-streak',sx+hx,sy+hy,sx,sy)+ln('ds-streak s',sx+hx*.8+wx,sy+hy*.8+wy,sx+wx,sy+wy)+ln('ds-streak s',sx+hx*.8-wx,sy+hy*.8-wy,sx-wx,sy-wy)+hull+`<g class="lz-g">${g}</g>`;
+  at(580,()=>fx.classList.add('out'));                                  /* 580ms: beam + rays fade out; the station stays put */
+  away(1100);                                                            /* a full beat on show in the ring, then back to hyperspace (1100–1320ms) */
+  setTimeout(()=>{                                                      /* impact at ~470ms */
+    if(!live())return;
     const m2=moonEl(t.id);if(m2)m2.classList.add('nuked');
     const add=(cls,css)=>{const e=document.createElement('i');e.className=cls;e.style.cssText=`left:${f(mx)}px;top:${f(my)}px;`+css;fd.appendChild(e)},d2=`width:${f(mR*2)}px;height:${f(mR*2)}px`;
     add('core',`width:${f(mR*2.2)}px;height:${f(mR*2.2)}px`);add('shock',d2);add('shock px',d2);
     const col=['#ecfdf5','#4ade80','#22c55e','#10b981','#fde68a','#fbbf24',CATS[t.ci].c];
     for(let i=0;i<32;i++){const a=Math.PI*2*i/32+Math.random()*.35,l=mR+36+Math.random()*96,w=2.5+Math.random()*5;
       add('deb',`width:${f(w)}px;height:${f(i%3?w:w*2.4)}px;border-radius:${i%3?'50%':'1.5px'};margin:${f(-w/2)}px 0 0 ${f(-w/2)}px;--c:${col[i%col.length]};--dx:${f(Math.cos(a)*l)}px;--dy:${f(Math.sin(a)*l)}px;--r:${(Math.random()*720-360)|0}deg;--t:${(430+Math.random()*260)|0}ms`)}
-    fx.classList.add('out')},420);
-  setTimeout(done,740);clean(1240)}
+  },470);
+  setTimeout(done,780);clean(1420)}
 /* ───────── Resolve FX · 8 selectable animations ─────────
    Every run animates a detached clone of the moon in the overlays (#fx › #fxr for SVG, #fxd inside the canvas, #fxa above the whole app),
    so a redraw never interrupts it. The real moon keeps its place in the layout but stays hidden (.fxh) until the run ends. */
