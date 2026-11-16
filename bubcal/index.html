@@ -368,14 +368,15 @@ repeating-linear-gradient(90deg,rgba(120,88,48,.03) 0 1px,transparent 1px 3px),#
   <div class="fbar">
     <div class="fg"><label>Priority</label><div class="sg" data-f="pri"><button class="on" data-v="All">All</button><button data-v="P0" style="--k:#c93a5b">P0</button><button data-v="P1" style="--k:#c98a12">P1</button><button data-v="P2" style="--k:#3f7fc4">P2</button><button data-v="P3" style="--k:#9a8f80">P3</button></div></div>
     <div class="fg"><button class="rtog" id="rtog" aria-pressed="false" title="Resolved tasks stay hidden until this is on"><span class="ck">✓</span><span id="rlab">Show Resolved (4)</span></button></div>
-    <div class="fg"><label>Exclude due past</label><div class="sg" data-f="due"><button data-v="1W">1W</button><button class="on" data-v="1M">1M</button><button data-v="1Y">1Y</button><button data-v="All">All</button></div></div>
+    <div class="fg"><label for="rfx">Resolve FX</label><select class="fxsel" id="rfx" aria-label="Resolve animation effect"></select><button class="rfxt" id="rfxTest" title="Preview selected Resolve FX on a task without consuming it">▶ Test</button></div>
+    <div class="fg"><label>Exclude due past</label><div class="sg" data-f="due"><button data-v="1W">1W</button><button data-v="1M">1M</button><button data-v="1Y">1Y</button><button class="on" data-v="All">All</button></div></div>
     <div class="fg"><label>No due date</label><div class="sg" data-f="nd"><button class="on" data-v="inc">Include</button><button data-v="hide">Hide</button><button data-v="only">Only</button></div></div>
     <div class="fg"><label>Created within</label><div class="sg" data-f="age"><button data-v="24h">24h</button><button data-v="3D">3D</button><button data-v="1W">1W</button><button data-v="1M">1M</button><button data-v="Older">Older</button><button class="on" data-v="Any">Any</button></div></div>
     <div class="fcount" id="fcount"></div>
   </div>
   <div id="canvas">
     <div id="world"><svg id="links"></svg><div id="nodes"></div></div>
-    <svg id="fx" aria-hidden="true"></svg><div id="fxd" aria-hidden="true"></div>
+    <svg id="fx" aria-hidden="true"><g id="fxl"></g><g id="fxr"></g></svg><div id="fxd" aria-hidden="true"><div id="fxdl"></div></div>
     <button class="back" id="back">←&nbsp; Back to All Tasks <kbd>Esc</kbd></button>
     <div class="crumb" id="crumb"></div>
     <div class="edge"><b>‹</b><b>‹</b><span>Edge-pan zone</span><b>‹</b><b>‹</b></div>
@@ -532,7 +533,7 @@ html,body{width:100%;height:100%;min-width:320px;overflow:hidden}
 #fx{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:30;overflow:visible}
 #fxd{position:absolute;inset:0;pointer-events:none;z-index:31;overflow:hidden}
 .lz-g{filter:drop-shadow(0 0 5px #22c55e)}
-#fx.out .lz-g{opacity:0;transition:opacity .26s ease-out}
+#fxl.out .lz-g{opacity:0;transition:opacity .26s ease-out}
 .lz-dish{fill:rgba(6,78,59,.8);stroke:#6ee7b7;stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:lzdish .3s ease-out both}
 .lz-rim{fill:none;stroke:#34d399;stroke-width:1;opacity:.75}
 .lz-trib{stroke:#86efac;stroke-width:1.7;stroke-dasharray:1 2;stroke-dashoffset:1;animation:lzdraw .24s ease-in forwards}
@@ -555,6 +556,57 @@ html,body{width:100%;height:100%;min-width:320px;overflow:hidden}
 @keyframes praxis{from{transform:translate(-50%,-50%) rotate(-18deg) scale(.3,.1)}to{transform:translate(-50%,-50%) rotate(-18deg) scale(5,1.5);opacity:0}}
 .deb{position:absolute;background:var(--c);box-shadow:0 0 6px 1px var(--c);animation:deb var(--t) cubic-bezier(.12,.7,.3,1) forwards}
 @keyframes deb{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.15);opacity:0}}
+/* ═════════ Resolve FX: selector, test button, overlay pieces for the 8 effects ═════════ */
+.fxsel{height:24px;max-width:190px;padding:0 24px 0 10px;border-radius:12px;border:1px solid rgba(70,48,24,.25);font:600 11px var(--sans);color:var(--ink);cursor:pointer;-webkit-appearance:none;appearance:none;
+  background:linear-gradient(45deg,transparent 50%,#7b6f61 50%) calc(100% - 14px) 10px/5px 5px no-repeat,linear-gradient(135deg,#7b6f61 50%,transparent 50%) calc(100% - 9px) 10px/5px 5px no-repeat,#fffdf8}
+.fxsel:focus{outline:2px solid rgba(43,36,29,.35);outline-offset:1px}
+.rfxt{height:24px;padding:0 11px;border-radius:12px;font:650 11px var(--sans);white-space:nowrap;color:#fff7e8;background:var(--ink)}
+.rfxt:hover{background:#000}.rfxt:active{transform:translateY(1px)}
+.rfxrow{margin-top:12px;display:flex;align-items:center;gap:8px}
+.rfxrow label{flex:none;font:650 9.5px var(--sans);letter-spacing:1px;text-transform:uppercase;color:var(--dim)}
+.rfxrow .fxsel{flex:1;min-width:0;max-width:none;height:28px}
+.stg{display:flex}                                 /* always present, so staging the first chip never resizes the canvas mid-animation */
+.stg:not(.has)::after{content:"none yet · resolve, delete or comment on a moon to stage a change";font-size:11px;color:var(--dim)}
+.stg .sc.wait{visibility:hidden}
+#combo{position:absolute;right:20px;top:11px;height:26px;padding:0 11px;border-radius:13px;display:none;font:800 12.5px/26px var(--mono);color:#fff;background:var(--k,#2f8f5b);box-shadow:0 0 0 2px #fffdf8,0 5px 12px -5px rgba(60,40,20,.6)}
+#combo.on{display:block}
+#fxdl{position:absolute;inset:0}
+#fxa{position:absolute;inset:0;pointer-events:none;z-index:70;overflow:hidden}
+.moon.fxh{visibility:hidden}
+.moon.fresh:not(.ghost){animation:fxin .45s cubic-bezier(.3,1.4,.5,1)}
+@keyframes fxin{from{opacity:0;transform:scale(.55)}}
+.fxw,.fxz,.fxp,.fxo,.fx-core,.fx-star,.fx-comet,.fx-glint,.fx-plane,.fx-stamp,.fx-tag,.fx-combo,.fx-chip{position:absolute;pointer-events:none;font-style:normal}
+.fxw,.fxz{width:0;height:0}.fxz{left:0;top:0}.fxw .moon{transition:none;pointer-events:none}
+.fxp,.fxo,.fx-core,.fx-comet,.fx-glint{border-radius:50%}
+.fxo{box-sizing:border-box;border:2.5px solid var(--k,#2f8f5b)}
+.fx-mist{border:6px solid rgba(255,255,255,.72);box-shadow:0 0 10px 2px rgba(255,255,255,.6),inset 0 0 8px rgba(150,195,255,.55)}
+.fx-core{background:radial-gradient(circle,#fff 0,#fff8dc 32%,rgba(246,196,83,.7) 58%,transparent 72%)}
+.fx-carrier{box-shadow:0 0 0 2px #fffdf8,0 0 10px 4px #f6c453,0 0 18px 7px rgba(47,143,91,.65)}
+.fx-drop{background:radial-gradient(circle at 32% 28%,#fff 0 22%,color-mix(in srgb,var(--k) 55%,#dff3ff) 70%);box-shadow:0 1px 2px rgba(60,40,20,.3)}
+.fx-sheen{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 24%,#fff 0 8%,rgba(255,255,255,0) 24%),conic-gradient(from 40deg,rgba(255,110,160,.6),rgba(255,214,110,.6),rgba(110,240,180,.6),rgba(110,180,255,.65),rgba(196,130,255,.6),rgba(255,110,160,.6))}
+.fx-th{fill:none;stroke-width:3;stroke-linecap:round}
+line.fx-th{stroke-dasharray:1 2;stroke-linecap:butt}
+.fx-th.hot{stroke:#f6c453;stroke-width:4.5}
+.fx-thg{fill:none;stroke:#ffb020;stroke-width:11;stroke-linecap:round;opacity:.45}
+.fx-tag{padding:3px 9px;border-radius:10px;font:700 11px/1.2 var(--sans);white-space:nowrap;color:#5a3d05;background:#ffe9a8;border:1px solid #e0a92e;box-shadow:0 4px 10px -4px rgba(120,80,10,.6)}
+.fx-stamp{padding:.25em .6em;border:.2em solid #1f7a4a;border-radius:.4em;font:900 1em/1 var(--sans);letter-spacing:.08em;white-space:nowrap;color:#1f7a4a;background:rgba(255,253,247,.55);box-shadow:inset 0 0 0 .08em rgba(31,122,74,.5)}
+.fx-plane{width:26px;height:26px;margin:-13px 0 0 -13px;filter:drop-shadow(0 4px 4px rgba(60,40,20,.35))}
+.fx-plane svg{display:block}
+.fx-chip{white-space:nowrap}
+.fx-rib,.fx-tail{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fx-rib{opacity:.9}
+.fx-comet{background:radial-gradient(circle,#fff 0 30%,var(--k) 70%);box-shadow:0 0 12px 4px var(--k)}
+.fx-notch{fill:none}
+.fring{fill:none;opacity:.92}
+.fring.full{stroke:#e9b949;filter:drop-shadow(0 0 4px rgba(233,185,73,.85))}
+.fx-combo{padding:.1em .5em;border-radius:1em;font:900 16px/1.3 var(--mono);white-space:nowrap;color:#fff;background:var(--k);box-shadow:0 0 0 2px #fffdf8,0 6px 12px -5px rgba(60,40,20,.6)}
+.fx-star::before{content:"";position:absolute;inset:-55%;border-radius:50%;background:radial-gradient(circle,rgba(255,250,235,.96) 0,rgba(246,196,83,.42) 34%,rgba(43,36,29,.2) 56%,transparent 70%)}
+.fx-star svg{position:relative;display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 1.5px rgba(92,62,18,.9)) drop-shadow(0 0 7px rgba(43,36,29,.42))}
+.fx-star .ry{transform-box:fill-box;transform-origin:center;animation:twk .24s ease-in-out infinite}
+@keyframes twk{50%{opacity:.2;transform:scale(.72)}}
+.fx-white{position:absolute;inset:-1px;border-radius:50%;background:#fff;box-shadow:0 0 0 1.5px rgba(184,134,47,.9),0 0 14px 4px rgba(255,244,214,.95)}
+.fx-glint{background:#fff;box-shadow:0 0 0 1px rgba(120,84,30,.6),0 0 6px 2px #fff,0 0 10px 3px rgba(43,36,29,.22)}
+@media(prefers-reduced-motion:reduce){.fx-star .ry,.moon.fresh:not(.ghost){animation:none}}
 @keyframes fadeo{to{opacity:0}}
 @media(prefers-reduced-motion:reduce){
   .moon.p0,.teth,.dot.pulse,.edge b,.pa .res::before,.pa .res::after,.moon.ghost.fresh{animation:none}
@@ -593,7 +645,7 @@ function chipText(s){return s.k==='res'?`✓ Resolve #${s.id}`:s.k==='del'?`🗑
 function renderDock(){
   const n=staged.length,ag=AGENTS[ai],typed=$('#msg').value.trim().length>0;
   $('#stg').className='stg'+(n?' has':'');
-  $('#stg').innerHTML=`<label>Attached UI changes (${n})</label>`+staged.map((s,i)=>`<span class="sc" style="--k:${KCOL[s.k]}">${chipText(s)}<button data-rm="${i}" title="Remove">×</button></span>`).join('');
+  $('#stg').innerHTML=`<label>Attached UI changes (${n})</label>`+staged.map((s,i)=>`<span class="sc${s.wait?' wait':''}" data-sid="${s.k}${s.id}" style="--k:${KCOL[s.k]}">${chipText(s)}<button data-rm="${i}" title="Remove">×</button></span>`).join('');
   $('#msg').placeholder=n?`Press ↵ to apply ${n} staged change${n>1?'s':''} to Secretary, or type instructions to send them + this view to ${ag.a}`:`Ask ${ag.a} about this view, or click a bubble to stage changes…`;
   const go=$('#go');
   if(typed){go.className='go';go.textContent='Send to Agent ↵'}
@@ -684,21 +736,21 @@ TASK[918].age='6w';TASK[210].age='5w';
 /* radii at scale 1.0 — solar: Sun 176 > Planet 106 > P0 80 > P1 68 > P2 58 > P3 48 · category: Planet 192 > 148 > 132 > 116 > 100 */
 const SUP=5,PRI=['P0','P1','P2','P3'],SUNR=88,PR0=53,R0={P0:40,P1:34,P2:29,P3:24},F0={P0:10,P1:9.6,P2:9,P3:8.4},
   PR1=96,R1={P0:74,P1:66,P2:58,P3:50},F1={P0:13,P1:12.5,P2:11.5,P3:10.5},
-  SMIN=11/14,SMAX=1.18,KCAT=.66,O0={x:0,y:0},RM=matchMedia('(prefers-reduced-motion: reduce)');
+  SMIN=11/14,SMAX=1,KCAT=.66,O0={x:0,y:0},RM=matchMedia('(prefers-reduced-motion: reduce)');
 let cur=SUP,sel=null,comOpen=false,z=1,tx=0,ty=0,ptr=null,booted=false,
   VW=0,VH=0,WW=0,WH=0,L=null,MM=null,rot=.04,vel=0,hov=false,busy=false,drag=null,dragged=false,panMode=false,recenter=true,popping=null;
 /* filters: priority (multi-toggle), show-resolved (off by default), due horizon, no-due-date, created-within */
-const F={pri:new Set(),res:false,due:'1M',nd:'inc',age:'Any'};
+const F={pri:new Set(),res:false,due:'All',nd:'inc',age:'Any'};
 const DUEMAX={'1W':7,'1M':31,'1Y':366,'All':1e9},AGE={'24h':[0,1],'3D':[0,3],'1W':[0,7],'1M':[0,31],'Older':[31,1e9],'Any':[0,1e9]};
 const dueDays=t=>{const m=/^(Nov|Dec) (\d+)/.exec(t.due);return m?(m[1]==='Dec'?30:0)+ +m[2]-15:parseFloat(t.due.replace(/\D+/,''))||0};
 const ageDays=t=>{const n=parseFloat(t.age),u=t.age.slice(-1);return u==='h'?n/24:u==='w'?n*7:n};
 function pass(t){
   if(t.gone)return false;
-  if(t.done&&!t.ghost&&!F.res&&t.id!==popping)return false;
+  if(t.done&&!t.ghost&&!F.res&&!FXR.has(t.id))return false;            /* a moon mid-Resolve-FX keeps its place until the run ends */
   if(F.pri.size&&!F.pri.has(t.p))return false;
   if(!t.due){if(F.nd==='hide')return false}else if(F.nd==='only'||dueDays(t)>DUEMAX[F.due])return false;
   const a=ageDays(t),g=AGE[F.age];return a>=g[0]&&a<=g[1]}
-const nRes=()=>Object.values(TASK).filter(t=>t.done&&!t.gone&&!t.ghost).length;
+const nRes=()=>Object.values(TASK).filter(t=>t.done&&!t.gone&&!t.ghost&&!fxPending(t)).length;
 const moonEl=id=>document.querySelector('.moon[data-t="'+id+'"]');
 const tied=(a,b)=>TETH.some(([x,y])=>(x===a&&y===b)||(x===b&&y===a));
 const unit=(x,y)=>{const l=Math.hypot(x,y)||1;return[x/l,y/l]};
@@ -721,33 +773,61 @@ function pick(ts,cut){
   const rk=t=>PRI.indexOf(t.p)+(t.done?4:0)+(t.ghost?8:0),srt=ts.slice().sort((a,b)=>rk(a)-rk(b));
   let k=cut===1?srt.filter(t=>t.p!=='P3'):cut===2?srt.filter(t=>t.p<'P2'):srt.slice(0,cut===3?2:1);
   if(k.length<2&&cut<4)k=srt.slice(0,2);
-  return ts.filter(t=>k.includes(t)||t.id===sel||t.id===popping||t.id===toast.id)}
+  return ts.filter(t=>k.includes(t)||t.id===sel||FXR.has(t.id)||t.id===toast.id)}
 function clusters(cut){return CATS.map((cat,ci)=>{
-  const all=cat.t.filter(pass),ts=pick(all,cut),pos=ring(O0,PR0,6,ts,cat.a,R0,ts.length<all.length),e=enclose([{x:0,y:0,r:PR0},...pos]);
-  return{ci,cat,all,ts,pos,more:all.length-ts.length,ex:e.x,ey:e.y,er:e.r,u:0}})}
+  const all=cat.t.filter(pass),ts=pick(all,cut),pos=ring(O0,PR0,6,ts,cat.a,R0,ts.length<all.length),disks=[{x:0,y:0,r:PR0},...pos],e=enclose(disks);   /* disks: planet + visible moons, unscaled, relative to the planet centre */
+  return{ci,cat,all,ts,pos,disks,more:all.length-ts.length,ex:e.x,ey:e.y,er:e.r,u:0}})}
 /* planets ride one ellipse, spaced by arc length so they keep their distance all the way round */
 function etab(a,b){const N=240,T=[0];let px=a,py=0;for(let i=1;i<=N;i++){const q=i/N*2*Math.PI,x=a*Math.cos(q),y=b*Math.sin(q);T.push(T[i-1]+Math.hypot(x-px,y-py));px=x;py=y}return T}
 function ept(L,u){const T=L.tab,N=T.length-1,g=(u%1+1)%1*T[N];let lo=0,hi=N;while(hi-lo>1){const m=lo+hi>>1;T[m]<=g?lo=m:hi=m}
   const q=(lo+(g-T[lo])/(T[hi]-T[lo]||1))/N*2*Math.PI;return[L.cx+L.a*Math.cos(q),L.cy+L.b*Math.sin(q)]}
-/* does scale s fit a W×H field with `gap` px clearance, at every phase of the rotation? */
-function tryFit(W,H,s,gap,C){
-  const em=Math.max(...C.map(c=>c.er)),a=W/2-em*s-gap/2-3,b=H/2-em*s-gap/2-3;if(a<24||b<24)return null;
-  const L={W,H,s,cx:W/2,cy:H/2,a,b,tab:etab(a,b),C},tot=C.reduce((q,c)=>q+2*c.er,0);let acc=0;
-  C.forEach((c,i)=>{c.u=acc/tot;acc+=c.er+C[(i+1)%C.length].er});
-  for(let k=0;k<48;k++){const P=C.map(c=>ept(L,c.u+k/48));
-    for(let i=0;i<P.length;i++){if(Math.hypot(P[i][0]-L.cx,P[i][1]-L.cy)<(SUNR+C[i].er)*s+gap)return null;
-      for(let j=i+1;j<P.length;j++)if(Math.hypot(P[i][0]-P[j][0],P[i][1]-P[j][1])<(C[i].er+C[j].er)*s+gap)return null}}
+/* Does scale s fit on the ellipse (a,b) of a W×H field at every phase of the rotation?
+   Narrowphase: real circle-vs-circle tests (planet + visible moons), `gap` px between clusters and a crisp ≤10px round the Sun.
+   The enclosing circle (er) is only a broadphase skip. Sampled at 96 phases — every one of the 48 plus the midpoints,
+   because clusters may now nestle into each other's pockets and must not brush past between samples. */
+function fitE(W,H,s,gap,C,a,b){
+  const L={W,H,s,cx:W/2,cy:H/2,a,b,tab:etab(a,b),C},tot=C.reduce((q,c)=>q+2*c.er,0),sg=Math.min(gap,10),n=C.length,N=96;let acc=0;
+  C.forEach((c,i)=>{c.u=acc/tot;acc+=c.er+C[(i+1)%n].er});
+  for(let k=0;k<N;k++){const P=C.map(c=>ept(L,c.u+k/N));
+    for(let i=0;i<n;i++){const ci=C[i],ox=P[i][0]-ci.ex*s,oy=P[i][1]-ci.ey*s;                    /* cluster origin (planet centre) — exactly what place() uses */
+      if(Math.hypot(P[i][0]-L.cx,P[i][1]-L.cy)<(SUNR+ci.er)*s+sg)
+        for(const d of ci.disks)if(Math.hypot(ox+d.x*s-L.cx,oy+d.y*s-L.cy)<(SUNR+d.r)*s+sg)return null;   /* disk vs Sun */
+      for(let j=i+1;j<n;j++){const cj=C[j];if(Math.hypot(P[i][0]-P[j][0],P[i][1]-P[j][1])>=(ci.er+cj.er)*s+gap)continue;
+        const qx=P[j][0]-cj.ex*s-ox,qy=P[j][1]-cj.ey*s-oy;                                       /* origin of j relative to origin of i */
+        for(const d of ci.disks)for(const e of cj.disks)if(Math.hypot(qx+(e.x-d.x)*s,qy+(e.y-d.y)*s)<(d.r+e.r)*s+gap)return null}}}
   return L}
+/* Field limits (aMax × bMax keep every cluster inside the window) and the compact "hug the Sun" box:
+   b ≤ Sun + cluster + 34px, a ≤ max(1.38·b, Sun + cluster + 38px). `lam` loosens the box; Infinity = the whole field. */
+function orbBox(W,H,s,gap,C,lam){
+  const em=Math.max(...C.map(c=>c.er)),aMax=W/2-em*s-gap/2-3,bMax=H/2-em*s-gap/2-3;if(aMax<24||bMax<24)return null;
+  const b=Math.min(bMax,(SUNR+em+34)*s*lam);return{a:Math.min(aMax,Math.max(b*1.38,(SUNR+em+38)*s*lam)),b}}
+function tryFit(W,H,s,gap,C,lam){const B=orbBox(W,H,s,gap,C,lam==null?Infinity:lam);return B&&fitE(W,H,s,gap,C,B.a,B.b)}
+/* at a settled scale: tighten b if it can go lower, then binary-search the smallest a that still passes every phase (+8px pad).
+   Every layout returned here is one that passed fitE. */
+function snug(L,gap){
+  const{W,H,s,C}=L,a0=L.a,bT=Math.min(L.b,(SUNR+Math.max(...C.map(c=>c.er))+34)*s);let t=bT<L.b&&fitE(W,H,s,gap,C,a0,bT);if(t)L=t;
+  const b=L.b;let lo=Math.min(a0,SUNR*s+20),hi=a0;
+  if(t=fitE(W,H,s,gap,C,lo,b)){L=t;hi=lo}else for(let i=0;i<8;i++){const m=(lo+hi)/2;(t=fitE(W,H,s,gap,C,m,b))?(L=t,hi=m):lo=m}
+  return fitE(W,H,s,gap,C,Math.min(a0,hi+8*s),b)||L}
 /* the 4-stage resize cascade for the solar overview */
 function solveSolar(W,H){
-  let C=clusters(0),st=1,cut=0,L=tryFit(W,H,SMIN,22,C);
-  if(L){let lo=SMIN,hi=SMAX;                                             /* 1 · proportional fit, down to the 11px title floor */
-    if(tryFit(W,H,hi,22,C))lo=hi;else for(let i=0;i<7;i++){const m=(lo+hi)/2;tryFit(W,H,m,22,C)?lo=m:hi=m}
-    L=tryFit(W,H,lo,22,C)}
+  /* memo: the layout only depends on the field size and on which moons are showing, so repeat draws are free */
+  const key=[W,H,sel,toast.id,[...FXR.keys()],CATS.map(c=>c.t.filter(pass).map(t=>t.id+(t.done?'d':'')+(t.ghost?'g':'')))].join('|');
+  if(solveSolar.k===key)return solveSolar.L;
+  /* Stage 1 searches the scale INSIDE a compact Sun-hugging box, so s can no longer grow until the clusters eat the whole window width.
+     The box is tried tightest first and loosened step by step (Infinity = whole field) until the 11px floor fits. */
+  let C=clusters(0),st=1,cut=0,L=null;
+  for(const lam of[1,1.12,1.25,1.4,1.6,1.85,2.2,2.7,3.4,Infinity]){                                             /* 1 · proportional fit, down to the 11px title floor */
+    if(!(L=tryFit(W,H,SMIN,10,C,lam)))continue;
+    let lo=SMIN,hi=SMAX,t;
+    if(t=tryFit(W,H,hi,10,C,lam))L=t;else for(let i=0;i<7;i++){const m=(lo+hi)/2;(t=tryFit(W,H,m,10,C,lam))?(L=t,lo=m):hi=m}
+    break}
+  if(L)st=1;
   else if(L=tryFit(W,H,SMIN,6,C))st=2;                                   /* 2 · text frozen, orbit + spacing squeezed to the safe minimum */
   else{st=3;for(const k of[1,2,3,4]){cut=k;C=clusters(k);if(L=tryFit(W,H,SMIN,6,C))break}   /* 3 · trim low-priority moons, "+N more" */
     if(!L){st=4;cut=3;C=clusters(3);for(let f=1.06;!L;f*=1.07)L=tryFit(W*f,H*f,SMIN,6,C)}}   /* 4 · field larger than the window: pan */
-  L.stage=st;L.cut=cut;return L}
+  if(st<4)L=snug(L,st>1?6:10);                          /* stages 1–3: pull the orbit in to hug the Sun (stage 4 already uses the smallest field that fits) */
+  L.stage=st;L.cut=cut;solveSolar.k=key;solveSolar.L=L;return L}
 /* category focus: every task of the planet, never trimmed; shrinks to fit, then pans */
 function solveCat(W,H){
   const ts=CATS[cur].t.filter(pass),raw=ring(O0,PR1,10,ts,-70,R1),ext=Math.max(PR1,...raw.map(o=>Math.hypot(o.x,o.y)+o.r))+14,dk=W>=980,hw=dk?(W-372)/2:W/2;
@@ -764,7 +844,7 @@ function tether(A,B,P,c,k,label){
   return{s:`<path class="tethg" d="${d}"/><path class="teth" d="${d}" stroke="${c}"/><polygon points="${f(ex)},${f(ey)} ${f(bx+px)},${f(by+py)} ${f(bx-px)},${f(by-py)}" fill="${c}"/>`,h}}
 function moonHTML(o,zm,c,k){
   const t=o.t,P=t.p,d=(o.r*2).toFixed(1),due=t.due?'Due '+t.due:'No due date',nd=t.due?'':' class="nd"';
-  const cls=['moon',P.toLowerCase(),t.ghost?'ghost':'',t.fresh?'fresh':'',t.done&&!t.ghost?'done':'',sel===t.id?'sel':'',popping===t.id?'bye':''].join(' ');
+  const cls=['moon',P.toLowerCase(),t.ghost?'ghost':'',t.fresh?'fresh':'',t.done&&!t.ghost?'done':'',sel===t.id?'sel':'',FXR.has(t.id)?'fxh':''].join(' ');
   const inner=zm?`<span class="src">${t.src}</span><b>${t.f}</b><i${nd}>${P} · ${due}</i><span class="xt">${t.ghost?'soft-deleted':t.done?'Resolved ✓':'Created '+t.age+' ago'}</span>${P==='P3'?'':`<span class="xt w">${t.who}</span>`}`
     :`${P<'P2'?`<em class="pp">${P}</em>`:''}<b>${t.n}</b>${P==='P3'?'':`<i${nd}>${due}</i>`}`;
   const fs=Math.max(zm?9:7.6,(zm?F1:F0)[P]*k).toFixed(2);
@@ -786,33 +866,34 @@ function place(){
 function draw(){
   const st=app.dataset.state;if(st==='dashboard'||!VW||!VH)return;
   let h='',s='';const lead=$('#lead'),world=$('#world'),rt=$('#rtog'),f=v=>v.toFixed(1);lead.style.display='none';
-  const vis=Object.values(TASK).filter(t=>pass(t)&&!t.ghost).length;
+  const allT=Object.values(TASK).filter(t=>!t.gone&&!t.ghost),tot=allT.length,shown=t=>!t.ghost&&!(t.done&&!F.res&&!fxPending(t)),vis=allT.filter(t=>pass(t)&&shown(t)).length,flt=tot-vis;
   rt.classList.toggle('on',F.res);rt.setAttribute('aria-pressed',F.res);$('#rlab').textContent=`Show Resolved (${nRes()})`;
   if(st==='solar'){
     L=solveSolar(VW,VH);WW=L.W;WH=L.H;panMode=L.stage===4;app.dataset.fit=L.stage;world.classList.remove('tight');
     const k=L.s;let g='';
     s=`<ellipse class="orb" cx="${f(L.cx)}" cy="${f(L.cy)}" rx="${f(L.a)}" ry="${f(L.b)}"/><circle class="orb m" cx="${f(L.cx)}" cy="${f(L.cy)}" r="${f((SUNR+18)*k)}"/>`;
-    h=`<div class="sun" style="left:${f(L.cx-SUNR*k)}px;top:${f(L.cy-SUNR*k)}px;width:${f(SUNR*2*k)}px;height:${f(SUNR*2*k)}px;--k:${k.toFixed(3)}"><b>Tasks</b><span>${vis} Tasks</span><i>of 254 · filtered</i></div>`;
+    h=`<div class="sun" style="left:${f(L.cx-SUNR*k)}px;top:${f(L.cy-SUNR*k)}px;width:${f(SUNR*2*k)}px;height:${f(SUNR*2*k)}px;--k:${k.toFixed(3)}"><b>Tasks</b><span>${vis} Task${vis===1?'':'s'}</span><i>${flt} of ${tot} filtered</i></div>`;
     L.C.forEach((c,i)=>{
-      const cat=c.cat,pos=c.pos.map(o=>({t:o.t,x:o.x*k,y:o.y*k,r:o.r*k})),n=c.all.filter(t=>!t.ghost).length;
+      const cat=c.cat,pos=c.pos.map(o=>({t:o.t,x:o.x*k,y:o.y*k,r:o.r*k})),n=c.all.filter(shown).length;
       s+=`<line class="spk" id="sp${i}" x1="${f(L.cx)}" y1="${f(L.cy)}" x2="${f(L.cx)}" y2="${f(L.cy)}"/>`;
-      g+=`<g id="cg${i}"><circle class="orb m" r="${f((PR0+6+R0.P1)*k)}"/>`;
-      TETH.forEach(([a,b])=>{const A=pos.find(o=>o.t.id===a),B=pos.find(o=>o.t.id===b);if(A&&B&&!A.t.ghost&&!B.t.ghost)g+=tether(A,B,O0,cat.c,Math.min(A.r,B.r)*.9+12).s});
+      g+=`<g id="cg${i}"><circle class="orb m" r="${f((PR0+6+R0.P1)*k)}"/>${forgeSVG(c.ci,0,0,(PR0+3.2)*k,3.4*k)}`;
+      TETH.forEach(([a,b])=>{const A=pos.find(o=>o.t.id===a),B=pos.find(o=>o.t.id===b);if(A&&B&&tOK(A,B))g+=tether(A,B,O0,cat.c,Math.min(A.r,B.r)*.9+12).s});
       g+='</g>';
       h+=`<div class="clu" id="cl${i}"><div class="planet" data-c="${c.ci}" style="left:${f(-PR0*k)}px;top:${f(-PR0*k)}px;width:${f(PR0*2*k)}px;height:${f(PR0*2*k)}px;--c:${cat.c};--pf:${f(14*k)}px;--pc:${f(9.5*k)}px"><b>${cat.h}</b><i>${n} task${n===1?'':'s'}</i>${c.more?`<u class="more">+${c.more} more</u>`:''}</div>${pos.map(o=>moonHTML(o,false,cat.c,k)).join('')}</div>`});
     s+=g;
-    $('#fcount').innerHTML=`<b>${vis}</b> of 254 tasks visible${L.cut?' · overview trimmed':''}`;
+    $('#fcount').innerHTML=`<b>${vis}</b> shown · <b>${flt}</b> of ${tot} filtered${L.cut?' · overview trimmed':''}`;
     $('#hsub').textContent=['','Stage 1 · proportional fit','Stage 2 · orbits compressed','Stage 3 · low-priority moons tucked','Stage 4 · drag or scroll to pan'][L.stage];
-    ctxLabel=`Bubble Tasks · ${vis} visible${sel?' · task #'+sel:''}`;
+    ctxLabel=`Bubble Tasks · ${vis} shown (${flt} of ${tot} filtered)${sel?' · task #'+sel:''}`;
     miniDraw(st);
   }else{
-    const cat=CATS[cur],C=solveCat(VW,VH),k=C.k,pos=C.pos,live=pos.filter(o=>!o.t.ghost).length;
+    const cat=CATS[cur],C=solveCat(VW,VH),k=C.k,pos=C.pos,live=pos.filter(o=>shown(o.t)).length,ctot=cat.t.filter(t=>!t.gone&&!t.ghost).length;
     WW=C.W;WH=C.H;panMode=C.pan;app.dataset.fit=C.pan?4:1;world.classList.toggle('tight',k<.85);
     s=`<circle class="orb m" cx="${f(C.x)}" cy="${f(C.y)}" r="${f((PR1+10+R1.P1)*k)}"/><circle class="orb" cx="${f(C.x)}" cy="${f(C.y)}" r="${f(C.ext*k)}"/>`;
-    TETH.forEach(([a,b])=>{const A=pos.find(o=>o.t.id===a),B=pos.find(o=>o.t.id===b);if(A&&B&&!A.t.ghost&&!B.t.ghost){const q=tether(A,B,C,cat.c,46*k,true);s+=q.s;h+=q.h}});
+    TETH.forEach(([a,b])=>{const A=pos.find(o=>o.t.id===a),B=pos.find(o=>o.t.id===b);if(A&&B&&tOK(A,B)){const q=tether(A,B,C,cat.c,46*k,true);s+=q.s;h+=q.h}});
+    s+=forgeSVG(cur,C.x,C.y,(PR1+5)*k,5*k);
     h+=`<div class="planet hubp" style="left:${f(C.x-PR1*k)}px;top:${f(C.y-PR1*k)}px;width:${f(PR1*2*k)}px;height:${f(PR1*2*k)}px;--c:${cat.c};--pf:${f(Math.max(11,22*k))}px;--pc:${f(Math.max(9,11.5*k))}px;cursor:default"><b>${cat.h}</b><i>${live} task${live===1?'':'s'} · all shown</i></div>`;
     h+=pos.map(o=>moonHTML(o,true,cat.c,k)).join('');
-    $('#fcount').innerHTML=`<b>${live}</b> in ${cat.k} · other categories filtered out`;
+    $('#fcount').innerHTML=`<b>${live}</b> of ${ctot} shown in ${cat.k} · <b>${tot-live}</b> of ${tot} filtered`;
     $('#crumb').innerHTML=`All Tasks &nbsp;›&nbsp; <b style="--c:${cat.c}">${cat.k}</b> · ${live} tasks · semantic zoom`;
     $('#hsub').textContent=C.pan?'Drag or scroll to pan':'Every task shown · no cutoff';
     ctxLabel=`${cat.k} · 1.8×${sel?' · task #'+sel:''}`;
@@ -857,9 +938,9 @@ cv.addEventListener('pointerleave',()=>{ptr=null;hov=false});
 function frame(ts){
   const dt=Math.min(.05,(ts-(frame.t||ts))/1000),solar=app.dataset.state==='solar';frame.t=ts;
   if(ptr&&!drag&&pannable()&&app.dataset.view==='bub'){const dx=ptr.x<40?7:ptr.x>VW-40?-7:0,dy=ptr.y<36?7:ptr.y>VH-36?-7:0;if(dx||dy){tx+=dx;ty+=dy;applyT()}}
-  /* planets drift ~0.02 rad/s (≈5 min a lap); eases to a stop on hover, while the inspector is open, mid-animation, or with reduced motion */
-  const want=solar&&!hov&&sel==null&&!busy&&!drag&&!RM.matches?1:0;vel=busy?0:vel+(want-vel)*Math.min(1,dt*2.5);
-  if(solar&&L&&vel>.002){rot=(rot+vel*dt*.02/(2*Math.PI))%1;place()}
+  /* planets drift ~0.01 rad/s (≈10 min a lap); eases to a stop on hover, while the inspector is open, mid-animation, or with reduced motion */
+  const want=solar&&!hov&&sel==null&&!busy&&!drag&&!RM.matches?1:0;vel=busy||FXR.size?0:vel+(want-vel)*Math.min(1,dt*2.5);
+  if(solar&&L&&vel>.002){rot=(rot+vel*dt*.01/(2*Math.PI))%1;place()}
   requestAnimationFrame(frame)}
 
 /* ───────── inspector sheet, undo toast, state machine, ?state= boot ───────── */
@@ -873,6 +954,7 @@ function openPop(id){
 <h3>${t.f}</h3>
 <dl class="pm">${row('Source',t.src)}${row('From',t.who)}${row('Due',t.due?'Due '+t.due:'No due date')}${row('Created',t.age+' ago · swept by Secretary')}${row('Status',t.done?(staged.some(s=>s.k==='res'&&s.id===id)?'Resolve staged · not yet applied':'Resolved ✓'):'Open loop')}</dl>
 <div class="dep">${dep}</div>
+<div class="rfxrow"><label for="rfxp">Resolve FX</label><select class="fxsel" id="rfxp" aria-label="Resolve animation effect">${fxOpts()}</select></div>
 <div class="pa"><button class="res" data-act="res">${t.done?'✓ Resolved':'✓ Resolve'}</button><button class="del" data-act="del">🗑 Delete</button><button class="com${comOpen?' on':''}" data-act="com">💬 Comment</button></div>
 ${comOpen?`<div class="cbox"><label>Note to Secretary · #${t.id}</label><textarea id="cmt" spellcheck="false" placeholder="Write a note…">${t.note}</textarea><div>Attaches as a chip in the composer below<b data-act="stagecom">Stage note ↵</b></div></div>`:''}`;
   $('#pop').classList.add('open');draw();renderDock();
@@ -889,7 +971,7 @@ function burst(x,y,R){
     app.appendChild(p);setTimeout(()=>p.remove(),720)}}
 /* delete: dish charges on the hub's rim → 5 tributary rays converge → superlaser → planet-buster → cb() leaves the ghost ring */
 function fireLaser(t,cb){
-  const me=moonEl(t.id),he=document.querySelector(app.dataset.state==='solar'?'.sun':'.hubp'),fx=$('#fx'),fd=$('#fxd'),tok=fireLaser.n=(fireLaser.n||0)+1;
+  const me=moonEl(t.id),he=document.querySelector(app.dataset.state==='solar'?'.sun':'.hubp'),fx=$('#fxl'),fd=$('#fxdl'),tok=fireLaser.n=(fireLaser.n||0)+1;
   if(!me||!he){cb();return}
   const cr=cv.getBoundingClientRect(),mr=me.getBoundingClientRect(),hr=he.getBoundingClientRect(),f=v=>v.toFixed(1),
     mx=mr.left+mr.width/2-cr.left,my=mr.top+mr.height/2-cr.top,mR=mr.width/2,hx=hr.left+hr.width/2-cr.left,hy=hr.top+hr.height/2-cr.top,hR=hr.width/2,
@@ -914,17 +996,225 @@ function fireLaser(t,cb){
       add('deb',`width:${f(w)}px;height:${f(i%3?w:w*2.4)}px;border-radius:${i%3?'50%':'1.5px'};margin:${f(-w/2)}px 0 0 ${f(-w/2)}px;--c:${col[i%col.length]};--dx:${f(Math.cos(a)*l)}px;--dy:${f(Math.sin(a)*l)}px;--r:${(Math.random()*720-360)|0}deg;--t:${(430+Math.random()*260)|0}ms`)}
     fx.classList.add('out')},420);
   setTimeout(done,740);clean(1240)}
+/* ───────── Resolve FX · 8 selectable animations ─────────
+   Every run animates a detached clone of the moon in the overlays (#fx › #fxr for SVG, #fxd inside the canvas, #fxa above the whole app),
+   so a redraw never interrupts it. The real moon keeps its place in the layout but stays hidden (.fxh) until the run ends. */
+const FXS=[['seed','1 · Supernova Seed'],['slingshot','2 · Slingshot to the Sun'],['bubble','3 · Soap-Bubble Pop'],['tether','4 · Tether Snap Chain'],['stamp','5 · Stamp &amp; Paper Plane'],['forge','6 · Saturn Ring Forge'],['streak','7 · Streak Comet'],['whitestar','8 · White Star Morph (Moon → Star → Moon)']];
+let resolveFx='seed',streakCount=0,streakT=0,streakTm=0;
+const FXR=new Map(),FD=$('#fxd'),FG=$('#fxr'),FA=document.createElement('div'),CB=document.createElement('b');
+FA.id='fxa';app.appendChild(FA);CB.id='combo';$('#dock').appendChild(CB);
+const fxPending=t=>{const R=FXR.get(t.id);return!!R&&R.mode==='real'&&!R.counted},fxIs=(id,k)=>{const R=FXR.get(id);return!!R&&R.fx===k},
+  cnt=t=>!t.ghost&&(!t.done||fxPending(t)),tOK=(A,B)=>!A.t.ghost&&!B.t.ghost&&!A.t.done&&!B.t.done&&!fxIs(A.t.id,'tether'),
+  fxOpts=()=>FXS.map(f=>`<option value="${f[0]}"${f[0]===resolveFx?' selected':''}>${f[1]}</option>`).join(''),
+  an=(e,kf,o)=>e.animate(kf,Object.assign({fill:'forwards',easing:'ease-out'},o)),anb=(e,kf,o)=>an(e,kf,Object.assign({fill:'both'},o)),
+  tr=(x,y,s,r)=>`translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`+(r==null?'':` rotate(${r.toFixed(1)}deg)`)+(s==null?'':` scale(${s})`),
+  pos=(p,r)=>`left:${p.x.toFixed(1)}px;top:${p.y.toFixed(1)}px;width:${(r*2).toFixed(1)}px;height:${(r*2).toFixed(1)}px;margin:${(-r).toFixed(1)}px 0 0 ${(-r).toFixed(1)}px`,
+  dot=(R,x,y,d,bg,par)=>R.el('fxp',pos({x,y},d/2)+';background:'+bg,par),
+  qb=(a,c,b,n)=>Array.from({length:n+1},(_,i)=>{const u=i/n,v=1-u;return[v*v*a[0]+2*v*u*c[0]+u*u*b[0],v*v*a[1]+2*v*u*c[1]+u*u*b[1]]}),
+  forgeArc=(n,i)=>{const st=2*Math.PI/n,gp=Math.min(.14,st*.2),a=-Math.PI/2+i*st+gp/2;return[a,a+st-gp]},
+  arcD=(cx,cy,r,a0,a1)=>`M${(cx+Math.cos(a0)*r).toFixed(1)} ${(cy+Math.sin(a0)*r).toFixed(1)}A${r.toFixed(1)} ${r.toFixed(1)} 0 ${a1-a0>Math.PI?1:0} 1 ${(cx+Math.cos(a1)*r).toFixed(1)} ${(cy+Math.sin(a1)*r).toFixed(1)}`;
+const STAR=(()=>{let d='';for(let i=0;i<16;i++){const r=i%4===0?50:i%2?12.5:27,a=i*Math.PI/8-Math.PI/2;d+=(i?'L':'M')+(Math.cos(a)*r).toFixed(1)+' '+(Math.sin(a)*r).toFixed(1)}
+  return`<svg viewBox="-56 -56 112 112"><path d="${d}Z" fill="#fff" stroke="#b8862f" stroke-width="2.2" stroke-linejoin="round"/><g class="ry" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M-40 -40L-31 -31M40 -40L31 -31M-40 40L-31 31M40 40L31 31"/></g><circle r="9" fill="#fff"/></svg>`})();
+const PLANE='<svg viewBox="0 0 32 32" width="26" height="26"><path d="M2 15L30 3L21 29L14 19Z" fill="#fffdf8" stroke="#2b241d" stroke-width="1.6" stroke-linejoin="round"/><path d="M30 3L14 19L13 27L17.5 22.5" fill="#efe4d0" stroke="#2b241d" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+function setFx(k){if(!FXS.some(f=>f[0]===k))return;resolveFx=k;['#rfx','#rfxp'].forEach(q=>{const e=$(q);if(e)e.value=k});if(booted)try{history.replaceState(null,'','?state='+app.dataset.state+'&fx='+k)}catch(e){}}
+/* forged notches: one arc per resolved task of the category; all resolved → one continuous gold-accented trophy ring */
+function forgeSVG(ci,cx,cy,r,w){
+  const ts=CATS[ci].t.filter(t=>!t.gone&&!t.ghost),n=ts.length,k=ts.filter(t=>t.done&&!(fxIs(t.id,'forge')&&fxPending(t))).length,c=CATS[ci].c,f=v=>v.toFixed(1);
+  if(!k)return'';
+  if(k>=n)return`<circle class="fring full" cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}" stroke-width="${f(w*1.3)}"/><circle class="fring" cx="${f(cx)}" cy="${f(cy)}" r="${f(r)}" stroke="${c}" stroke-width="${f(w*.35)}"/>`;
+  let h='';for(let i=0;i<k;i++){const a=forgeArc(n,i);h+=`<path class="fring" stroke="${c}" stroke-width="${f(w)}" d="${arcD(cx,cy,r,a[0],a[1])}"/>`}return h}
+function bumpRes(){$('#rlab').textContent=`Show Resolved (${nRes()})`;$('#rtog').animate([{transform:'scale(1)'},{transform:'scale(1.16)',boxShadow:'0 0 0 4px rgba(47,143,91,.3),0 0 18px 5px rgba(246,196,83,.75)'},{transform:'scale(1)'}],{duration:460,easing:'ease-out'})}
+/* screen-space geometry (canvas coords) of the moon M, its planet P and the hub H (Sun, or the centred planet in category view) */
+function fxGeo(t){
+  const me=moonEl(t.id);if(!me)return null;
+  const solar=app.dataset.state==='solar',pe=solar?me.parentNode.querySelector('.planet'):$('.hubp'),he=solar?$('.sun'):pe,cr=cv.getBoundingClientRect(),ar=app.getBoundingClientRect(),
+    rc=e=>{const r=e.getBoundingClientRect();return{x:r.left+r.width/2-cr.left,y:r.top+r.height/2-cr.top,r:r.width/2}};
+  return{me,solar,rc,M:rc(me),P:rc(pe),H:rc(he),c:CATS[t.ci].c,sc:me.getBoundingClientRect().width/(me.offsetWidth||1),ox:cr.left-ar.left,oy:cr.top-ar.top}}
+function fxStart(t,mode,G){
+  const old=FXR.get(t.id);if(old)fxEnd(old,true);
+  const R={id:t.id,t,mode,fx:resolveFx,tm:[],raf:[],els:[],g:null,counted:false};FXR.set(t.id,R);
+  R.at=(ms,fn)=>{R.tm.push(setTimeout(fn,ms))};
+  R.el=(cls,css,par,html)=>{const e=document.createElement('i');e.className=cls;e.style.cssText=css||'';if(html)e.innerHTML=html;(par||FD).appendChild(e);R.els.push(e);return e};
+  R.svg=h=>{if(!R.g){FG.insertAdjacentHTML('beforeend','<g></g>');R.g=FG.lastElementChild;R.els.push(R.g)}R.g.insertAdjacentHTML('beforeend',h);return R.g.lastElementChild};
+  R.tw=(delay,dur,fn)=>{const o={id:0};R.raf.push(o);R.at(delay,()=>{const t0=performance.now(),st=n=>{const p=Math.max(0,Math.min(1,(n-t0)/dur));fn(p);if(p<1)o.id=requestAnimationFrame(st)};o.id=requestAnimationFrame(st)})};
+  R.count=()=>{if(R.mode==='real')R.counted=true;bumpRes()};
+  const w=R.el('fxw',`left:${G.M.x.toFixed(1)}px;top:${G.M.y.toFixed(1)}px`),zc=document.createElement('i'),c=G.me.cloneNode(true),ow=G.me.offsetWidth;
+  zc.className='fxz';zc.style.transform=`scale(${G.sc.toFixed(4)})`;c.removeAttribute('data-t');c.removeAttribute('title');c.classList.remove('sel','fresh','fxh');
+  c.style.left=c.style.top=(-ow/2)+'px';zc.appendChild(c);w.appendChild(zc);R.w=w;R.c=c;
+  G.me.classList.add('fxh');
+  const dur=(RM.matches?fxCalm:FXP[R.fx])(R,G,t)||900;
+  R.at(dur,()=>fxEnd(R));return R}
+function fxEnd(R,silent){
+  R.tm.forEach(clearTimeout);R.raf.forEach(o=>cancelAnimationFrame(o.id));R.els.forEach(e=>e.remove());
+  if(FXR.get(R.id)===R)FXR.delete(R.id);
+  const t=R.t,s=staged.find(s=>s.wait&&s.id===R.id);if(s){s.wait=false;if(silent)renderDock()}
+  if(silent)return;
+  if(R.mode==='real'&&!R.counted)bumpRes();
+  if(R.fx!=='whitestar'&&(R.mode==='test'||F.res)&&!t.gone&&!t.ghost){t.fresh=true;setTimeout(()=>{t.fresh=false;if(!FXR.size)draw()},520)}
+  draw();renderDock();
+  if(R.mode==='real'&&!F.res)flash(`Resolved #${t.id} ✓ · tucked under Show Resolved (${nRes()})`)}
+function fxAbort(){[...FXR.values()].forEach(R=>fxEnd(R,true))}
+/* reduced motion: opacity only — no flashes, travel or scaling */
+function fxCalm(R,G){
+  if(R.fx==='whitestar'){an(R.el('fx-star',pos(G.M,Math.max(10,G.M.r*.5)),0,STAR),[{opacity:0},{opacity:1,offset:.35},{opacity:1,offset:.65},{opacity:0}],{duration:1000});
+    an(R.c,[{opacity:1},{opacity:0,offset:.35},{opacity:0,offset:.65},{opacity:1}],{duration:1000});return 1040}
+  an(R.w,[{opacity:1},{opacity:0}],{duration:380,delay:60});an(R.el('fxo',pos(G.M,G.M.r)),[{opacity:.9},{opacity:0}],{duration:420});return 460}
+const FXP={
+  /* 1 · inhale → white-hot core + ring + 20 gravity-bent sparks; one carrier spark arcs into Show Resolved (N) */
+  seed(R,G){
+    const{M,P,c}=G,gv=unit(P.x-M.x,P.y-M.y);
+    an(R.w,[{transform:'scale(1)',opacity:1},{transform:'scale(.86)',opacity:1,offset:.4},{transform:'scale(1.3)',opacity:0}],{duration:225,easing:'ease-in'});
+    R.at(90,()=>{
+      an(R.el('fx-core',pos(M,M.r*1.1)),[{transform:'scale(.3)',opacity:1},{transform:'scale(1.9)',opacity:0}],{duration:380});
+      an(R.el('fxo',pos(M,M.r)+';--k:'+c),[{transform:'scale(.5)',opacity:1},{transform:'scale(2.7)',opacity:0}],{duration:520});
+      for(let i=0;i<20;i++){const a=Math.PI*2*i/20+Math.random()*.3,l=M.r+26+Math.random()*46,x=Math.cos(a)*l,y=Math.sin(a)*l,g=l*.4;
+        an(dot(R,M.x,M.y,3+Math.random()*4,[c,'#f6c453','#fff','#2f8f5b'][i%4]),[{transform:tr(0,0,1),opacity:1},{transform:tr(x*.62,y*.62,1),opacity:1,offset:.45},{transform:tr(x+gv[0]*g,y+gv[1]*g,.2),opacity:0}],{duration:520+Math.random()*220})}
+      const T=G.rc($('#rtog')),a=[M.x+G.ox,M.y+G.oy],b=[T.x+G.ox,T.y+G.oy],e=dot(R,a[0],a[1],10,'#f6c453',FA);e.classList.add('fx-carrier');
+      an(e,qb([0,0],[(b[0]-a[0])/2+(b[1]-a[1])*.22,(b[1]-a[1])/2-(b[0]-a[0])*.22-40],[b[0]-a[0],b[1]-a[1]],14).map((p,i)=>({transform:tr(p[0],p[1],i<14?1:.5)})),{duration:620,easing:'cubic-bezier(.45,0,.3,1)'});
+      R.at(620,()=>{e.remove();R.count()})});
+    return 1150},
+  /* 2 · clone swings half an orbit round its planet, whips down the spoke into the hub; hub ripples, swells 4%, count rolls down */
+  slingshot(R,G){
+    const{M,P,H}=G,a0=Math.atan2(M.y-P.y,M.x-P.x),d0=Math.hypot(M.x-P.x,M.y-P.y),kf=[],N=12;
+    for(let i=0;i<=N;i++){const u=i/N,a=a0+Math.PI*u*u,d=d0*(1-.14*u);kf.push({transform:tr(P.x+Math.cos(a)*d-M.x,P.y+Math.sin(a)*d-M.y,+(1-.25*u).toFixed(3)),offset:+(.62*u).toFixed(4),easing:'linear'})}
+    kf[N].easing='cubic-bezier(.55,0,.9,.5)';kf.push({transform:tr(H.x-M.x,H.y-M.y,.2),offset:1});
+    an(R.w,kf,{duration:820,easing:'linear'});an(R.w,[{opacity:1},{opacity:1,offset:.9},{opacity:0}],{duration:820,easing:'linear'});
+    R.at(800,()=>{
+      [0,110].forEach(dl=>anb(R.el('fxo',pos(H,H.r)+';--k:#f0a53a'),[{transform:'scale(1)',opacity:.9},{transform:'scale(1.55)',opacity:0}],{duration:560,delay:dl}));
+      const he=$(G.solar?'.sun':'.hubp'),ce=he&&he.querySelector(G.solar?'span':'i');
+      if(he)he.animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:440,easing:'ease-out'});
+      R.count();
+      if(ce){const m=/\d+/.exec(ce.textContent),n=m?+m[0]:0;
+        ce.animate([{transform:'translateY(0)',opacity:1},{transform:'translateY(-70%)',opacity:0}],{duration:150,fill:'forwards'});
+        R.at(150,()=>{ce.textContent=ce.textContent.replace(/\d+/,Math.max(0,n-1));ce.animate([{transform:'translateY(70%)',opacity:0},{transform:'translateY(0)',opacity:1}],{duration:190,fill:'forwards'})})}});
+    return 1250},
+  /* 3 · iridescent sheen → film retracts from a pinhole in 120ms → 15 falling droplets + mist ring; neighbours flinch 3px and spring back */
+  bubble(R,G,t){
+    const{M,c}=G,sh=document.createElement('i');sh.className='fx-sheen';R.c.appendChild(sh);
+    an(sh,[{opacity:0},{opacity:.95}],{duration:150});an(R.w,[{transform:'scale(1)'},{transform:'scale(1.07)'}],{duration:170});
+    R.at(170,()=>{
+      an(R.c,[{clipPath:'circle(86% at 68% 72%)'},{clipPath:'circle(0% at 68% 72%)'}],{duration:120,easing:'ease-in'});
+      an(R.el('fxo fx-mist',pos(M,M.r)),[{transform:'scale(1)',opacity:.7},{transform:'scale(1.95)',opacity:0}],{duration:540});
+      for(let i=0;i<15;i++){const a=Math.PI*2*i/15+Math.random()*.3,vx=Math.cos(a)*(22+Math.random()*26),vy=Math.sin(a)*(18+Math.random()*22)-14,g=70+Math.random()*50;
+        an(R.el('fxp fx-drop',pos({x:M.x+Math.cos(a)*M.r*.8,y:M.y+Math.sin(a)*M.r*.8},1.5+Math.random()*2.3)+';--k:'+c),[0,.33,.66,1].map(u=>({transform:tr(vx*u,vy*u+g*u*u,+(1-.4*u).toFixed(2)),opacity:u<1?1:0})),{duration:560+Math.random()*200,easing:'linear'})}
+      const me=moonEl(t.id);if(!me)return;const r0=me.getBoundingClientRect(),cx=r0.left+r0.width/2,cy=r0.top+r0.height/2;
+      [...(G.solar?me.parentNode:document).querySelectorAll('#nodes .moon')].forEach(o=>{if(o===me||o.classList.contains('fxh'))return;const r=o.getBoundingClientRect(),v=unit(r.left+r.width/2-cx,r.top+r.height/2-cy);
+        o.animate([{transform:'translate(0,0)'},{transform:`translate(${(v[0]*3).toFixed(2)}px,${(v[1]*3).toFixed(2)}px)`,offset:.3},{transform:`translate(${(-v[0]).toFixed(2)}px,${(-v[1]).toFixed(2)}px)`,offset:.65},{transform:'translate(0,0)'}],{duration:380,easing:'ease-out'})})});
+    return 950},
+  /* 4 · the blocks→ thread (or a synthesized thread to the planet) pulls taut, vibrates like a plucked string, snaps; gold whips into the freed moon / planet */
+  tether(R,G,t){
+    const{M,P,c}=G,ok=x=>x&&!x.done&&!x.ghost&&moonEl(x.id),pr=TETH.find(p=>p[0]===t.id&&ok(TASK[p[1]])),B=pr?G.rc(moonEl(pr[1])):P,
+      u=unit(B.x-M.x,B.y-M.y),n=[-u[1],u[0]],a=[M.x+u[0]*M.r*.35,M.y+u[1]*M.r*.35],b=[B.x-u[0]*B.r*(pr?.35:.6),B.y-u[1]*B.r*(pr?.35:.6)],m=[(a[0]+b[0])/2,(a[1]+b[1])/2],f=v=>v.toFixed(1),col=pr?c:'#e9b949',
+      d=o=>`M${f(a[0])} ${f(a[1])}Q${f(m[0]+n[0]*o)} ${f(m[1]+n[1]*o)} ${f(b[0])} ${f(b[1])}`,
+      gl=R.svg(`<path class="fx-thg" d="${d(32)}"/>`),th=R.svg(`<path class="fx-th" stroke="${col}" d="${d(32)}"/>`),set=o=>{gl.setAttribute('d',d(o));th.setAttribute('d',d(o))};
+    R.tw(0,200,p=>set(32*(1-p)));                                       /* pull taut */
+    R.tw(200,230,p=>set(Math.sin(p*Math.PI*7)*14*(1-p)));               /* pluck: ~3.5 fast oscillations */
+    R.at(440,()=>{gl.remove();th.remove();                              /* snap in two */
+      const la=R.svg(`<line class="fx-th" pathLength="1" stroke="${col}" x1="${f(a[0])}" y1="${f(a[1])}" x2="${f(m[0])}" y2="${f(m[1])}"/>`),lb=R.svg(`<line class="fx-th hot" pathLength="1" x1="${f(b[0])}" y1="${f(b[1])}" x2="${f(m[0])}" y2="${f(m[1])}"/>`);
+      an(la,[{strokeDashoffset:0},{strokeDashoffset:1}],{duration:150,easing:'ease-in'});an(lb,[{strokeDashoffset:0},{strokeDashoffset:1}],{duration:230,easing:'ease-in'});
+      for(let i=0;i<7;i++){const q=Math.PI*2*i/7;an(dot(R,m[0],m[1],3.5,'#ffe9a8'),[{transform:tr(0,0,1),opacity:1},{transform:tr(Math.cos(q)*18,Math.sin(q)*18,.3),opacity:0}],{duration:300})}
+      an(R.w,[{transform:tr(0,0,1),opacity:1},{transform:tr(-u[0]*12,-u[1]*12,.82),opacity:0}],{duration:380,delay:60});
+      anb(R.el('fxo',pos(M,M.r)),[{transform:'scale(1)',opacity:.9},{transform:'scale(1.5)',opacity:0}],{duration:420,delay:60})});
+    R.at(640,()=>{
+      an(R.el('fxo',pos(B,B.r)+';--k:#f0a53a'),[{transform:'scale(1)',opacity:1},{transform:'scale(1.45)',opacity:0}],{duration:520});
+      const me=moonEl(t.id),e=pr?moonEl(pr[1]):G.solar?me&&me.parentNode.querySelector('.planet'):$('.hubp');
+      if(e)e.animate([{transform:'scale(1)',filter:'brightness(1)'},{transform:`scale(${pr?1.12:1.05})`,filter:'brightness(1.12) drop-shadow(0 0 10px #f6c453)'},{transform:'scale(1)',filter:'brightness(1)'}],{duration:480,easing:'ease-out'});
+      if(pr)an(R.el('fx-tag',`left:${f(B.x)}px;top:${f(B.y-B.r-6)}px`,0,'Unblocked ✓'),[{transform:'translate(-50%,-60%) scale(.5)',opacity:0},{transform:'translate(-50%,-100%) scale(1.08)',opacity:1,offset:.25},{transform:'translate(-50%,-100%) scale(1)',opacity:1,offset:.8},{transform:'translate(-50%,-150%) scale(1)',opacity:0}],{duration:620})});
+    return 1300},
+  /* 5 · RESOLVED ✓ stamp slams down (squash + dust), holds 200ms, folds into a paper plane that glides to the dock chip */
+  stamp(R,G,t){
+    const{M}=G,real=R.mode==='real',st=R.el('fx-stamp',`left:${M.x.toFixed(1)}px;top:${M.y.toFixed(1)}px;font-size:${Math.max(9,M.r*.3).toFixed(1)}px`,0,'RESOLVED ✓'),S='translate(-50%,-50%) rotate(-8deg) ';
+    if(real){const s=staged.find(s=>s.k==='res'&&s.id===t.id);if(s)s.wait=true}
+    an(st,[{transform:'translate(-50%,-140%) rotate(-8deg) scale(2.1)',opacity:0},{transform:S+'scale(1)',opacity:1}],{duration:150,easing:'cubic-bezier(.6,0,.9,.3)'});
+    an(R.w,[{transform:'scale(1)'},{transform:'scale(.9)'},{transform:'scale(1)'}],{duration:190,delay:140});
+    R.at(150,()=>{for(let i=0;i<9;i++){const q=Math.PI*2*i/9;an(dot(R,M.x+Math.cos(q)*M.r*.9,M.y+Math.sin(q)*M.r*.9,5+Math.random()*4,'rgba(201,165,110,.55)'),[{transform:tr(0,0,1),opacity:.9},{transform:tr(Math.cos(q)*16,Math.sin(q)*16-4,1.8),opacity:0}],{duration:380})}});
+    an(R.w,[{transform:'scale(1,1)',opacity:1},{transform:'scale(.5,.08)',opacity:0}],{duration:170,delay:350,easing:'ease-in'});
+    an(st,[{transform:S+'scale(1,1)',opacity:1},{transform:S+'scale(.5,.08)',opacity:0}],{duration:170,delay:350,easing:'ease-in'});
+    R.at(505,()=>{
+      const ar=app.getBoundingClientRect(),chip=real&&$(`#stg [data-sid="res${t.id}"]`),lr=(chip||$('#stg').lastElementChild||$('#stg')).getBoundingClientRect(),
+        a=[M.x+G.ox,M.y+G.oy],b=[chip?lr.left+lr.width/2-ar.left:Math.min(ar.width-70,lr.right+56-ar.left),lr.top+lr.height/2-ar.top],
+        pts=qb(a,[a[0]+(b[0]-a[0])*.3,a[1]-80],b,16),pl=R.el('fx-plane','left:0;top:0',FA,PLANE);
+      an(pl,pts.map((p,i)=>{const q=pts[Math.min(16,i+1)],o=pts[Math.max(0,i-1)];return{transform:tr(p[0],p[1],i?(i<16?1:.55):.3,Math.atan2(q[1]-o[1],q[0]-o[0])*180/Math.PI+45),opacity:i<16?1:.2}}),{duration:640,easing:'cubic-bezier(.4,0,.5,1)'});
+      R.at(640,()=>{pl.remove();R.count();
+        if(chip){const s=staged.find(s=>s.k==='res'&&s.id===t.id);if(s){s.wait=false;renderDock()}const c2=$(`#stg [data-sid="res${t.id}"]`);
+          if(c2)c2.animate([{transform:'scale(.4)',opacity:0},{transform:'scale(1.15)',opacity:1,boxShadow:'0 0 0 4px rgba(47,143,91,.3),0 0 16px 4px rgba(246,196,83,.7)'},{transform:'scale(1)',opacity:1}],{duration:480,easing:'ease-out'})}
+        else an(R.el('sc fx-chip',`left:${b[0].toFixed(1)}px;top:${b[1].toFixed(1)}px;--k:#2f8f5b`,FA,`✓ Resolve #${t.id} <em>preview</em>`),[{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:'translate(-50%,-50%) scale(1.12)',opacity:1,offset:.3},{transform:'translate(-50%,-50%) scale(1)',opacity:1,offset:.75},{transform:'translate(-50%,-50%) scale(1)',opacity:0}],{duration:900})})});
+    return real?1650:2100},
+  /* 6 · moon melts into a comet of category-coloured light, sweeps 360° round its planet and cools into the next ring notch */
+  forge(R,G,t){
+    const{M,P,c,solar}=G,ts=CATS[t.ci].t.filter(x=>!x.gone&&!x.ghost),n=ts.length,k=ts.filter(x=>x!==t&&x.done).length,full=k+1>=n,TAU=Math.PI*2,f=v=>v.toFixed(1),
+      rn=P.r*(1+(solar?3.2/PR0:5/PR1)),wn=P.r*(solar?3.4/PR0:5/PR1),sa=forgeArc(n,Math.min(k,n-1)),a0=Math.atan2(M.y-P.y,M.x-P.x),d0=Math.hypot(M.x-P.x,M.y-P.y),
+      sweep=TAU+(((sa[0]+sa[1])/2-a0)%TAU+TAU)%TAU,
+      pt=u=>{const e=u<.5?2*u*u:1-2*(1-u)*(1-u),a=a0+sweep*e,d=d0+(rn-d0)*Math.min(1,u*1.4);return[P.x+Math.cos(a)*d,P.y+Math.sin(a)*d]},
+      tail=R.svg(`<path class="fx-rib" stroke="${c}" stroke-width="${f(wn*1.7)}"/>`),core=R.svg(`<path class="fx-rib" stroke="#fff" stroke-width="${f(wn*.6)}"/>`),head=R.el('fx-comet',pos(M,Math.max(5,wn*1.5))+';--k:'+c);
+    an(R.w,[{transform:'scale(1)',opacity:1,filter:'brightness(1)'},{transform:'scale(.25)',opacity:0,filter:'brightness(2.2)'}],{duration:220,easing:'ease-in'});
+    anb(head,[{opacity:0},{opacity:1}],{duration:150,delay:70});
+    R.tw(180,760,p=>{const h=pt(p);head.style.transform=`translate(${f(h[0]-M.x)}px,${f(h[1]-M.y)}px)`;let d='';
+      for(let i=0;i<=10;i++){const q=pt(Math.max(0,p-.16*(1-i/10)*(p<.9?1:(1-p)*10)));d+=(i?'L':'M')+f(q[0])+' '+f(q[1])}tail.setAttribute('d',d);core.setAttribute('d',d)});
+    R.at(950,()=>{an(head,[{opacity:1},{opacity:0}],{duration:200});tail.remove();core.remove();
+      const nt=R.svg(full?`<circle class="fx-notch" cx="${f(P.x)}" cy="${f(P.y)}" r="${f(rn)}"/>`:`<path class="fx-notch" d="${arcD(P.x,P.y,rn,sa[0],sa[1])}"/>`);
+      an(nt,[{stroke:'#ffffff',strokeWidth:f(wn*2.4)+'px'},{stroke:full?'#e9b949':c,strokeWidth:f(wn*(full?1.3:1))+'px'}],{duration:330});
+      if(full){[0,140].forEach(dl=>anb(R.el('fxo',pos(P,rn)+';--k:#e9b949'),[{transform:'scale(1)',opacity:.9},{transform:'scale(1.7)',opacity:0}],{duration:600,delay:dl}));
+        if(R.mode==='real')flash(`${CATS[t.ci].k} cleared · trophy ring forged`)}});
+    return R.mode==='real'&&!full?1300:1750},
+  /* 7 · rapid resolves inside 5s escalate: longer, hotter comet tail along the moon's ring, ×N combo pill, Sun corona pulse at ×3+ */
+  streak(R,G){
+    const{M,P,H}=G,now=performance.now();if(now-streakT>5000)streakCount=0;streakCount++;streakT=now;
+    clearTimeout(streakTm);streakTm=setTimeout(()=>{streakCount=0;CB.classList.remove('on')},5000);
+    const n=streakCount,col=['#34d399','#22c55e','#f6c453','#f59e0b','#ff8a70'][Math.min(n,5)-1],a0=Math.atan2(M.y-P.y,M.x-P.x),d0=Math.hypot(M.x-P.x,M.y-P.y),sw=Math.min(3.6,.55+.42*n),f=v=>v.toFixed(1),kf=[],
+      arc=p=>{let d='';for(let i=0;i<=14;i++){const a=a0+sw*p*i/14;d+=(i?'L':'M')+f(P.x+Math.cos(a)*d0)+' '+f(P.y+Math.sin(a)*d0)}return d},
+      ts=[R.svg(`<path class="fx-tail" stroke="${col}" stroke-width="${f(M.r*.9)}" opacity=".28"/>`),R.svg(`<path class="fx-tail" stroke="${col}" stroke-width="${f(M.r*.42)}"/>`)];
+    if(n>=5)ts.push(R.svg(`<path class="fx-tail" stroke="#fff" stroke-width="${f(M.r*.16)}"/>`));
+    for(let i=0;i<=12;i++){const u=i/12,a=a0+sw*(1-(1-u)*(1-u));kf.push({transform:tr(P.x+Math.cos(a)*d0-M.x,P.y+Math.sin(a)*d0-M.y,+(1-.55*u).toFixed(3)),opacity:u<.7?1:+(1-(u-.7)/.3).toFixed(3)})}
+    an(R.w,kf,{duration:520,easing:'linear'});
+    R.tw(0,520,p=>{const d=arc(1-(1-p)*(1-p));ts.forEach(x=>x.setAttribute('d',d))});
+    R.at(540,()=>ts.forEach((x,i)=>an(x,[{opacity:i?1:.28},{opacity:0}],{duration:330})));
+    an(R.el('fx-combo',`left:${f(M.x)}px;top:${f(M.y-M.r-4)}px;--k:${col};font-size:${Math.min(26,13+n*2.2).toFixed(1)}px`,0,'×'+n),[{transform:'translate(-50%,-50%) scale(.4)',opacity:0},{transform:'translate(-50%,-100%) scale(1.25)',opacity:1,offset:.22},{transform:'translate(-50%,-100%) scale(1)',opacity:1,offset:.75},{transform:'translate(-50%,-170%) scale(1)',opacity:0}],{duration:900});
+    CB.textContent='×'+n+' streak';CB.style.setProperty('--k',col);CB.classList.add('on');CB.animate([{transform:'scale(1)'},{transform:'scale(1.3)'},{transform:'scale(1)'}],{duration:320,easing:'ease-out'});
+    if(n>=3)R.at(40,()=>{[0,120].forEach(dl=>anb(R.el('fxo',pos(H,H.r)+';--k:'+col),[{transform:'scale(1)',opacity:.85},{transform:'scale(1.4)',opacity:0}],{duration:560,delay:dl}));
+      const he=$(G.solar?'.sun':'.hubp');if(he)he.animate([{filter:'brightness(1)'},{filter:'brightness(1.18) drop-shadow(0 0 14px #f6c453)'},{filter:'brightness(1)'}],{duration:520})});
+    return 980},
+  /* 8 · Moon → small white star (0–380) → twinkle hold (380–820) → star rounds back into the full Moon (820–1250) */
+  whitestar(R,G){
+    const{M}=G,real=R.mode==='real',tuck=real&&!F.res,D=1250,o=ms=>+(ms/D).toFixed(4),sd=Math.max(20,M.r*2*.34*1.5),kids=[...R.c.children],wh=document.createElement('i'),star=R.el('fx-star',pos(M,sd/2),0,STAR);
+    wh.className='fx-white';R.c.appendChild(wh);
+    kids.forEach(k=>an(k,[{opacity:1},{opacity:0}],{duration:220}));                                       /* beat 1: text fades, sphere contracts to 0.34× and whitens… */
+    an(R.w,[{transform:'scale(1)',easing:'cubic-bezier(.5,0,.3,1)'},{transform:'scale(.34)',offset:o(380)},{transform:'scale(.34)',offset:o(820),easing:'cubic-bezier(.3,1.35,.5,1)'},{transform:'scale(1)'}],{duration:D,easing:'linear'});
+    an(wh,[{opacity:0},{opacity:1,offset:o(300)},{opacity:1,offset:o(900)},{opacity:0,offset:o(1120)},{opacity:0}],{duration:D,easing:'linear'});
+    an(R.c,[{opacity:1},{opacity:1,offset:o(250)},{opacity:0,offset:o(380)},{opacity:0,offset:o(820)},{opacity:1,offset:o(980)},{opacity:1}],{duration:D,easing:'linear'});
+    anb(star,[{transform:'scale(.3) rotate(-50deg)',opacity:0},{transform:'scale(.3) rotate(-50deg)',opacity:0,offset:o(230)},{transform:'scale(1) rotate(0deg)',opacity:1,offset:o(380)},   /* …into the white star */
+      {transform:'scale(1.2) rotate(8deg)',opacity:1,offset:o(490)},{transform:'scale(.92) rotate(14deg)',opacity:1,offset:o(600)},{transform:'scale(1.16) rotate(20deg)',opacity:1,offset:o(710)},{transform:'scale(1) rotate(24deg)',opacity:1,offset:o(820)},   /* beat 2: twinkle */
+      {transform:'scale(1.9) rotate(45deg)',opacity:0,offset:o(1000)},{transform:'scale(1.9) rotate(45deg)',opacity:0}],{duration:D,easing:'linear'});                                         /* beat 3: rounds + expands back */
+    R.at(300,()=>{for(let i=0;i<6;i++){const q=Math.PI*2*i/6+.4,l=sd*.55+8+Math.random()*10,x=Math.cos(q)*l,y=Math.sin(q)*l;
+      anb(R.el('fx-glint',pos(M,2.2+Math.random()*1.6)),[{transform:tr(0,0,.3),opacity:0},{transform:tr(x,y,1.3),opacity:1,offset:.35},{transform:tr(x*1.15,y*1.15,.6),opacity:.9,offset:.7},{transform:tr(x*1.3,y*1.3,.2),opacity:0}],{duration:560,delay:i*25})}});
+    R.at(600,()=>{kids.forEach(k=>k.getAnimations().forEach(a=>a.cancel()));if(real)R.c.classList.add('done')});   /* the returning moon wears its ✓ */
+    if(!tuck)return D+40;                                                                                  /* Show Resolved on / Test: moon stays on its orbit */
+    an(R.w,[{transform:'translateY(0) scale(1)',opacity:1},{transform:'translateY(-16px) scale(.3)',opacity:0}],{duration:340,delay:1850,easing:'ease-in'});   /* hold till 1850, then tuck away */
+    return 2210}
+};
+function resolveTask(t){
+  const G=fxGeo(t);closePop();t.done=true;stage('res',t.id);
+  if(G)fxStart(t,'real',G);else bumpRes();
+  draw();renderDock();showToast(t,5,false,'res')}
+/* ▶ Test: play the selected effect on the selected moon (or an open moon in view) and put the moon back afterwards */
+function fxTest(){
+  if(app.dataset.view!=='bub')return;
+  const cr=cv.getBoundingClientRect(),ok=t=>!!t&&!t.done&&!t.ghost&&!FXR.has(t.id)&&!!moonEl(t.id),
+    inv=t=>{const r=moonEl(t.id).getBoundingClientRect();return r.left>=cr.left&&r.right<=cr.right&&r.top>=cr.top&&r.bottom<=cr.bottom},
+    c=Object.values(TASK).filter(t=>ok(t)&&inv(t)),
+    t=sel!=null&&ok(TASK[sel])?TASK[sel]:(resolveFx==='tether'&&c.find(x=>TETH.some(p=>p[0]===x.id&&ok(TASK[p[1]]))))||c.find(x=>x.id===fxTest.last)||c[0];
+  if(!t){flash('No open moon in view to preview on');return}
+  fxTest.last=t.id;fxStart(t,'test',fxGeo(t));draw();renderDock()}
+$('#rfx').innerHTML=fxOpts();setFx(new URLSearchParams(location.search).get('fx')||resolveFx);
+$('#rfx').onchange=e=>setFx(e.target.value);$('#rfxTest').onclick=fxTest;
+$('#pop').addEventListener('change',e=>{if(e.target.id==='rfxp')setFx(e.target.value)});
 $('#pop').onclick=e=>{
   const b=e.target.closest('[data-act],[data-x]');if(!b||sel==null)return;
   if(b.dataset.x){closePop();draw();renderDock();return}
   const t=TASK[sel],a=b.dataset.act;
   if(a==='res'){
-    if(t.done){t.done=false;unstage('res',t.id);openPop(t.id)}
-    else{const m=moonEl(t.id),r=m&&m.getBoundingClientRect();t.done=true;
-      if(F.res){stage('res',t.id);openPop(t.id)}                        /* Show Resolved on: moon stays, gains the ✓ badge */
-      else{popping=t.id;busy=true;closePop();stage('res',t.id);draw();renderDock();   /* off (default): pop, then leave the orbit */
-        setTimeout(()=>{popping=null;busy=false;draw();renderDock();flash(`Resolved #${t.id} ✓ · tucked under Show Resolved (${nRes()})`)},520)}
-      if(r)burst(r.left+r.width/2,r.top+r.height/2,r.width/2)}}
+    if(t.done){const R=FXR.get(t.id);if(R)fxEnd(R,true);if(toast.id===t.id)hideToast();t.done=false;unstage('res',t.id);openPop(t.id)}
+    else resolveTask(t)}                                                /* plays the selected Resolve FX + 5s Undo toast */
   else if(a==='del'){
     closePop();draw();renderDock();                                     /* clear the line of sight first */
     fireLaser(t,()=>{if(staged.some(s=>s.k==='res'&&s.id===t.id))t.done=false;t.ghost=t.fresh=true;stage('del',t.id);draw();renderDock();showToast(t,5,false);setTimeout(()=>{t.fresh=false},600)})}
@@ -933,25 +1223,29 @@ $('#pop').onclick=e=>{
   else if(a==='focus'){const id=t.id;setState('category',t.ci);openPop(id)}
 };
 const toast={id:null,rem:0,hold:false,iv:0};
-function showToast(t,rem,hold){
-  toast.id=t.id;toast.rem=rem;toast.hold=hold;
-  $('#toast').innerHTML=`<span>🗑</span><span>Deleted <b>“${t.f} #${t.id}”</b> <em>(soft-deleted)</em></span><span class="ring"><svg width="28" height="28"><circle cx="14" cy="14" r="11" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2.5"/><circle id="tr" cx="14" cy="14" r="11" fill="none" stroke="#f6c453" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="69.1"/></svg><span id="ts"></span></span><button class="undo" id="undo">Undo <kbd>⌘Z</kbd></button>`;
+function showToast(t,rem,hold,kind){
+  const rs=kind==='res';toast.id=t.id;toast.rem=rem;toast.hold=hold;toast.kind=rs?'res':'del';
+  $('#toast').innerHTML=`<span>${rs?'✓':'🗑'}</span><span>${rs?'Resolved':'Deleted'} <b>“${t.f} #${t.id}”</b> <em>${rs?'(staged)':'(soft-deleted)'}</em></span><span class="ring"><svg width="28" height="28"><circle cx="14" cy="14" r="11" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="2.5"/><circle id="tr" cx="14" cy="14" r="11" fill="none" stroke="#f6c453" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="69.1"/></svg><span id="ts"></span></span><button class="undo" id="undo">Undo <kbd>⌘Z</kbd></button>`;
   $('#toast').classList.add('show');$('#undo').onclick=undo;tick(0);clearInterval(toast.iv);toast.iv=setInterval(()=>tick(.1),100)}
 function tick(d){if(!toast.hold)toast.rem-=d;if(toast.rem<=0){hideToast();return}$('#tr').style.strokeDashoffset=(69.1*(1-toast.rem/5)).toFixed(1);$('#ts').textContent=Math.max(1,Math.round(toast.rem))+'s'}
 function hideToast(){clearInterval(toast.iv);toast.id=null;$('#toast').classList.remove('show')}
-function undo(){if(toast.id==null)return;const t=TASK[toast.id];t.ghost=false;unstage('del',t.id);hideToast();draw();renderDock();flash(`Restored #${t.id}`)}
-function onUnstage(s){const t=TASK[s.id];if(!t)return;if(s.k==='res')t.done=false;if(s.k==='del'){t.ghost=false;if(toast.id===s.id)hideToast()}if(s.k==='com')t.note='';if(sel!=null)openPop(sel);else draw()}
+/* ⌘Z undoes whichever came last: a Resolve (cancels its FX, un-stages, moon returns) or a Delete */
+function undo(){
+  if(toast.id==null)return;const t=TASK[toast.id],rs=toast.kind==='res';
+  if(rs){const R=FXR.get(t.id);if(R)fxEnd(R,true);t.done=false;unstage('res',t.id)}else{t.ghost=false;unstage('del',t.id)}
+  hideToast();draw();renderDock();flash(rs?`Un-resolved #${t.id}`:`Restored #${t.id}`)}
+function onUnstage(s){const t=TASK[s.id];if(!t)return;if(s.k==='res'){const R=FXR.get(s.id);if(R)fxEnd(R,true);t.done=false;if(toast.id===s.id)hideToast()}if(s.k==='del'){t.ghost=false;if(toast.id===s.id)hideToast()}if(s.k==='com')t.note='';if(sel!=null)openPop(sel);else draw()}
 /* applying: soft-deletes leave for good, resolves stay resolved (visible via Show Resolved) */
 function commitStaged(){staged.forEach(s=>{if(s.k==='del'&&TASK[s.id])TASK[s.id].gone=true});if(sel!=null&&!pass(TASK[sel]))closePop();hideToast();draw()}
-function relayout(){VW=cv.clientWidth;VH=cv.clientHeight;draw()}
-function refilter(){if(sel!=null&&!pass(TASK[sel]))closePop();draw();renderDock()}
+function relayout(){fxAbort();VW=cv.clientWidth;VH=cv.clientHeight;draw()}   /* overlay FX are positioned in screen space: a resize or view switch ends them cleanly */
+function refilter(){fxAbort();if(sel!=null&&!pass(TASK[sel]))closePop();draw();renderDock()}
 function setState(s,ci){
   app.dataset.state=s;app.dataset.view=s==='dashboard'?'dash':'bub';
   document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',(b.dataset.go==='dashboard')===(s==='dashboard')));
-  closePop();if(s==='category')cur=ci==null?SUP:ci;
+  fxAbort();closePop();if(s==='category')cur=ci==null?SUP:ci;
   z=1;recenter=true;if(s==='dashboard'){ctxLabel='Secretary Dashboard · card #512';app.classList.remove('pan')}
   renderDock();relayout();renderDock();
-  if(booted)try{history.replaceState(null,'','?state='+s)}catch(e){}
+  if(booted)try{history.replaceState(null,'','?state='+s+'&fx='+resolveFx)}catch(e){}
 }
 $('#seg').onclick=e=>{const b=e.target.closest('button');if(b)setState(b.dataset.go)};
 $('#back').onclick=()=>setState('solar');
