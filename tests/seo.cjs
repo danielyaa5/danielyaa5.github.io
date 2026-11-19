@@ -21,7 +21,8 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   const robots = await get(`${base}/robots.txt`);
   assert.match(robots, /^User-agent: \*\nAllow: \/$/m);
   assert.match(robots, /^Sitemap: https:\/\/danielyakobian\.com\/sitemap\.xml$/m);
-  assert.match(robots, /^Sitemap: https:\/\/danielyaa5\.github\.io\/sitemap-projects\.xml$/m);
+  // The app pages moved from danielyaa5.github.io project sites to danielyakobian.com, so only one sitemap is left.
+  assert.equal(robots.match(/^Sitemap:/gm).length, 1);
   assert.doesNotMatch(robots, /Disallow/);
 
   const pages = locs(await get(`${base}/sitemap.xml`));
@@ -55,9 +56,6 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   // Extensionless post links (/blog/slug/) land on the .html post instead of a 404.
   assert.ok(JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8')).redirects.some(rule => rule.source === '/blog/:slug([a-z0-9-]+)/' && rule.destination === '/blog/:slug.html' && rule.permanent));
 
-  const projects = locs(await get(`${base}/sitemap-projects.xml`));
-  assert.ok(projects.every(loc => loc.startsWith('https://danielyaa5.github.io/') && loc.endsWith('/')));
-
   const home = await get(`${base}/`);
   const graph = jsonLd(home)[0]['@graph'];
   const person = graph.find(node => node['@type'] === 'Person');
@@ -67,9 +65,11 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   const cards = [...home.matchAll(/<a class="project-name" href="([^"]+)">([^<]+)<\/a>/g)].map(m => ({ url: m[1], name: m[2] }));
   assert.equal(cards.length, 16);
   assert.deepEqual(listed.map(item => ({ url: item.url, name: item.name })), cards, 'structured data matches the project cards');
-  for (const card of cards.filter(card => card.url.startsWith('https://danielyaa5.github.io/'))) {
-    assert.ok(projects.includes(card.url), `${card.url} is in sitemap-projects.xml`);
+  // A project page on this site is in the sitemap; GitHub Pages project sites now only forward here.
+  for (const card of cards.filter(card => card.url.startsWith(`${site}/`))) {
+    assert.ok(pages.includes(card.url), `${card.url} is in sitemap.xml`);
   }
+  assert.ok(!cards.some(card => card.url.startsWith('https://danielyaa5.github.io/')), 'no project card points at a GitHub Pages project site');
 
   const vercel = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
   const hostRedirects = vercel.redirects.filter(rule => rule.has?.[0]?.type === 'host');
@@ -80,5 +80,5 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   // Like GitHub Pages, send /blog to /blog/ so the page's relative links resolve.
   assert.equal(vercel.trailingSlash, true);
 
-  console.log(JSON.stringify({ passed: true, pages, projects: projects.length }));
+  console.log(JSON.stringify({ passed: true, pages }));
 })().catch(error => { console.error(error); process.exitCode = 1; });

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Keep a local history of the places Find My displays for your AirTag items. Free, open-source macOS collector with maps and date filters.">
+  <meta name="author" content="Daniel Yakobian">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
+  <meta property="og:site_name" content="Daniel Yakobian">
+  <meta property="og:title" content="TagTracker: A little history for the things you carry | Daniel Yakobian">
+  <meta property="og:description" content="Local item history. A map you can look back on. Free and open source for macOS.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://danielyakobian.com/tagtracker/">
+  <meta property="og:image" content="https://danielyakobian.com/assets/tagtracker/social-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="TagTracker: a little history for the things you carry.">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>TagTracker: Location history for your things | Daniel Yakobian</title>
+  <link rel="canonical" href="https://danielyakobian.com/tagtracker/">
+  <link rel="icon" type="image/svg+xml" href="../assets/tagtracker/logo.svg">
+  <link rel="stylesheet" href="../styles.css?v=mark-3">
+  <link rel="stylesheet" href="../cloud-media-shrinker/cms.css?v=2">
+  <link rel="stylesheet" href="../assets/apps/app-page.css?v=1">
+  <script src="/analytics.js?v=10" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": "https://danielyakobian.com/tagtracker/#app",
+    "name": "TagTracker",
+    "url": "https://danielyakobian.com/tagtracker/",
+    "description": "Keep a local history of the places Find My displays for your AirTag items. Free, open-source macOS collector with maps and date filters.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "macOS 14 or later",
+    "processorRequirements": "Apple silicon",
+    "image": "https://danielyakobian.com/assets/tagtracker/logo.svg",
+    "screenshot": "https://danielyakobian.com/assets/tagtracker/history.webp",
+    "downloadUrl": "https://github.com/danielyaa5/tagtracker/releases/latest/download/TagTracker.dmg",
+    "license": "https://github.com/danielyaa5/tagtracker/blob/main/LICENSE",
+    "isAccessibleForFree": true,
+    "sameAs": ["https://github.com/danielyaa5/tagtracker"],
+    "author": { "@id": "https://danielyakobian.com/#person" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+</head>
+<body id="top" class="cms-page app-page">
+  <div class="page-frame">
+    <header class="site-header">
+      <a class="identity" href="../" aria-label="Daniel, home">Daniel</a>
+      <nav aria-label="Main navigation">
+        <a href="../#work" data-icon="work" aria-current="page">Work</a>
+        <a href="../blog/" data-icon="blog">Blog</a>
+        <a href="../resume/" data-icon="resume">Resume</a>
+        <a href="https://www.etsy.com/shop/JustFitsStudio" data-icon="shop" aria-label="3D Print Shop"><span><span class="nav-extra">3D Print </span>Shop</span></a>
+        <a href="../motorcycle-rentals/" data-icon="moto" aria-label="Motorcycle Rentals"><span><span class="nav-extra">Motorcycle </span>Rentals</span></a>
+      </nav>
+    </header>
+    <a class="site-mark" href="https://www.goodreads.com/book/show/629.Zen_and_the_Art_of_Motorcycle_Maintenance" aria-label="Zen and the Art of Motorcycle Maintenance on Goodreads" title="Zen and the Art of Motorcycle Maintenance"><svg viewBox="0 0 192 192" aria-hidden="true" focusable="false"><path class="mark-leaf mark-back mark-r" d="M98.8 168.4C99.8 166.1 102.8 159 104.7 154.4C106.7 149.9 108.6 145.4 110.4 140.9C112.2 136.4 114 131.9 115.7 127.4C117.4 122.9 119 118.4 120.6 113.7C122.2 109.1 123.7 104.5 125 99.6C126.3 94.6 127.7 86.6 128.2 84C126.2 85.8 119.5 90.5 115.9 94.4C112.3 98.2 109.3 102.6 106.5 107.1C103.8 111.6 101.5 116.4 99.6 121.2C97.7 126.1 96.2 131.2 95.2 136.3C94.1 141.4 93.4 146.7 93.1 151.9C92.8 157.1 93.4 165 93.5 167.6Z"/><path class="mark-trace" d="M98.8 168.4C99.8 166.1 102.8 159 104.7 154.4C106.7 149.9 108.6 145.4 110.4 140.9C112.2 136.4 114 131.9 115.7 127.4C117.4 122.9 119 118.4 120.6 113.7C122.2 109.1 123.7 104.5 125 99.6C126.3 94.6 127.7 86.6 128.2 84C126.2 85.8 119.5 90.5 115.9 94.4C112.3 98.2 109.3 102.6 106.5 107.1C103.8 111.6 101.5 116.4 99.6 121.2C97.7 126.1 96.2 131.2 95.2 136.3C94.1 141.4 93.4 146.7 93.1 151.9C92.8 157.1 93.4 165 93.5 167.6Z" stroke-dasharray="192 192" stroke-dashoffset="192"/><path class="mark-leaf mark-back mark-l" d="M93.2 168.4C92.2 166.1 89.2 159 87.3 154.4C85.3 149.9 83.4 145.4 81.6 140.9C79.8 136.4 78 131.9 76.3 127.4C74.6 122.9 73 118.4 71.4 113.7C69.8 109.1 68.3 104.5 67 99.6C65.7 94.6 64.3 86.6 63.8 84C65.8 85.8 72.5 90.5 76.1 94.4C79.7 98.2 82.7 102.6 85.5 107.1C88.2 111.6 90.5 116.4 92.4 121.2C94.3 126.1 95.8 131.2 96.8 136.3C97.9 141.4 98.6 146.7 98.9 151.9C99.2 157.1 98.6 165 98.5 167.6Z"/><path class="mark-trace" d="M93.2 168.4C92.2 166.1 89.2 159 87.3 154.4C85.3 149.9 83.4 145.4 81.6 140.9C79.8 136.4 78 131.9 76.3 127.4C74.6 122.9 73 118.4 71.4 113.7C69.8 109.1 68.3 104.5 67 99.6C65.7 94.6 64.3 86.6 63.8 84C65.8 85.8 72.5 90.5 76.1 94.4C79.7 98.2 82.7 102.6 85.5 107.1C88.2 111.6 90.5 116.4 92.4 121.2C94.3 126.1 95.8 131.2 96.8 136.3C97.9 141.4 98.6 146.7 98.9 151.9C99.2 157.1 98.6 165 98.5 167.6Z" stroke-dasharray="192 192" stroke-dashoffset="192"/><g class="mark-wrench"><path class="mark-steel" d="M87.2 155L87.2 86.5Q87.2 75.1 82.1 71.9A27.5 27.5 0 0 1 93 20.8L85.5 43.9A11.3 11.3 0 0 0 107 50.9L114.5 27.8A27.5 27.5 0 0 1 109.9 71.9Q104.8 75.1 104.8 86.5L104.8 155A8.8 8.8 0 0 1 87.2 155Z"/><path class="mark-trace" d="M87.2 155L87.2 86.5Q87.2 75.1 82.1 71.9A27.5 27.5 0 0 1 93 20.8L85.5 43.9A11.3 11.3 0 0 0 107 50.9L114.5 27.8A27.5 27.5 0 0 1 109.9 71.9Q104.8 75.1 104.8 86.5L104.8 155A8.8 8.8 0 0 1 87.2 155Z" stroke-dasharray="404 404" stroke-dashoffset="404"/><path class="mark-groove" d="M96 83.2V155"/><path class="mark-trace" d="M96 83.2V155" stroke-dasharray="74 74" stroke-dashoffset="74"/></g><path class="mark-leaf mark-mid mark-r" d="M98.6 169.8C100.4 168.5 106 164.6 109.6 162.3C113.1 160 116.7 158 120.2 155.9C123.7 153.9 127.1 152.1 130.6 150.2C134.1 148.3 137.5 146.5 141.1 144.5C144.7 142.6 148.3 140.9 152.3 138.7C156.2 136.5 162.6 132.7 164.7 131.5C162.3 130.7 155.2 127.5 150.3 126.9C145.5 126.3 140.3 126.8 135.5 127.8C130.6 128.8 125.8 130.6 121.4 132.9C117 135.2 112.8 138.2 109.2 141.6C105.6 144.9 102.3 148.9 99.7 153C97.1 157.2 94.6 164.1 93.6 166.4Z"/><path class="mark-trace" d="M98.6 169.8C100.4 168.5 106 164.6 109.6 162.3C113.1 160 116.7 158 120.2 155.9C123.7 153.9 127.1 152.1 130.6 150.2C134.1 148.3 137.5 146.5 141.1 144.5C144.7 142.6 148.3 140.9 152.3 138.7C156.2 136.5 162.6 132.7 164.7 131.5C162.3 130.7 155.2 127.5 150.3 126.9C145.5 126.3 140.3 126.8 135.5 127.8C130.6 128.8 125.8 130.6 121.4 132.9C117 135.2 112.8 138.2 109.2 141.6C105.6 144.9 102.3 148.9 99.7 153C97.1 157.2 94.6 164.1 93.6 166.4Z" stroke-dasharray="175 175" stroke-dashoffset="175"/><path class="mark-leaf mark-mid mark-l" d="M93.4 169.8C91.6 168.5 86 164.6 82.4 162.3C78.9 160 75.3 158 71.8 155.9C68.3 153.9 64.9 152.1 61.4 150.2C57.9 148.3 54.5 146.5 50.9 144.5C47.3 142.6 43.7 140.9 39.7 138.7C35.8 136.5 29.4 132.7 27.3 131.5C29.7 130.7 36.8 127.5 41.7 126.9C46.5 126.3 51.7 126.8 56.5 127.8C61.4 128.8 66.2 130.6 70.6 132.9C75 135.2 79.2 138.2 82.8 141.6C86.4 144.9 89.7 148.9 92.3 153C94.9 157.2 97.4 164.1 98.4 166.4Z"/><path class="mark-trace" d="M93.4 169.8C91.6 168.5 86 164.6 82.4 162.3C78.9 160 75.3 158 71.8 155.9C68.3 153.9 64.9 152.1 61.4 150.2C57.9 148.3 54.5 146.5 50.9 144.5C47.3 142.6 43.7 140.9 39.7 138.7C35.8 136.5 29.4 132.7 27.3 131.5C29.7 130.7 36.8 127.5 41.7 126.9C46.5 126.3 51.7 126.8 56.5 127.8C61.4 128.8 66.2 130.6 70.6 132.9C75 135.2 79.2 138.2 82.8 141.6C86.4 144.9 89.7 148.9 92.3 153C94.9 157.2 97.4 164.1 98.4 166.4Z" stroke-dasharray="175 175" stroke-dashoffset="175"/><path class="mark-leaf mark-front mark-l" d="M93.4 168.6C92.5 167.4 89.6 163.6 87.8 161.1C86.1 158.6 84.4 156.2 82.9 153.8C81.3 151.3 79.9 148.9 78.6 146.4C77.3 143.8 76.1 141.3 75 138.6C73.9 135.9 72.9 133.2 72.1 130.1C71.3 127 70.7 121.6 70.4 119.8C72 120.5 77.2 122.2 80.1 124C82.9 125.8 85.3 128.2 87.5 130.6C89.7 133 91.6 135.8 93.1 138.7C94.7 141.5 95.9 144.6 96.8 147.7C97.7 150.9 98.3 154.2 98.6 157.5C98.8 160.7 98.4 165.7 98.4 167.4Z"/><path class="mark-trace" d="M93.4 168.6C92.5 167.4 89.6 163.6 87.8 161.1C86.1 158.6 84.4 156.2 82.9 153.8C81.3 151.3 79.9 148.9 78.6 146.4C77.3 143.8 76.1 141.3 75 138.6C73.9 135.9 72.9 133.2 72.1 130.1C71.3 127 70.7 121.6 70.4 119.8C72 120.5 77.2 122.2 80.1 124C82.9 125.8 85.3 128.2 87.5 130.6C89.7 133 91.6 135.8 93.1 138.7C94.7 141.5 95.9 144.6 96.8 147.7C97.7 150.9 98.3 154.2 98.6 157.5C98.8 160.7 98.4 165.7 98.4 167.4Z" stroke-dasharray="122 122" stroke-dashoffset="122"/><path class="mark-leaf mark-front mark-r" d="M98.4 168.7C99.3 167.6 102.2 164.3 103.9 162.1C105.6 159.9 107.3 157.8 108.8 155.7C110.3 153.6 111.7 151.5 113 149.2C114.3 147 115.5 144.8 116.6 142.4C117.7 140 118.7 137.6 119.6 134.8C120.4 131.9 121.2 127 121.6 125.4C120 126 115.1 127.1 112.4 128.5C109.6 130 107.3 132 105.1 134.1C103 136.2 101.1 138.6 99.6 141.2C98 143.7 96.7 146.5 95.8 149.4C94.8 152.2 94.1 155.2 93.8 158.2C93.5 161.2 93.8 165.8 93.8 167.4Z"/><path class="mark-trace" d="M98.4 168.7C99.3 167.6 102.2 164.3 103.9 162.1C105.6 159.9 107.3 157.8 108.8 155.7C110.3 153.6 111.7 151.5 113 149.2C114.3 147 115.5 144.8 116.6 142.4C117.7 140 118.7 137.6 119.6 134.8C120.4 131.9 121.2 127 121.6 125.4C120 126 115.1 127.1 112.4 128.5C109.6 130 107.3 132 105.1 134.1C103 136.2 101.1 138.6 99.6 141.2C98 143.7 96.7 146.5 95.8 149.4C94.8 152.2 94.1 155.2 93.8 158.2C93.5 161.2 93.8 165.8 93.8 167.4Z" stroke-dasharray="112 112" stroke-dashoffset="112"/></svg></a>
+    <main class="cms cms-a">
+      <header class="c-hero">
+        <div class="c-hero-copy">
+          <div class="c-brand"><img src="../assets/tagtracker/logo.svg" width="40" height="40" alt=""><p class="eyebrow">TagTracker</p></div>
+          <h1>A little history for the things you carry.</h1>
+          <p class="lede">Your keys. Your bag. Your next trip. Save the places Find My displays, then look back on a map whenever you need to.</p>
+          <p class="c-sub">For macOS · Free &amp; open source</p>
+          <div class="c-actions">
+            <a class="button" href="https://github.com/danielyaa5/tagtracker/releases/latest/download/TagTracker.dmg">Download for macOS <span aria-hidden="true">↗</span></a>
+            <a class="button button-outline" href="#demo">See it in action <span aria-hidden="true">↓</span></a>
+          </div>
+          <p class="fine-print">Apple silicon · macOS 14+ · Experimental · Free download</p>
+        </div>
+        <figure class="app-hero-media app-has-stamp">
+          <img class="app-hero-stamp" src="../assets/tagtracker/logo.svg" width="72" height="72" alt="">
+          <a class="app-window app-hero-shot" href="../assets/tagtracker/history.webp" aria-label="View full location history screenshot"><img src="../assets/tagtracker/history.webp" srcset="../assets/tagtracker/history-480.webp 480w, ../assets/tagtracker/history-800.webp 800w, ../assets/tagtracker/history.webp 1200w" sizes="(max-width: 900px) min(540px, calc(100vw - 62px)), 520px" alt="TagTracker showing fictional backpack observations on a San Francisco map" width="1200" height="1746" fetchpriority="high"></a>
+          <figcaption class="c-note">Real dashboard. Fictional items and observations.</figcaption>
+        </figure>
+      </header>
+      <section class="app-points" aria-label="Features">
+        <article><p class="eyebrow">01 / Keep</p><h2>Your history, on your Mac.</h2><p>Observations are saved locally in SQLite. No TagTracker account, Apple-account password, or cloud subscription.</p></article>
+        <article><p class="eyebrow">02 / Explore</p><h2>Pick a window in time.</h2><p>See the last day, week, month, or all your saved history. Choose custom dates and fit the map to every displayed pin.</p></article>
+        <article><p class="eyebrow">03 / Pause</p><h2>Give your work some space.</h2><p>Collection waits for an idle Mac and pauses during macOS Screen Sharing. Find My closes when the scan ends.</p></article>
+      </section>
+      <section class="app-section" id="demo" aria-labelledby="demo-title">
+        <p class="app-kicker">Two quick looks</p>
+        <h2 class="section-title" id="demo-title">Browse history. Explore the map.</h2>
+        <p class="app-section-lede">Two short demos of the actual dashboard, captured with fictional items and observations at public landmarks.</p>
+        <div class="app-demos">
+          <figure class="app-demo" data-animation="../assets/tagtracker/history-demo.gif" data-poster="../assets/tagtracker/history-demo.webp" data-title="Browse history"><figcaption><h3>Browse history</h3><p>Select an item and switch between the last day, week, and all time.</p></figcaption><div class="app-demo-bar"><span class="app-dots" aria-hidden="true">● ● ●</span><span class="app-demo-controls"><button type="button" data-demo-toggle>Pause demo</button><a href="../assets/tagtracker/history-demo.gif">Open GIF <span aria-hidden="true">↗</span></a></span></div><picture><source media="(prefers-reduced-motion: reduce)" srcset="../assets/tagtracker/history-demo.webp"><img src="../assets/tagtracker/history-demo.gif" alt="Select a fictional backpack and change its history date range" width="1000" height="667" loading="lazy"></picture></figure>
+          <figure class="app-demo" data-animation="../assets/tagtracker/map-demo.gif" data-poster="../assets/tagtracker/map-demo.webp" data-title="Explore the map"><figcaption><h3>Explore the map</h3><p>Connect timeline points, inspect a pin, and fit every displayed place.</p></figcaption><div class="app-demo-bar"><span class="app-dots" aria-hidden="true">● ● ●</span><span class="app-demo-controls"><button type="button" data-demo-toggle>Pause demo</button><a href="../assets/tagtracker/map-demo.gif">Open GIF <span aria-hidden="true">↗</span></a></span></div><picture><source media="(prefers-reduced-motion: reduce)" srcset="../assets/tagtracker/map-demo.webp"><img src="../assets/tagtracker/map-demo.gif" alt="Connect map points, inspect a pin, and fit all places" width="1000" height="667" loading="lazy"></picture></figure>
+        </div>
+      </section>
+      <section class="app-section" id="screenshots" aria-labelledby="screenshots-title">
+        <p class="app-kicker">Take a closer look</p>
+        <h2 class="section-title" id="screenshots-title">The useful details.</h2>
+        <div class="app-gallery">
+          <figure><a class="app-window" href="../assets/tagtracker/overview.webp"><img src="../assets/tagtracker/overview.webp" srcset="../assets/tagtracker/overview-480.webp 480w, ../assets/tagtracker/overview-800.webp 800w, ../assets/tagtracker/overview.webp 1200w" sizes="(max-width: 620px) calc(100vw - 62px), (max-width: 850px) calc(100vw - 126px), 440px" alt="Fictional items and devices with their last displayed place, Find My age and recording time" width="1200" height="1080" loading="lazy"></a><figcaption><strong>Your items and devices.</strong> <span>See what Find My displayed and when the Mac recorded it.</span></figcaption></figure>
+          <figure><a class="app-window" href="../assets/tagtracker/history.webp"><img src="../assets/tagtracker/history.webp" srcset="../assets/tagtracker/history-480.webp 480w, ../assets/tagtracker/history-800.webp 800w, ../assets/tagtracker/history.webp 1200w" sizes="(max-width: 620px) calc(100vw - 62px), (max-width: 850px) calc(100vw - 126px), 440px" alt="Date filter, map pins, and observation table for the fictional Demo backpack" width="1200" height="1746" loading="lazy"></a><figcaption><strong>A history for each one.</strong> <span>Filter observations, inspect pins, and read the recorded details.</span></figcaption></figure>
+        </div>
+      </section>
+      <section class="app-section app-setup" id="setup" aria-labelledby="setup-title">
+        <div>
+          <p class="app-kicker">Make yourself at home</p>
+          <h2 id="setup-title">A Mac. Your items.<br>A few setup steps.</h2>
+          <p>Download the Mac app, drag TagTracker into Applications, and open it there. The installer disk ejects automatically. Choose your items, allow the macOS permissions, and start tracking. Signed updates are delivered with Sparkle.</p>
+          <a class="app-more-link" href="https://github.com/danielyaa5/tagtracker#build-and-setup">Read the setup and source guide <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="app-code">
+          <div class="app-code-head"><span>Start with the source</span><button type="button" id="copy" aria-label="Copy build commands">Copy</button></div>
+          <pre><code id="commands">git clone https://github.com/danielyaa5/tagtracker.git
+cd tagtracker
+make build
+python3 scripts/setup.py --item 'Keys' --item 'Backpack'</code></pre>
+          <ol><li>Choose your exact Find My item names.</li><li>Grant Accessibility and Screen Recording permissions.</li><li>Load the local services, then open the dashboard.</li></ol>
+          <p>The setup guide includes the service commands and removal instructions.</p>
+          <p id="copy-status" class="sr-only" role="status"></p>
+        </div>
+      </section>
+      <section class="c-know" id="expectations" aria-labelledby="expectations-title">
+        <h2 class="section-title" id="expectations-title">A record of what was shown.</h2>
+        <ul class="c-checks">
+          <li>TagTracker reads Find My's visible interface. A saved observation can contain an older location, and gaps are possible. The Mac must stay awake, logged in, and unlocked. Find My opens during a scan.</li>
+          <li>Map pins use your saved coordinates or approximate town centers. They aren't GPS fixes or measured routes. History stays local; OpenStreetMap receives requests for the map tiles you view.</li>
+        </ul>
+      </section>
+      <aside class="c-cta" aria-labelledby="cta-title">
+        <div class="c-cta-copy">
+          <h2 id="cta-title">Keep the little bits of history.</h2>
+          <p>Free and open source, for Macs with Apple silicon.</p>
+        </div>
+        <div class="c-actions">
+          <a class="button" href="https://github.com/danielyaa5/tagtracker/releases/latest/download/TagTracker.dmg">Download for macOS <span aria-hidden="true">↗</span></a>
+          <a class="button button-outline" href="https://github.com/danielyaa5/tagtracker">Explore TagTracker on GitHub <span aria-hidden="true">↗</span></a>
+        </div>
+      </aside>
+      <aside class="c-more c-more-row" aria-labelledby="more-title-row">
+        <h2 id="more-title-row">More apps by Daniel</h2>
+        <ul class="c-apps">
+          <li><a class="c-app" data-app="Cloud Media Shrinker" href="../cloud-media-shrinker/"><img class="c-app-icon" src="../assets/cloud-media-shrinker/icon.svg" width="56" height="56" alt="" loading="lazy"><span class="c-app-copy"><b>Cloud Media Shrinker</b><small>iPhone, iPad and Mac · App Store</small><span class="c-app-line">Massively cut down on your cloud storage without losing a thing.</span></span></a></li>
+          <li><a class="c-app" data-app="Beckon" href="../beckon/"><img class="c-app-icon" src="../assets/beckon/icon.png" width="56" height="56" alt="" loading="lazy"><span class="c-app-copy"><b>Beckon</b><small>Mac · Free</small><span class="c-app-line">Ring your iPhone, iPad and AirPods from your Mac menu bar, widgets or a shortcut key.</span></span></a></li>
+          <li><a class="c-app" data-app="3D Print Monitor" href="../3d-print-monitor/"><img class="c-app-icon ios" src="../assets/apps/3d-print-monitor.webp" width="56" height="56" alt="" loading="lazy"><span class="c-app-copy"><b>3D Print Monitor</b><small>iPhone and iPad · App Store</small><span class="c-app-line">Keep an eye on your 3D prints from widgets or through the app.</span></span></a></li>
+        </ul>
+        <p class="c-more-all"><a href="../#work">All my projects</a></p>
+      </aside>
+      <section class="c-support" id="support" aria-labelledby="support-title">
+        <h2 class="section-title" id="support-title">Support</h2>
+        <p><a href="https://github.com/danielyaa5/tagtracker/issues">Report an issue</a> on GitHub, or email <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
+        <p class="app-links"><a href="https://github.com/danielyaa5/tagtracker/blob/main/LICENSE">License</a><a href="https://github.com/danielyaa5/tagtracker/blob/main/THIRD_PARTY_NOTICES.md">Credits</a></p>
+        <p class="app-trademark">By Daniel Yakobian · MIT license. AirTag is a trademark of Apple Inc. TagTracker is independent and is not affiliated with or endorsed by Apple. All demo items and observations are fictional.</p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p><a href="#top" aria-label="Back to top">Daniel</a> / TagTracker</p>
+      <div class="profile-links">
+        <a class="profile-link" href="../"><img class="link-icon" src="../assets/illustrations/link.svg" width="14" height="14" alt=""><span>danielyakobian.com</span></a>
+        <a class="profile-link" href="mailto:support@danielyakobian.com"><img class="link-icon" src="../assets/illustrations/link.svg" width="14" height="14" alt=""><span>support@danielyakobian.com</span></a>
+      </div>
+    </footer>
+  </div>
+  <script>
+    // Each demo plays its GIF until paused; Pause swaps in a still. Visitors who prefer reduced motion start on the still.
+    document.querySelectorAll('.app-demo').forEach(figure => {
+      const button = figure.querySelector('[data-demo-toggle]'), image = figure.querySelector('img'), source = figure.querySelector('source');
+      let playing = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const label = () => { button.textContent = playing ? 'Pause demo' : 'Play demo'; button.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} ${figure.dataset.title} demo`); };
+      label();
+      button.addEventListener('click', () => { playing = !playing; source.media = 'not all'; image.src = playing ? figure.dataset.animation : figure.dataset.poster; label(); });
+    });
+    const copy = document.getElementById('copy'), status = document.getElementById('copy-status');
+    copy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(document.getElementById('commands').textContent);
+        copy.textContent = 'Copied';
+        status.textContent = 'Build commands copied.';
+        setTimeout(() => { copy.textContent = 'Copy'; }, 2000);
+      } catch {
+        status.textContent = 'Select the commands and copy them manually.';
+      }
+    });
+  </script>
+</body>
+</html>

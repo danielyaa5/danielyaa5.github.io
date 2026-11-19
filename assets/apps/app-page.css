@@ -1,0 +1,140 @@
+/* App pages (Beckon, 3D Print Monitor, TagTracker). Built on the Cloud Media Shrinker page's parts in
+   ../../cloud-media-shrinker/cms.css (hero, features, steps, buy box, More apps, privacy layout); this file adds what those pages need beyond it. */
+
+/* Hero: one picture beside the copy, with a note under it. */
+.app-hero-media { display: block; margin: 0; min-width: 0; }
+.app-hero-media .c-media { box-shadow: 0 22px 44px -24px rgba(17, 24, 16, .45), 0 2px 6px rgba(17, 24, 16, .06); }
+.app-hero-media .c-note { margin-top: 10px; }
+.app-hero-art { display: block; width: min(100%, 420px); height: auto; margin: 0 auto; }
+.c-hero h1 .app-h1-soft { color: var(--green); }
+/* Buttons are flex boxes, so the space before an arrow would collapse. */
+.app-page .c-actions .button { gap: 6px; }
+
+/* Section with a title and plain paragraphs. */
+.app-section { margin-top: 36px; padding-top: 30px; border-top: 1px solid var(--line); }
+.app-section > .section-title { font-size: 24px; margin-bottom: 12px; }
+.app-section > p { max-width: 720px; margin: 0 0 12px; font-size: 16px; line-height: 1.6; }
+.app-section .app-more-link { display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; }
+.app-section-lede { color: var(--muted); }
+.app-kicker { margin: 0 0 8px; font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+
+/* A short notice inside the hero (3D Print Monitor's beta note). */
+.app-callout { max-width: 560px; margin: 18px 0 0; padding: 12px 16px; border: 1px solid var(--line); border-left: 3px solid var(--green); border-radius: 6px; background: var(--box); font-size: 15px; line-height: 1.55; }
+
+/* Three-step setup instead of four. */
+.c-steps.app-steps-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.c-steps p b { display: inline; margin: 0; font-size: inherit; }
+
+/* A title over the features, which the Cloud Media Shrinker page doesn't have. */
+.c-features > .section-title { margin: 36px 0 0; font-size: 24px; }
+.cms-a .c-features:has(> .section-title) { margin-top: 0; }
+
+/* Features with headings one level down (the section already has a title), and screenshots that carry their own window frame. */
+.c-feature h3 { margin: 0 0 10px; font-size: 24px; line-height: 1.2; letter-spacing: -.4px; }
+.c-shot.app-shot-narrow { max-width: 340px; justify-self: center; }
+
+kbd { display: inline-block; padding: 0 6px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; background: var(--tile); font: 600 13px/1.6 var(--mono); white-space: nowrap; }
+.app-page code { padding: 0 4px; border: 1px solid var(--soft-line); border-radius: 4px; background: var(--tile); font-family: var(--mono); font-size: .9em; }
+
+/* Questions. */
+.app-faq { margin-top: 36px; }
+.app-faq .section-title { font-size: 24px; margin-bottom: 8px; }
+.app-faq details { border-top: 1px solid var(--soft-line); }
+.app-faq details:last-of-type { border-bottom: 1px solid var(--soft-line); }
+.app-faq summary { display: flex; align-items: center; min-height: 48px; padding: 10px 28px 10px 0; position: relative; font-size: 17px; font-weight: 700; cursor: pointer; list-style: none; }
+.app-faq summary::-webkit-details-marker { display: none; }
+.app-faq summary::after { content: "+"; position: absolute; right: 4px; font-family: var(--mono); font-size: 18px; font-weight: 400; color: var(--green); }
+.app-faq details[open] summary::after { content: "−"; }
+.app-faq details p { max-width: 720px; margin: 0 0 16px; font-size: 16px; line-height: 1.6; color: var(--muted); }
+
+/* Support and legal links at the end of an app page. */
+.c-support .app-links { display: flex; flex-wrap: wrap; gap: 0 20px; }
+.c-support .app-links a { display: inline-flex; align-items: center; min-height: 44px; }
+.c-support .app-trademark { margin-top: 10px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+
+/* More apps by Daniel: icons that aren't square-cornered artwork. */
+.c-app-icon.round { border-radius: 22.5%; }
+
+/* Privacy, terms and support pages. */
+.c-legal ul { margin: 0 0 12px; padding-left: 22px; font-size: 16px; line-height: 1.6; }
+.c-legal li { margin-bottom: 6px; }
+.c-legal .c-updated + .c-updated { margin-top: -18px; }
+
+/* TagTracker: three numbered points, two demos, two cropped screenshots, and a setup card. */
+.app-points { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; margin-top: 8px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.app-points article { padding: 22px 20px 24px 0; }
+.app-points article + article { padding-left: 20px; border-left: 1px solid var(--soft-line); }
+.app-points h2 { margin: 0 0 8px; font-size: 21px; line-height: 1.25; letter-spacing: -.3px; }
+.app-points p:not(.eyebrow) { margin: 0; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.app-points .eyebrow { margin-bottom: 10px; }
+
+.app-window { display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.app-window img { display: block; width: 100%; height: auto; }
+.app-hero-shot { height: 430px; box-shadow: 0 22px 44px -24px rgba(17, 24, 16, .45), 0 2px 6px rgba(17, 24, 16, .06); }
+.app-hero-stamp { position: absolute; top: 0; right: 14px; z-index: 1; width: 72px; height: 72px; transform: rotate(8deg); filter: drop-shadow(0 8px 10px rgba(17, 24, 16, .14)); }
+.app-hero-media.app-has-stamp { position: relative; padding-top: 30px; }
+
+.app-demos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
+.app-demo { display: flex; flex-direction: column; margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--tile); }
+.app-demo figcaption { padding: 18px 20px; border-bottom: 1px solid var(--line); }
+.app-demo figcaption h3 { margin: 0 0 6px; font-size: 21px; line-height: 1.25; letter-spacing: -.3px; }
+.app-demo figcaption p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.app-demo-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 14px; padding: 4px 14px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.app-demo-bar .app-dots { letter-spacing: 2px; color: var(--line); }
+.app-demo-controls { display: flex; align-items: center; gap: 16px; }
+.app-demo-controls button { min-height: 44px; padding: 0; border: 0; background: none; color: var(--green); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.app-demo-controls a { display: inline-flex; align-items: center; min-height: 44px; }
+.app-demo picture, .app-demo img { display: block; width: 100%; height: auto; background: #fff; }
+
+.app-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 8px; }
+.app-gallery figure { margin: 0; min-width: 0; }
+.app-gallery .app-window { height: 290px; }
+.app-gallery figure:nth-child(2) .app-window img { margin-top: -135px; }
+.app-gallery figcaption { padding-top: 12px; font-size: 15px; line-height: 1.5; }
+.app-gallery figcaption strong { display: block; margin-bottom: 2px; }
+.app-gallery figcaption span { color: var(--muted); }
+
+.app-setup { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.app-setup h2 { margin: 0 0 12px; font-size: 24px; line-height: 1.2; letter-spacing: -.4px; }
+.app-setup > div > p { margin: 0 0 12px; font-size: 16px; line-height: 1.6; }
+.app-code { overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--box); }
+.app-code-head { display: flex; align-items: center; justify-content: space-between; padding: 0 0 0 16px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--green); }
+.app-code-head button { min-width: 72px; min-height: 44px; padding: 0 16px; border: 0; border-left: 1px solid var(--line); background: transparent; color: var(--green); font: 700 14px/1 Arial, Helvetica, sans-serif; cursor: pointer; }
+.app-code-head button:hover { background: var(--tile); }
+.app-code pre { margin: 0; padding: 14px 16px; overflow-x: auto; border-bottom: 1px solid var(--line); background: var(--tile); font: 13px/1.7 var(--mono); }
+.app-code pre code { padding: 0; border: 0; background: none; font-size: inherit; }
+.app-code ol { margin: 14px 0 6px; padding: 0 16px 0 36px; font-size: 15px; line-height: 1.55; }
+.app-code p { margin: 0; padding: 0 16px 16px; font-size: 14px; color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 1000px) {
+  .c-steps.app-steps-3 { grid-template-columns: 1fr; }
+  .c-steps.app-steps-3 div, .c-steps.app-steps-3 div + div { padding: 14px 0; border-left: 0; border-top: 1px solid var(--soft-line); }
+  .c-steps.app-steps-3 div:first-of-type { border-top: 0; }
+}
+@media (max-width: 900px) {
+  /* Same order as the Cloud Media Shrinker page: headline, picture, buttons, then the rest. */
+  .cms-a .app-hero-media { order: 3; width: 100%; max-width: 540px; }
+  .cms-a .app-callout { order: 4; margin: 20px 0 0; }
+  .app-hero-shot { height: 380px; }
+  .app-setup { grid-template-columns: 1fr; }
+}
+@media (max-width: 850px) {
+  .app-points { grid-template-columns: 1fr; }
+  .app-points article, .app-points article + article { padding: 18px 0; border-left: 0; border-top: 1px solid var(--soft-line); }
+  .app-points article:first-child { border-top: 0; }
+  .app-demos, .app-gallery { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .app-hero-shot { height: 340px; }
+  .app-hero-art { width: 220px; }
+  .app-gallery .app-window { height: 250px; }
+  .app-gallery figure:nth-child(2) .app-window img { margin-top: -85px; }
+  .c-feature h3 { font-size: 21px; }
+  .app-faq summary { font-size: 16px; }
+}
+@media screen and (prefers-color-scheme: dark) {
+  .app-hero-media .c-media, .app-hero-shot { box-shadow: none; }
+  .app-window { border-color: var(--card-line); }
+  .app-demo-bar .app-dots { color: var(--rule); }
+}

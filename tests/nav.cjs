@@ -10,6 +10,9 @@ const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '') + '
 const blogPages = fs.readdirSync(path.join(__dirname, '..', 'blog')).filter(f => f.endsWith('.html')).map(f => 'blog/' + (f === 'index.html' ? '' : f));
 const pages = [['', null], ['resume/', 'Resume'], ['motorcycle-rentals/', 'Motorcycle Rentals'], ...blogPages.map(p => [p, 'Blog'])];
 
+// App pages, with their privacy, terms and support pages, are part of Work.
+pages.push(...['cloud-media-shrinker/', 'cloud-media-shrinker/privacy/', 'beckon/', 'beckon/privacy/', 'beckon/terms/', '3d-print-monitor/', '3d-print-monitor/privacy/', '3d-print-monitor/support/', 'tagtracker/'].map(p => [p, 'Work']));
+
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const failures = [];

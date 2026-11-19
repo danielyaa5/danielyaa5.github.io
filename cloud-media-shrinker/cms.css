@@ -1,4 +1,4 @@
-/* Cloud Media Shrinker. Shares the portfolio frame, header, buttons and colors from ../styles.css. */
+/* Cloud Media Shrinker, and the base for the other app pages (with assets/apps/app-page.css). Shares the portfolio frame, header, buttons and colors from ../styles.css. */
 .cms { --muted: #5d6a5f; --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace; --box: #e4ebd7; --tile: #edf1e3; --line: #a7b2a5; --soft-line: #d0d4b9; padding: 44px var(--rail) 40px 0; }
 .cms a:not(.button) { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
 .eyebrow { margin: 0 0 14px; font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
