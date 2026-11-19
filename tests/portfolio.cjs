@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['Robot Vacuum Threshold Ramp','3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer','Gate Opener Widget','Price Watch','QuickDesk','orchestrate-agents','simulate-user','H2D Custom Dashboard','TagTracker','qtfaststart2','bambu-headless'];
+const expected = ['3D Print Monitor','AI Usage','Buy or Rent','Netflix PiP Fixer','Gate Opener Widget','Price Watch','QuickDesk','orchestrate-agents','simulate-user','H2D Custom Dashboard','TagTracker','qtfaststart2','bambu-headless'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -34,14 +34,14 @@ const expected = ['Robot Vacuum Threshold Ramp','3D Print Monitor','AI Usage','B
 
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
-    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===14 && images.every(img=>img.complete && img.naturalWidth>0)));
+    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===13 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
-    assert.equal(await page.locator('.project-link').count(),14);
+    assert.equal(await page.locator('.project-link').count(),13);
     assert.equal(await page.locator('.featured-pick').count(),3);
     assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','Beckon']);
     assert.equal(await page.locator('.featured-lead h3').innerText(), 'Cloud Media Shrinker');
     assert.equal(await page.locator('#other-projects-title').innerText(), 'Other projects');
-    assert.equal(await page.locator('.filter-count').innerText(), '14 projects');
+    assert.equal(await page.locator('.filter-count').innerText(), '13 projects');
     assert.equal(await page.locator('.featured-link').count(), 3);
     assert.equal(await page.locator('.featured-pick a a').count(), 0);
     assert.ok(await page.locator('.star-count').evaluate(badge=>{
@@ -58,7 +58,7 @@ const expected = ['Robot Vacuum Threshold Ramp','3D Print Monitor','AI Usage','B
       ios: ['Cloud Media Shrinker','3D Print Monitor','Buy or Rent','Gate Opener Widget'],
       web: ['Buy or Rent','Netflix PiP Fixer','H2D Custom Dashboard'],
       developer: ['puml-for-markdown','AI Usage','Price Watch','orchestrate-agents','simulate-user','qtfaststart2','bambu-headless'],
-      printing: ['Robot Vacuum Threshold Ramp','3D Print Monitor','H2D Custom Dashboard','bambu-headless']
+      printing: ['3D Print Monitor','H2D Custom Dashboard','bambu-headless']
     };
     const featuredByFilter = {
       mac: ['Cloud Media Shrinker','Beckon'],
