@@ -85,8 +85,17 @@
 
 .c-jump { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 18px 0 0; font-size: 15px; }
 .c-jump a { display: inline-flex; align-items: center; min-height: 44px; }
-.cms-a .c-hero { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: center; padding-bottom: 40px; }
-.cms-a .c-hero-art { display: block; width: 100%; max-width: 300px; height: auto; justify-self: end; }
+.cms-a .c-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); gap: 36px; align-items: center; padding-bottom: 40px; }
+.cms-a .c-hero h1 { font-size: clamp(34px, 3.6vw, 44px); letter-spacing: -1.2px; }
+/* The first image: the free scan's result in a Mac window at its smallest size, with the iPhone's over its lower corner,
+   below the headline and the tiles. On phones the iPhone's ring alone, between the headline and the buttons.
+   Each picture has a one-pixel source for the widths where it's hidden, so it isn't downloaded there. */
+.c-hero-media { display: grid; margin: 0; min-width: 0; }
+.c-hero-media img { display: block; width: 100%; height: auto; }
+.c-mac { grid-area: 1 / 1; align-self: start; width: calc(100% - 40px); overflow: hidden; border: 1px solid #9aa596; border-radius: 10px; background: #e9e9e6; box-shadow: 0 22px 44px -24px rgba(17, 24, 16, .5), 0 2px 6px rgba(17, 24, 16, .08); }
+.c-mac::before { content: ""; display: block; height: 22px; border-bottom: 1px solid #d2d2ce; background: radial-gradient(circle at 14px 11px, #ec6a5e 4.5px, transparent 5px), radial-gradient(circle at 30px 11px, #f4bf4f 4.5px, transparent 5px), radial-gradient(circle at 46px 11px, #61c554 4.5px, transparent 5px), #e9e9e6; }
+.c-phone { grid-area: 1 / 1; justify-self: end; align-self: start; position: relative; width: 26%; margin-top: 46.5%; overflow: hidden; border: 5px solid #141a15; border-radius: 22px; background: #fff; box-shadow: 0 22px 44px -22px rgba(17, 24, 16, .55); }
+.c-ring { display: none; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: #fff; box-shadow: 0 22px 44px -24px rgba(17, 24, 16, .45), 0 2px 6px rgba(17, 24, 16, .06); }
 .cms-a .c-demo { padding: 36px 0 8px; border-top: 1px solid var(--line); }
 .cms-a .c-features { margin-top: 20px; }
 .cms-a .c-feature { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 36px; align-items: center; padding: 34px 0; border-bottom: 1px solid var(--soft-line); }
@@ -95,14 +104,29 @@
 .c-feature p:not(.eyebrow) { margin: 0; font-size: 16px; line-height: 1.55; }
 .c-feature .eyebrow { margin-bottom: 10px; }
 .c-shot { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); box-shadow: 0 1px 3px #59684a14; }
+@media (max-width: 900px) {
+  /* One column: headline, image, buttons, then the rest. */
+  .cms-a .c-hero { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .cms-a .c-hero-copy { display: contents; }
+  .cms-a .c-brand { order: 1; }
+  .cms-a .c-hero h1 { order: 2; margin-bottom: 20px; }
+  .cms-a .c-hero-media { order: 3; width: 100%; max-width: 540px; }
+  .cms-a .c-hero .c-actions { order: 4; margin-top: 22px; }
+  .cms-a .c-hero .lede { order: 5; margin-top: 24px; }
+  .cms-a .c-hero .c-sub { order: 6; }
+  .cms-a .c-hero .fine-print { order: 7; }
+  .cms-a .c-jump { order: 8; }
+}
 @media (max-width: 850px) {
-  .cms-a .c-hero { grid-template-columns: minmax(0, 1fr) 190px; gap: 24px; }
   .cms-a .c-feature { grid-template-columns: 1fr; gap: 18px; padding: 28px 0; }
   .cms-a .c-feature:nth-child(even) .c-feature-copy { order: 0; }
 }
 @media (max-width: 620px) {
-  .cms-a .c-hero { grid-template-columns: 1fr; padding-bottom: 30px; }
-  .cms-a .c-hero-art { display: none; }
+  .cms-a .c-hero { padding-bottom: 30px; }
+  .cms-a .c-hero h1 { font-size: 31px; letter-spacing: -1px; margin-bottom: 16px; }
+  .cms-a .c-mac, .cms-a .c-phone { display: none; }
+  .cms-a .c-ring { display: block; }
+  .cms-a .c-hero .c-actions { margin-top: 16px; }
   .c-feature h2 { font-size: 21px; }
 }
 @media screen and (prefers-color-scheme: dark) { .c-shot { box-shadow: none; } }
