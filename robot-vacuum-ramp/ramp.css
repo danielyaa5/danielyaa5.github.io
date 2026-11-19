@@ -1,0 +1,176 @@
+/* Robot vacuum ramp guide. Layout and colors come from ../styles.css; the reading column, step list,
+   table and summary box come from ../blog/blog.css. This file adds the hero, the measuring diagrams,
+   the size finder and the copyable message. */
+.ramp-page {
+  --d-line: #2c3a2b;
+  --d-floor: #ece8d9;
+  --d-wall: #dad8ca;
+  --d-threshold: #c9d4bc;
+  --d-door: #f6f4ea;
+  --d-ramp: rgba(196, 140, 84, .26);
+  --d-ramp-line: #9a6638;
+  --d-edge: #8d9a86;
+  --muted: #52604d;
+  --r-chip: #e9eedf;
+  --r-chip-line: #b7c3a5;
+  --panel: #fffdf6;
+  --panel-line: #d0d4b9;
+}
+.ramp { padding: 44px 0 36px; margin-right: var(--rail); }
+.ramp-page .site-footer { margin-right: var(--rail); }
+
+.ramp-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 400px); gap: 44px; align-items: center; padding-bottom: 38px; border-bottom: 1px solid var(--rule); }
+.ramp-hero-copy { min-width: 0; }
+.ramp-hero .eyebrow { margin-bottom: 16px; }
+.ramp h1 { max-width: 620px; font-size: clamp(36px, 4.6vw, 52px); line-height: 1.1; letter-spacing: -1.6px; margin: 0 0 20px; text-wrap: balance; }
+.ramp-lede { max-width: 560px; margin: 0 0 20px; font-size: 19px; line-height: 1.55; text-wrap: pretty; }
+.ramp-facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; padding: 0; list-style: none; }
+.ramp-facts li { padding: 5px 10px; border: 1px solid var(--r-chip-line); border-radius: 4px; background: var(--r-chip); color: var(--green); font-size: 14px; font-weight: 700; line-height: 1.3; }
+.ramp-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.ramp-fine { max-width: 540px; margin: 16px 0 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.ramp-hero-media { margin: 0; min-width: 0; }
+.ramp-hero-media picture { display: block; }
+.ramp-hero-media img { display: block; width: 100%; height: auto; border: 1px solid var(--panel-line); border-radius: 8px; background: var(--card); }
+.ramp-hero-media figcaption { margin-top: 10px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+
+.ramp-guide { max-width: 700px; margin: 0 auto; padding-top: 6px; }
+.ramp-guide > h2 { scroll-margin-top: 16px; }
+
+/* Measuring diagrams: inline SVG drawn with the page's colors, so they follow light and dark mode. */
+.ramp-diagram { margin: 26px 0 30px; padding: 20px 20px 16px; border: 1px solid var(--panel-line); border-radius: 8px; background: var(--panel); }
+.ramp-diagram svg, .edge-card svg { display: block; width: 100%; height: auto; overflow: visible; }
+.d-floor, .d-wall, .d-threshold, .d-door, .d-edge { stroke: var(--d-line); stroke-width: 2; stroke-linejoin: round; }
+.d-floor { fill: var(--d-floor); }
+.d-wall { fill: var(--d-wall); }
+.d-threshold { fill: var(--d-threshold); }
+.d-door { fill: var(--d-door); }
+.d-edge { fill: var(--d-edge); stroke-width: 1.5; }
+.d-ramp { fill: var(--d-ramp); stroke: var(--d-ramp-line); stroke-width: 2; stroke-dasharray: 7 5; }
+.d-ramp-optional { fill: none; }
+.d-dim { stroke: var(--green); stroke-width: 2.5; }
+.d-ext { stroke: var(--green); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.d-arrow { fill: var(--green); }
+.d-label { fill: var(--green); font: 700 26px Arial, Helvetica, sans-serif; }
+.d-text { fill: var(--ink); font: 700 19px Arial, Helvetica, sans-serif; }
+.d-note { fill: var(--muted); font: 16px Arial, Helvetica, sans-serif; }
+.d-small { fill: var(--green); font: 700 15px Arial, Helvetica, sans-serif; }
+.edge-card .d-label { font-size: 22px; }
+.ramp-diagram figcaption { margin-top: 14px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.ramp-diagram .diagram-key { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.ramp-diagram figcaption b { color: var(--green); }
+.ramp-diagram .key { display: inline-flex; align-items: center; gap: 7px; }
+.key-ramp { display: inline-block; width: 22px; height: 12px; border: 2px dashed var(--d-ramp-line); border-radius: 2px; background: var(--d-ramp); }
+
+.edge-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 22px 0 30px; }
+.edge-card { display: flex; flex-direction: column; gap: 12px; min-width: 0; margin: 0; padding: 16px 14px 14px; border: 1px solid var(--panel-line); border-radius: 8px; background: var(--panel); }
+.edge-card figcaption { font-size: 14.5px; line-height: 1.5; color: var(--muted); }
+.edge-card figcaption b { color: var(--ink); }
+
+/* Size table: the row headers wrap and carry the metric range on a second line. */
+.size-table th, .size-table td { vertical-align: top; }
+.size-table thead th { white-space: normal; }
+.size-table tbody th { white-space: normal; line-height: 1.35; }
+.size-table tbody th span { white-space: nowrap; }
+.size-table tbody th small { display: block; margin-top: 2px; font-size: 13px; font-weight: 400; color: var(--muted); }
+.size-table td { font-weight: 700; }
+
+/* Size finder: shown only when the script runs; the table above works without it. */
+.size-finder { margin: 6px 0 34px; padding: 20px 22px; border: 1px solid #a7b2a5; border-radius: 8px; background: var(--card); }
+.article-body .size-finder h3 { margin: 0 0 12px; font-size: 20px; line-height: 1.3; letter-spacing: -.3px; }
+.finder-units { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; padding: 0; border: 0; }
+.finder-units legend { float: left; margin-right: 6px; padding: 0; font-size: 14px; font-weight: 700; line-height: 44px; color: #455f3d; }
+.finder-units label { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid #a7b2a5; border-radius: 5px; color: var(--green); font-size: 15px; line-height: 1.2; cursor: pointer; }
+.finder-units input { position: absolute; opacity: 0; pointer-events: none; }
+.finder-units label:has(input:checked) { color: #fff; background: var(--green); border-color: var(--green); }
+.finder-units label:has(input:focus-visible) { outline: 2px solid var(--green); outline-offset: 2px; }
+.finder-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.finder-fields label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; font-size: 14px; font-weight: 700; line-height: 1.4; color: #455f3d; }
+.finder-unit { font-weight: 400; }
+.finder-fields input { flex-basis: 100%; min-width: 0; min-height: 46px; margin-top: 4px; padding: 10px 14px; border: 1.5px solid #789182; border-radius: 4px; background: #fffefa; color: var(--ink); font: inherit; font-size: 17px; font-weight: 400; }
+.finder-fields input:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-color: var(--green); }
+.size-finder output { display: block; margin-top: 16px; padding: 12px 14px; border-left: 3px solid var(--rule); border-radius: 4px; background: var(--panel); font-size: 16px; line-height: 1.5; }
+.size-finder output[data-kind="match"] { border-left-color: var(--green); }
+.size-finder output strong { color: var(--green); }
+.finder-reach { display: block; margin-top: 4px; font-size: 15px; color: var(--muted); }
+.size-finder output[data-kind="outside"] { border-left-color: #9a6638; }
+.article-body .finder-note { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+
+/* The Etsy message template, with a copy button when the browser allows it. */
+.message-template { margin: 0 0 22px; }
+.article-body .message-template pre { margin-bottom: 10px; font-size: 14.5px; line-height: 1.6; }
+.copy-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.article-body .copy-row { margin: 0; }
+.copy-button { min-height: 44px; padding: 8px 18px; font-family: inherit; font-size: 15px; cursor: pointer; }
+.copy-status { font-size: 14px; font-weight: 700; color: var(--green); }
+
+.faq h3 { margin: 26px 0 8px; font-size: 19px; line-height: 1.35; letter-spacing: -.2px; }
+.faq h3:first-child { margin-top: 10px; }
+.article-body .faq p { margin-bottom: 12px; }
+
+.ramp-cta { margin: 40px 0 0; padding: 24px; border: 1px solid #a7b2a5; border-radius: 8px; background: #edf1e3; }
+.article-body .ramp-cta h2 { margin: 0 0 8px; font-size: 24px; }
+.article-body .ramp-cta p { margin: 0 0 18px; font-size: 17px; line-height: 1.55; }
+.article-body .ramp-cta .button-outline { color: var(--green); background: transparent; }
+.article-body .ramp-cta .button-outline:hover { color: var(--green); background: #e1e9d5; }
+
+@media (max-width: 900px) {
+  .ramp-hero { grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 30px; }
+  .ramp-lede { font-size: 17px; }
+}
+@media (max-width: 760px) {
+  .ramp { padding-top: 34px; }
+  .ramp-hero { grid-template-columns: 1fr; gap: 28px; }
+  .ramp-hero-media { max-width: 400px; }
+}
+@media (max-width: 620px) {
+  .ramp h1 { font-size: clamp(30px, 8.4vw, 38px); letter-spacing: -1.1px; }
+  .ramp-lede { font-size: 16.5px; }
+  .ramp-facts li { font-size: 13px; }
+  .ramp-diagram { padding: 14px 12px 12px; }
+  /* The diagrams scale down with the column, so their labels grow to stay readable. */
+  .ramp-diagram .d-label { font-size: 36px; }
+  .ramp-diagram .d-text { font-size: 26px; }
+  .ramp-diagram .d-note { font-size: 25px; }
+  .edge-card .d-label { font-size: 30px; }
+  .edge-card .d-small { font-size: 22px; }
+  /* Price columns hug their prices so the height labels keep the room. */
+  .size-table td, .size-table thead th:not(:first-child) { width: 1%; }
+  .edge-grid { grid-template-columns: 1fr; gap: 12px; }
+  .edge-card { display: grid; grid-template-columns: minmax(0, 132px) minmax(0, 1fr); align-items: center; gap: 14px; }
+  .size-finder { padding: 18px 16px; }
+  .finder-fields { grid-template-columns: 1fr; }
+  .article-body .message-template pre { font-size: 13px; }
+  .ramp-cta { padding: 20px 16px; }
+}
+@media (max-width: 360px) {
+  .ramp-actions { gap: 10px; }
+  .edge-card { grid-template-columns: 1fr; }
+  .edge-card svg { max-width: 220px; }
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .ramp-page {
+    --d-line: #a9b8a4;
+    --d-floor: #1d2820;
+    --d-wall: #253129;
+    --d-threshold: #33473a;
+    --d-door: #18221b;
+    --d-ramp: rgba(214, 160, 105, .2);
+    --d-ramp-line: #d6a46f;
+    --d-edge: #6d7d68;
+    --muted: var(--soft);
+    --r-chip: var(--chip);
+    --r-chip-line: var(--chip-line);
+    --panel: #141e18;
+    --panel-line: var(--card-line);
+  }
+  .ramp-facts li { color: var(--green); }
+  .size-finder, .ramp-cta { border-color: var(--rule); background: #1a281f; }
+  .finder-units legend, .finder-fields label { color: var(--soft-strong); }
+  .finder-units label { border-color: var(--rule); }
+  .finder-units label:has(input:checked) { color: var(--on-fill); background: var(--fill); border-color: var(--fill); }
+  .finder-fields input { border-color: var(--frame); background: var(--field); }
+  .size-finder output[data-kind="outside"] { border-left-color: #d6a46f; }
+  .article-body .ramp-cta .button-outline:hover { background: var(--hover); }
+  .edge-card figcaption b { color: var(--ink); }
+}
