@@ -27,7 +27,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=8" defer><\/script>/g)?.length, 1, `${file} loads analytics v=8 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=9" defer><\/script>/g)?.length, 1, `${file} loads analytics v=9 once`);
   }
   for (const file of untracked) {
     assert.doesNotMatch(fs.readFileSync(path.join(root, file), 'utf8'), /analytics\.js/, `${file} has no analytics`);

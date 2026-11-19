@@ -169,5 +169,11 @@
     ready = true;
     pending.splice(0).forEach(send);
   };
-  document.head.append(script);
+  // PostHog's own script starts loading only after the page's load event, and then when the browser is idle
+  // (at the latest 2 s later), so it never competes with the images and styles the visitor is waiting for.
+  // Clicks and sign-ups in the meantime wait in `pending` above and are sent once it is ready.
+  const start = () => document.head.append(script);
+  const whenIdle = () => ('requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 2000 }) : setTimeout(start, 2000));
+  if (document.readyState === 'complete') whenIdle();
+  else addEventListener('load', whenIdle, { once: true });
 })();
