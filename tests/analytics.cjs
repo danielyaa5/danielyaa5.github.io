@@ -29,7 +29,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=11" defer><\/script>/g)?.length, 1, `${file} loads analytics v=11 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=12" defer><\/script>/g)?.length, 1, `${file} loads analytics v=12 once`);
   }
   // vercel.json sends /dy-relay/ to PostHog. The site-wide trailing slash turns /array/<token>/config into .../config/,
   // which PostHog answers with a 404, so a rule ahead of the general one strips that slash again.
@@ -130,7 +130,7 @@ const events = request => {
     });
     // On the published host, PostHog goes through the site's /dy-relay/ path, which vercel.json rewrites to PostHog.
     // Here PostHog's scripts come from PostHog (or a local copy in POSTHOG_ARRAY_JS) and everything else is caught.
-    const relayScript = /^\/dy-relay\/static\/(?:[\d.]+\/)?(array|web-vitals[\w-]*)\.js$/;
+    const relayScript = /^\/dy-relay\/static\/(?:[\d.]+\/)?(array|web-vitals[\w-]*|exception-autocapture)\.js$/;
     await context.route(`${site}/dy-relay/**`, async route => {
       const url = new URL(route.request().url());
       const script = url.pathname.match(relayScript);
@@ -186,6 +186,28 @@ const events = request => {
     }
     assert.ok(vitals.every(e => e.properties.$current_url === `${site}/` && e.properties.$cookieless_mode === true), 'cookieless web vitals with a clean address');
     assert.ok(!/utm_source=|private-fragment/.test(JSON.stringify(vitals)), 'no query or fragment inside web vitals');
+
+    // Browser errors become $exception events: one thrown before PostHog has loaded (it waits for the load event),
+    // one after, and an unhandled promise rejection, each sent once with the page address cleaned.
+    const errorPage = await context.newPage();
+    await errorPage.addInitScript(() => addEventListener('DOMContentLoaded', () => setTimeout(() => { throw new Error('analytics-test early error'); }, 0)));
+    const errorStart = captured.length;
+    await errorPage.goto(`${site}/blog/?utm_source=analytics-test#private-fragment`, { waitUntil: 'networkidle' });
+    await errorPage.waitForFunction(() => window.posthog?.__loaded === true);
+    await errorPage.evaluate(() => {
+      setTimeout(() => { throw new Error('analytics-test late error'); }, 0);
+      Promise.reject(new Error('analytics-test rejection'));
+    });
+    // PostHog batches $exception events (about every 3 s), so wait for the batch, then a little longer to catch any duplicate.
+    const errorsSoFar = () => captured.slice(errorStart).filter(e => e.event === '$exception');
+    for (let i = 0; i < 40 && errorsSoFar().length < 3; i += 1) await errorPage.waitForTimeout(200);
+    await errorPage.waitForTimeout(500);
+    const exceptions = errorsSoFar();
+    assert.deepEqual(exceptions.map(e => e.properties.$exception_list?.[0]?.value).sort(), ['analytics-test early error', 'analytics-test late error', 'analytics-test rejection'], `each error is sent once; got ${JSON.stringify(captured.slice(errorStart).map(e => [e.event, e.properties.$current_url, e.properties.$exception_list?.[0]?.value]))}`);
+    assert.deepEqual(exceptions.map(e => e.properties.error_source).sort(), ['uncaught', 'uncaught', 'unhandled_rejection'], 'error source is recorded');
+    assert.ok(exceptions.every(e => e.properties.$current_url === `${site}/blog/` && e.properties.$cookieless_mode === true), 'cookieless errors with a clean address');
+    assert.ok(!/utm_source=|private-fragment/.test(JSON.stringify(exceptions)), 'no query or fragment inside errors');
+    await errorPage.close();
 
     // Links in project tiles send a project_click named after the project, at phone, tablet and desktop widths.
     // Navigation is cancelled after the site's own listeners run, so the page stays put.

@@ -1,4 +1,4 @@
-/* Anonymous page views, page speed (web vitals), project, rental, blog suggestion and TL;DR clicks, resume downloads and email sign-up counts with PostHog,
+/* Anonymous page views, page speed (web vitals), browser errors, project, rental, blog suggestion and TL;DR clicks, resume downloads and email sign-up counts with PostHog,
    without cookies or browser storage. It runs only on the published hosts for non-automated browsers, so local previews, bots and headless checks send nothing,
    and the guest gate page never loads it. */
 (() => {
@@ -21,9 +21,9 @@
       return value;
     }
   };
-  // Web vitals and link clicks nest addresses inside objects and lists, so those are cleaned too.
+  // Web vitals, link clicks and error stack frames nest addresses inside objects and lists, so those are cleaned too.
   const cleanAll = (value, depth = 0) => {
-    if (value && typeof value === 'object' && depth < 4) {
+    if (value && typeof value === 'object' && depth < 8) {
       for (const key of Object.keys(value)) value[key] = cleanAll(value[key], depth + 1);
       return value;
     }
@@ -45,6 +45,29 @@
     if (ready) send([event, properties]);
     else pending.push([event, properties]);
   };
+
+  // Uncaught errors and unhandled promise rejections become PostHog `$exception` events for Error tracking.
+  // These listeners start with this script, so errors raised before PostHog loads (it waits for the load event)
+  // wait in `pendingErrors`. PostHog's own exception autocapture stays off, so nothing is reported twice.
+  // Errors from browser extensions and cross-origin "Script error." reports (no details) are skipped,
+  // and one page sends at most 10, so a loop can't flood the project.
+  const pendingErrors = [];
+  let errorsSent = 0;
+  const sendError = ([error, properties]) => window.posthog?.captureException?.(error, properties);
+  const reportError = (error, properties) => {
+    if (errorsSent >= 10 || /extension:\/\//.test(`${properties.error_file || ''} ${error?.stack || ''}`)) return;
+    errorsSent += 1;
+    if (ready) sendError([error, properties]);
+    else pendingErrors.push([error, properties]);
+  };
+  addEventListener('error', event => {
+    if (!event.error && (!event.filename || event.message === 'Script error.')) return;
+    reportError(event.error instanceof Error ? event.error : new Error(String(event.message || 'Unknown error')), { error_source: 'uncaught', error_file: event.filename || undefined });
+  });
+  addEventListener('unhandledrejection', event => {
+    const reason = event.reason;
+    reportError(reason instanceof Error ? reason : new Error(typeof reason === 'string' ? reason : 'Unhandled promise rejection'), { error_source: 'unhandled_rejection' });
+  });
   const tileClick = event => {
     if (event.type === 'auxclick' && event.button !== 1) return;
     const link = event.target.closest?.('a[href]');
@@ -163,6 +186,7 @@
       autocapture: { dom_event_allowlist: ['click'], element_allowlist: ['a'] },
       rageclick: false,
       capture_dead_clicks: false,
+      // Errors are reported by the listeners near the top of this file instead, so early errors aren't lost.
       capture_exceptions: false,
       // Page speed (LCP, INP, CLS, FCP) for PostHog's Web vitals dashboard; no network timing.
       capture_performance: { web_vitals: true, network_timing: false },
@@ -177,6 +201,7 @@
     });
     ready = true;
     pending.splice(0).forEach(send);
+    pendingErrors.splice(0).forEach(sendError);
   };
   // PostHog's own script starts loading only after the page's load event, and then when the browser is idle
   // (at the latest 2 s later), so it never competes with the images and styles the visitor is waiting for.
