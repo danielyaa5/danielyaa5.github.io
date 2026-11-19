@@ -27,18 +27,20 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 820, 768, 680, 600, 414, 390,
   try {
     for (const width of widths) {
       const phone = width <= 620;
-      const page = await browser.newPage({ viewport: { width, height: phone ? 844 : 900 }, reducedMotion: 'reduce' });
+      const page = await browser.newPage({ viewport: { width, height: phone ? 844 : 900 }, reducedMotion: 'reduce', deviceScaleFactor: 1.5 });
       const errors = [];
       page.on('pageerror', e => errors.push(e.message));
       page.on('response', r => { if (r.url().startsWith(base) && r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
       await page.goto(`${base}/motorcycle-rentals/`, { waitUntil: 'networkidle' });
       await page.evaluate(() => Promise.all([...document.images].map(img => { img.loading = 'eager'; return img.decode(); })));
-      const r = await page.evaluate(() => {
+      // Photos come in several widths (srcset), so img.naturalWidth is scaled to the slot; the file's own width is read from the chosen file.
+      const pixels = await page.evaluate(() => Promise.all([...document.querySelectorAll('.bike-photo img')].map(img => new Promise(done => { const file = new Image(); file.onload = () => done(file.naturalWidth); file.onerror = () => done(0); file.src = img.currentSrc; }))));
+      const r = await page.evaluate(pixels => {
         const box = el => el.getBoundingClientRect();
         const frame = box(document.querySelector('.page-frame'));
         const nav = document.querySelector('.site-header nav');
         const current = nav.querySelector('[aria-current="page"]');
-        const bikes = [...document.querySelectorAll('.bike')].map(bike => {
+        const bikes = [...document.querySelectorAll('.bike')].map((bike, index) => {
           const img = bike.querySelector('.bike-photo img');
           const links = [...bike.querySelectorAll('.bike-links a')].map(a => {
             const b = box(a);
@@ -46,7 +48,7 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 820, 768, 680, 600, 414, 390,
             return { platform: a.dataset.platform, href: a.href, text: a.textContent.trim(), width: b.width, height: b.height, lines: Math.round(range.getBoundingClientRect().height / parseFloat(getComputedStyle(a).lineHeight || 20)) };
           });
           const status = bike.querySelector('.bike-status');
-          return { name: bike.querySelector('h3')?.textContent.trim(), repair: bike.matches('.is-repair'), status: status && getComputedStyle(status).display !== 'none' ? status.textContent.trim() : null, note: bike.querySelector('.bike-note')?.textContent.trim(), allLinks: bike.querySelectorAll('a').length, alt: img?.alt, loaded: !!img && img.complete && img.naturalWidth > 0, sharp: !!img && img.naturalWidth >= box(img).width * 1.5, left: box(bike).left, right: box(bike).right, links };
+          return { name: bike.querySelector('h3')?.textContent.trim(), repair: bike.matches('.is-repair'), status: status && getComputedStyle(status).display !== 'none' ? status.textContent.trim() : null, note: bike.querySelector('.bike-note')?.textContent.trim(), allLinks: bike.querySelectorAll('a').length, alt: img?.alt, loaded: !!img && img.complete && img.naturalWidth > 0, sharp: !!img && pixels[index] >= box(img).width * 1.5, left: box(bike).left, right: box(bike).right, links };
         });
         return {
           sideways: document.documentElement.scrollWidth > innerWidth,
@@ -58,7 +60,7 @@ const widths = [1920, 1650, 1440, 1280, 1024, 900, 820, 768, 680, 600, 414, 390,
           referral: [...document.querySelectorAll('.referral-links a')].map(a => { const b = box(a); const range = document.createRange(); range.selectNodeContents(a); return { text: a.textContent.trim(), width: b.width, height: b.height, lines: Math.round(range.getBoundingClientRect().height / parseFloat(getComputedStyle(a).lineHeight || 20)) }; }),
           blocks: [...document.querySelectorAll('.m-hero, .referral, .referral-links .button, .bike, .how, .site-footer, .bike-links .button')].map(el => ({ name: el.className, left: box(el).left, right: box(el).right })),
         };
-      });
+      }, pixels);
       const where = `${width}px`;
       try {
         assert.deepEqual(errors, [], `${where}: page errors or missing files`);
