@@ -29,7 +29,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=10" defer><\/script>/g)?.length, 1, `${file} loads analytics v=10 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=11" defer><\/script>/g)?.length, 1, `${file} loads analytics v=11 once`);
   }
   for (const file of untracked) {
     assert.doesNotMatch(fs.readFileSync(path.join(root, file), 'utf8'), /analytics\.js/, `${file} has no analytics`);
@@ -41,7 +41,7 @@ const events = request => {
     // Local preview: PostHog is never contacted.
     const local = await browser.newPage();
     const analytics = [];
-    local.on('request', r => { if (new URL(r.url()).hostname.endsWith('posthog.com')) analytics.push(r.url()); });
+    local.on('request', r => { const url = new URL(r.url()); if (url.hostname.endsWith('posthog.com') || url.pathname.startsWith('/dy-relay/')) analytics.push(r.url()); });
     await local.goto(`${base}/`, { waitUntil: 'networkidle' });
     assert.deepEqual(analytics, [], 'local preview sends no analytics');
     await local.close();
@@ -88,10 +88,15 @@ const events = request => {
           posthogRequests.push(route.request().url());
           await route.fulfill({ status: 200, contentType: 'application/json', body: '{"status":1}' });
         });
+        // The site's own PostHog relay (vercel.json rewrites /dy-relay/ to PostHog) counts as contacting PostHog too.
+        await botContext.route(`${site}/dy-relay/**`, async route => {
+          posthogRequests.push(route.request().url());
+          await route.fulfill({ status: 200, contentType: 'application/json', body: '{"status":1}' });
+        });
         const botPage = await botContext.newPage();
         await botPage.goto(`${site}/`, { waitUntil: 'networkidle' });
         await botPage.waitForTimeout(2300);
-        const hasPosthog = await botPage.evaluate(() => Boolean(window.posthog || document.querySelector('script[src*="posthog"]')));
+        const hasPosthog = await botPage.evaluate(() => Boolean(window.posthog || document.querySelector('script[src*="posthog"], script[src*="/dy-relay/"]')));
         assert.deepEqual(posthogRequests, [], `${label} sends no PostHog requests`);
         assert.equal(hasPosthog, false, `${label} never loads PostHog`);
       } finally {
@@ -112,16 +117,28 @@ const events = request => {
       const response = await fetch(base + url.pathname);
       await route.fulfill({ status: response.status, headers: { 'content-type': response.headers.get('content-type') || 'text/html' }, body: Buffer.from(await response.arrayBuffer()) });
     });
-    if (process.env.POSTHOG_ARRAY_JS) {
-      await context.route('https://us-assets.i.posthog.com/static/array.js', route => route.fulfill({ contentType: 'application/javascript', body: fs.readFileSync(process.env.POSTHOG_ARRAY_JS) }));
-      // The web vitals script sits beside array.js in PostHog's package (dist/web-vitals*.js).
-      await context.route(/^https:\/\/us-assets\.i\.posthog\.com\/static\/(?:[\d.]+\/)?(web-vitals[\w-]*)\.js/, route => {
-        const name = route.request().url().match(/(web-vitals[\w-]*)\.js/)[1];
-        route.fulfill({ contentType: 'application/javascript', body: fs.readFileSync(path.join(path.dirname(process.env.POSTHOG_ARRAY_JS), `${name}.js`)) });
-      });
-    }
-    await context.route(/^https:\/\/us(-assets)?\.i\.posthog\.com\/(?!static\/(?:[\d.]+\/)?(?:array|web-vitals[\w-]*)\.js)/, async route => {
-      if (route.request().method() === 'POST' && /\/e\/|\/i\/v0\/e\//.test(new URL(route.request().url()).pathname)) captured.push(...events(route.request()));
+    // On the published host, PostHog goes through the site's /dy-relay/ path, which vercel.json rewrites to PostHog.
+    // Here PostHog's scripts come from PostHog (or a local copy in POSTHOG_ARRAY_JS) and everything else is caught.
+    const relayScript = /^\/dy-relay\/static\/(?:[\d.]+\/)?(array|web-vitals[\w-]*)\.js$/;
+    await context.route(`${site}/dy-relay/**`, async route => {
+      const url = new URL(route.request().url());
+      const script = url.pathname.match(relayScript);
+      if (script) {
+        if (process.env.POSTHOG_ARRAY_JS) {
+          // The web vitals script sits beside array.js in PostHog's package (dist/web-vitals*.js).
+          const file = script[1] === 'array' ? process.env.POSTHOG_ARRAY_JS : path.join(path.dirname(process.env.POSTHOG_ARRAY_JS), `${script[1]}.js`);
+          return route.fulfill({ contentType: 'application/javascript', body: fs.readFileSync(file) });
+        }
+        const response = await fetch(`https://us-assets.i.posthog.com${url.pathname.slice('/dy-relay'.length)}`);
+        return route.fulfill({ status: response.status, contentType: 'application/javascript', body: Buffer.from(await response.arrayBuffer()) });
+      }
+      if (route.request().method() === 'POST' && /\/e\/|\/i\/v0\/e\//.test(url.pathname)) captured.push(...events(route.request()));
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"status":1}' });
+    });
+    // Nothing on the published host should reach PostHog's own domains, where ad blockers would stop it.
+    const direct = [];
+    await context.route(/^https:\/\/us(-assets)?\.i\.posthog\.com\//, async route => {
+      direct.push(route.request().url());
       await route.fulfill({ status: 200, contentType: 'application/json', body: '{"status":1}' });
     });
 
@@ -132,6 +149,7 @@ const events = request => {
     await page.waitForTimeout(1500);
     const views = captured.filter(e => e.event === '$pageview');
     assert.equal(views.length, 1, 'one page view');
+    assert.deepEqual(direct, [], 'the published host reaches PostHog only through /dy-relay/');
     const props = views[0].properties;
     assert.equal(props.$current_url, `${site}/`, 'query and fragment are removed');
     assert.equal(props.utm_source, 'analytics-test', 'campaign tags survive as their own property');
@@ -350,7 +368,7 @@ const events = request => {
     const gate = await context.newPage();
     gate.on('request', r => gateRequests.push(r.url()));
     await gate.goto(`${site}/gate/`, { waitUntil: 'networkidle' });
-    assert.ok(!gateRequests.some(url => /analytics\.js|posthog/.test(url)), 'gate page loads no analytics');
+    assert.ok(!gateRequests.some(url => /analytics\.js|posthog|dy-relay/.test(url)), 'gate page loads no analytics');
     assert.equal(captured.length, before, 'gate page sends nothing');
     console.log(`Analytics checks passed: ${tracked.length} tracked pages, ${untracked.length} untracked, cookieless page view without query or fragment, web vitals, project clicks, rental clicks, resume downloads, suggested blog clicks, TL;DR link clicks and sign-up events at 3 widths.`);
   } finally {

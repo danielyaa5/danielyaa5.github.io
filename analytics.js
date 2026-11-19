@@ -143,13 +143,17 @@
   document.addEventListener('signup', event => track('email_signup', topicProperties(event.detail?.topics || [])));
   document.addEventListener('signup-error', event => track('email_signup_failed', { ...topicProperties(event.detail?.topics || []), error: String(event.detail?.error || 'unknown') }));
 
+  // On danielyakobian.com, PostHog goes through this site's own /dy-relay/ path (rewrites in vercel.json), which ad blockers
+  // don't block. The GitHub Pages copy has no rewrites, so it talks to PostHog directly.
+  const relay = location.hostname.endsWith('danielyakobian.com') ? `${location.origin}/dy-relay` : null;
   const script = document.createElement('script');
-  script.src = 'https://us-assets.i.posthog.com/static/array.js';
+  script.src = `${relay || 'https://us-assets.i.posthog.com'}/static/array.js`;
   script.async = true;
   script.crossOrigin = 'anonymous';
   script.onload = () => {
     window.posthog?.init(TOKEN, {
-      api_host: 'https://us.i.posthog.com',
+      api_host: relay || 'https://us.i.posthog.com',
+      ui_host: 'https://us.posthog.com',
       defaults: '2026-08-30',
       cookieless_mode: 'always',
       person_profiles: 'never',

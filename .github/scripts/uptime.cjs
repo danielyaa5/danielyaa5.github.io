@@ -24,6 +24,8 @@ const CHECKS = [
   { name: 'Motorcycle rentals', url: `${SITE}/motorcycle-rentals/`, status: [200], includes: 'Daniel Yakobian' },
   { name: 'Blog', url: `${SITE}/blog/`, status: [200], includes: 'Daniel Yakobian' },
   { name: 'Analytics script', url: `${SITE}/analytics.js`, status: [200], includes: 'posthog' },
+  // vercel.json rewrites /dy-relay/ to PostHog so ad blockers don't drop the site's analytics.
+  { name: 'Analytics relay', url: `${SITE}/dy-relay/static/array.js`, status: [200], includes: 'posthog' },
   // The sign-up function only takes POST, so a GET answering 405 from the function shows it is deployed and running.
   // It answers in JSON only when asked to, as the page's script does; otherwise it redirects like a no-JavaScript form post.
   { name: 'Email sign-up function', url: `${SITE}/api/subscribe/`, accept: 'application/json', status: [405], includes: 'method_not_allowed' },
