@@ -1,0 +1,13 @@
+# Repo-only files that should not be served at danielyakobian.com
+design-qa.md
+mobile-qa.md
+README.md
+AGENTS.md
+CLAUDE.md
+tests
+tools
+qa
+scripts
+.github
+assets/writing/source
+assets/social/*.html
