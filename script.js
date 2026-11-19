@@ -42,7 +42,8 @@ if (filters) {
     const artWrap = document.createElement('div');
     artWrap.className = 'project-art';
     const img = document.createElement('img');
-    img.className = 'project-illustration';
+    // Art drawn on a white background keeps its blend mode, so it doesn't show as a white box on the tile.
+    img.className = art.classList.contains('art-on-white') ? 'project-illustration art-on-white' : 'project-illustration';
     img.loading = 'lazy';
     img.src = art.getAttribute('src');
     img.width = Number(art.getAttribute('width'));
