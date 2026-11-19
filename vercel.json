@@ -90,6 +90,7 @@
   "rewrites": [
     { "source": "/api/subscribe/", "destination": "/api/subscribe" },
     { "source": "/dy-relay/static/:path(.*)", "destination": "https://us-assets.i.posthog.com/static/:path" },
+    { "source": "/dy-relay/array/:path(.*)/", "destination": "https://us-assets.i.posthog.com/array/:path" },
     { "source": "/dy-relay/array/:path(.*)", "destination": "https://us-assets.i.posthog.com/array/:path" },
     { "source": "/dy-relay/:path(.*)", "destination": "https://us.i.posthog.com/:path" }
   ],

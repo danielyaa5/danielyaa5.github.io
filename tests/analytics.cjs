@@ -31,6 +31,11 @@ const events = request => {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
     assert.equal(html.match(/<script src="\/analytics\.js\?v=11" defer><\/script>/g)?.length, 1, `${file} loads analytics v=11 once`);
   }
+  // vercel.json sends /dy-relay/ to PostHog. The site-wide trailing slash turns /array/<token>/config into .../config/,
+  // which PostHog answers with a 404, so a rule ahead of the general one strips that slash again.
+  const rewrites = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8')).rewrites;
+  const rewriteAt = source => rewrites.findIndex(rule => rule.source === source);
+  assert.ok(rewriteAt('/dy-relay/array/:path(.*)/') >= 0 && rewriteAt('/dy-relay/array/:path(.*)/') < rewriteAt('/dy-relay/array/:path(.*)'), 'the relay strips the trailing slash from PostHog remote config');
   for (const file of untracked) {
     assert.doesNotMatch(fs.readFileSync(path.join(root, file), 'utf8'), /analytics\.js/, `${file} has no analytics`);
   }
