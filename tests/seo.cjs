@@ -43,7 +43,17 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   for (const file of fs.readdirSync(path.join(root, 'blog')).filter(name => name.endsWith('.html') && name !== 'index.html')) {
     assert.ok(pages.includes(`${site}/blog/${file}`), `blog/${file} is in sitemap.xml`);
     assert.ok(posts.includes(`${site}/blog/${file}`), `blog/${file} is in the blog structured data`);
+    // Every post links to related posts, keeps search titles short and says when it last changed.
+    const post = fs.readFileSync(path.join(root, 'blog', file), 'utf8');
+    const related = [...post.matchAll(/<article class="related-card">[\s\S]*?<h3><a href="([^"]+)">/g)].map(m => m[1]);
+    assert.ok(related.length >= 2, `blog/${file} has a Keep reading section`);
+    for (const link of related) assert.ok(fs.existsSync(path.join(root, 'blog', link)) && link !== file, `blog/${file} links to another real post (${link})`);
+    assert.ok(attr(post, /<title>([^<]+)<\/title>/).length <= 90, `blog/${file} title is short enough for search results`);
+    const article = jsonLd(post).flatMap(node => node['@graph'] || [node]).find(node => node['@type'] === 'BlogPosting');
+    assert.ok(article.dateModified >= article.datePublished, `blog/${file} has dateModified`);
   }
+  // Extensionless post links (/blog/slug/) land on the .html post instead of a 404.
+  assert.ok(JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8')).redirects.some(rule => rule.source === '/blog/:slug([a-z0-9-]+)/' && rule.destination === '/blog/:slug.html' && rule.permanent));
 
   const projects = locs(await get(`${base}/sitemap-projects.xml`));
   assert.ok(projects.every(loc => loc.startsWith('https://danielyaa5.github.io/') && loc.endsWith('/')));
