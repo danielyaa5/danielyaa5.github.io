@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
 const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '');
 const root = path.join(__dirname, '..');
 const site = 'http://danielyakobian.com';
-const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html', 'motorcycle-rentals/index.html',
+const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html', 'motorcycle-rentals/index.html', 'cloud-media-shrinker/index.html', 'cloud-media-shrinker/privacy/index.html',
   ...fs.readdirSync(path.join(root, 'blog')).filter(name => name.endsWith('.html') && name !== 'index.html').map(name => `blog/${name}`)];
 const untracked = ['gate/index.html', 'quickdesk/privacy.html', 'bubcal/index.html', 'bubcal/astra-v1/index.html', 'bubcal/astra-v2/index.html'];
 
@@ -20,6 +20,7 @@ const events = request => {
   if (!raw) return [];
   let text = raw[0] === 0x1f && raw[1] === 0x8b ? zlib.gunzipSync(raw).toString() : raw.toString();
   if (text.startsWith('data=')) text = Buffer.from(decodeURIComponent(text.slice(5)), 'base64').toString();
+  else if (!/^\s*[\[{]/.test(text)) text = Buffer.from(text, 'base64').toString();
   const body = JSON.parse(text);
   return Array.isArray(body) ? body : body.batch || [body];
 };
@@ -27,7 +28,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=9" defer><\/script>/g)?.length, 1, `${file} loads analytics v=9 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=10" defer><\/script>/g)?.length, 1, `${file} loads analytics v=10 once`);
   }
   for (const file of untracked) {
     assert.doesNotMatch(fs.readFileSync(path.join(root, file), 'utf8'), /analytics\.js/, `${file} has no analytics`);
@@ -43,6 +44,59 @@ const events = request => {
     await local.goto(`${base}/`, { waitUntil: 'networkidle' });
     assert.deepEqual(analytics, [], 'local preview sends no analytics');
     await local.close();
+
+    // Automated / headless / bot browsers on the published host must never load or contact PostHog.
+    const botCases = [
+      { label: 'default headless', contextOptions: {}, init: null },
+      {
+        label: 'webdriver=true with regular UA',
+        contextOptions: { userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' },
+        init: () => {
+          Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => true });
+          Object.defineProperty(Navigator.prototype, 'userAgentData', { get: () => undefined });
+        },
+      },
+      {
+        label: 'bot userAgent with webdriver=false',
+        contextOptions: { userAgent: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)' },
+        init: () => {
+          Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => false });
+          Object.defineProperty(Navigator.prototype, 'userAgentData', { get: () => undefined });
+        },
+      },
+      {
+        label: 'HeadlessChrome brand in userAgentData',
+        contextOptions: { userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' },
+        init: () => {
+          Object.defineProperty(Navigator.prototype, 'webdriver', { get: () => false });
+          Object.defineProperty(Navigator.prototype, 'userAgentData', { get: () => ({ brands: [{ brand: 'HeadlessChrome', version: '142' }] }) });
+        },
+      },
+    ];
+    await Promise.all(botCases.map(async ({ label, contextOptions, init }) => {
+      const botContext = await browser.newContext(contextOptions);
+      try {
+        if (init) await botContext.addInitScript(init);
+        const posthogRequests = [];
+        await botContext.route(`${site}/**`, async route => {
+          const url = new URL(route.request().url());
+          const response = await fetch(base + url.pathname);
+          await route.fulfill({ status: response.status, headers: { 'content-type': response.headers.get('content-type') || 'text/html' }, body: Buffer.from(await response.arrayBuffer()) });
+        });
+        await botContext.route(/^https:\/\/us(-assets)?\.i\.posthog\.com\/.*/, async route => {
+          posthogRequests.push(route.request().url());
+          await route.fulfill({ status: 200, contentType: 'application/json', body: '{"status":1}' });
+        });
+        const botPage = await botContext.newPage();
+        await botPage.goto(`${site}/`, { waitUntil: 'networkidle' });
+        await botPage.waitForTimeout(2300);
+        const hasPosthog = await botPage.evaluate(() => Boolean(window.posthog || document.querySelector('script[src*="posthog"]')));
+        assert.deepEqual(posthogRequests, [], `${label} sends no PostHog requests`);
+        assert.equal(hasPosthog, false, `${label} never loads PostHog`);
+      } finally {
+        await botContext.close();
+      }
+    }));
 
     // Published host: serve the site locally and catch what PostHog would receive.
     // PostHog ignores headless and automated browsers, so this one presents as a regular Chrome.

@@ -1,10 +1,15 @@
 /* Anonymous page views, page speed (web vitals), project, rental, blog suggestion and TL;DR clicks, resume downloads and email sign-up counts with PostHog,
-   without cookies or browser storage. It runs only on the published hosts, so local previews and tests send nothing,
+   without cookies or browser storage. It runs only on the published hosts for non-automated browsers, so local previews, bots and headless checks send nothing,
    and the guest gate page never loads it. */
 (() => {
   const TOKEN = 'phc_phFn2Yijfyw4fMQxXDN878EUWihevmGmEWrUK27bUX4J';
-  const HOSTS = ['danielyakobian.com', 'danielyaa5.github.io'];
-  if (!HOSTS.includes(location.hostname) || location.pathname.startsWith('/gate')) return;
+  const HOSTS = ['danielyakobian.com', 'www.danielyakobian.com', 'danielyaa5.github.io'];
+  const BOT_UA = /HeadlessChrome|PhantomJS|Playwright|Puppeteer|SlimerJS|bot|crawler|spider|crawling|Lighthouse|PTST|PageSpeed/i;
+  const isAutomated = () =>
+    navigator.webdriver === true ||
+    BOT_UA.test(navigator.userAgent || '') ||
+    Boolean(Array.isArray(navigator.userAgentData?.brands) && navigator.userAgentData.brands.some(b => /HeadlessChrome/i.test(b?.brand || '')));
+  if (!HOSTS.includes(location.hostname) || location.pathname.startsWith('/gate') || isAutomated()) return;
 
   // Addresses on this site keep only their origin and path; queries and fragments stay in the browser.
   const clean = value => {
