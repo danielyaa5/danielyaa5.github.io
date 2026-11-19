@@ -41,7 +41,13 @@ const events = request => {
   }
   assert.doesNotMatch(fs.readFileSync(path.join(root, 'analytics.js'), 'utf8'), /POSTHOG_PROJECT_TOKEN/, 'analytics.js has the project token');
 
-  const browser = await chromium.launch({ headless: true, ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}) });
+  // The routes below stand in for the published site and PostHog, but beacons sent while a page closes can slip past them.
+  // Unresolvable hosts make those fail instead of landing in the real PostHog project.
+  const browser = await chromium.launch({
+    headless: true,
+    args: ['--host-resolver-rules=MAP danielyakobian.com ~NOTFOUND, MAP *.danielyakobian.com ~NOTFOUND, MAP *.posthog.com ~NOTFOUND'],
+    ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}),
+  });
   try {
     // Local preview: PostHog is never contacted.
     const local = await browser.newPage();
