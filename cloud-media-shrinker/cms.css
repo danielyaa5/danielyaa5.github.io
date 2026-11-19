@@ -1,0 +1,114 @@
+/* Cloud Media Shrinker. Shares the portfolio frame, header, buttons and colors from ../styles.css. */
+.cms { --muted: #5d6a5f; --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace; --box: #e4ebd7; --tile: #edf1e3; --line: #a7b2a5; --soft-line: #d0d4b9; padding: 44px var(--rail) 40px 0; }
+.cms a:not(.button) { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+.eyebrow { margin: 0 0 14px; font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.c-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.c-brand img { width: 40px; height: 40px; }
+.c-brand .eyebrow { margin: 0; }
+.c-hero h1 { margin: 0 0 18px; font-size: clamp(36px, 4.3vw, 50px); line-height: 1.1; letter-spacing: -1.4px; text-wrap: balance; }
+.lede { margin: 0; font-size: 19px; line-height: 1.5; }
+.c-sub { margin: 14px 0 0; font-size: 16px; line-height: 1.5; color: var(--muted); }
+.c-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.c-actions .button { min-height: 50px; padding: 11px 20px; font-size: 16px; text-align: center; }
+.fine-print { margin: 14px 0 0; max-width: 560px; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.fine-print + .fine-print { margin-top: 6px; }
+.c-media { overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); }
+.c-media video { display: block; width: 100%; height: auto; }
+.c-note { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+
+.c-know { margin-top: 36px; padding: 22px 24px 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--box); }
+.c-know .section-title { font-size: 22px; margin-bottom: 8px; }
+.c-checks { margin: 0; padding: 0; list-style: none; }
+.c-checks li { position: relative; padding: 10px 0 10px 28px; border-top: 1px solid #c9d2bb; font-size: 15px; line-height: 1.5; }
+.c-checks li:first-child { border-top: 0; }
+.c-checks li::before { content: "✓"; position: absolute; left: 4px; top: 10px; color: var(--green); font-weight: 700; }
+
+.c-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 36px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.c-steps h2 { grid-column: 1 / -1; margin: 26px 0 4px; font-family: var(--mono); font-size: 13px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.c-steps div { padding: 16px 18px 24px 0; }
+.c-steps div + div { padding-left: 18px; border-left: 1px solid var(--soft-line); }
+.c-steps b { display: block; margin-bottom: 6px; font-size: 17px; }
+.c-steps p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
+
+.c-cta { display: flex; align-items: center; justify-content: space-between; gap: 16px 28px; margin-top: 36px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 6px; background: var(--box); }
+.c-cta h2 { margin: 0 0 6px; font-size: 22px; line-height: 1.25; letter-spacing: -.3px; }
+.c-cta p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--muted); }
+.c-cta .c-actions { flex: 0 0 auto; margin-top: 0; }
+
+/* More apps by Daniel: his other live App Store apps, as a row of cards after the buy box. */
+.c-more { margin-top: 36px; }
+.c-more h2 { margin: 0 0 12px; font-family: var(--mono); font-size: 13px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.c-apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.cms a.c-app { display: flex; gap: 14px; align-items: flex-start; height: 100%; padding: 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); color: inherit; text-decoration: none; }
+.cms a.c-app:hover { border-color: var(--green); background: var(--box); }
+.c-app-icon { flex: 0 0 auto; width: 56px; height: 56px; }
+.c-app-icon.ios { border-radius: 22.5%; }
+.c-app-copy { min-width: 0; }
+.c-app b { display: block; font-size: 16px; line-height: 1.25; }
+.c-app small { display: block; margin: 2px 0 6px; font-size: 13px; color: var(--muted); }
+.c-app-line { display: block; font-size: 14px; line-height: 1.45; }
+.c-more-all { margin: 10px 0 0; font-size: 14px; }
+.c-more-all a { display: inline-flex; align-items: center; min-height: 44px; }
+
+.c-support { margin-top: 36px; }
+.c-support .section-title { font-size: 22px; margin-bottom: 10px; }
+.c-support p { margin: 0 0 8px; font-size: 16px; line-height: 1.5; }
+
+/* Privacy policy. */
+.cms-privacy { max-width: 760px; }
+.c-legal h1 { margin: 0 0 8px; font-size: 44px; letter-spacing: -1.4px; text-wrap: balance; }
+.c-legal .c-updated { margin: 0 0 22px; font-size: 14px; color: var(--muted); }
+.c-legal h2 { margin: 30px 0 8px; font-size: 21px; letter-spacing: -.3px; }
+.c-legal p { margin: 0 0 12px; font-size: 16px; line-height: 1.6; }
+
+@media (max-width: 1000px) {
+  .c-cta { flex-direction: column; align-items: stretch; }
+  .c-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .c-steps div:nth-of-type(3) { padding-left: 0; border-left: 0; }
+  .c-steps div:nth-of-type(n+3) { border-top: 1px solid var(--soft-line); }
+}
+@media (max-width: 850px) {
+  .cms { padding-top: 34px; }
+  .c-apps { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .cms { padding: 26px 0 30px; }
+  .c-hero h1 { font-size: 31px; letter-spacing: -1px; }
+  .lede { font-size: 17px; }
+  .c-actions .button { flex: 1 1 100%; min-height: 48px; font-size: 15px; }
+  .c-steps { grid-template-columns: 1fr; }
+  .c-steps div, .c-steps div + div { padding: 14px 0; border-left: 0; border-top: 1px solid var(--soft-line); }
+  .c-steps div:first-of-type { border-top: 0; }
+  .c-know, .c-cta { padding: 18px 16px; }
+  .c-legal h1 { font-size: 32px; letter-spacing: -1px; }
+}
+
+.c-jump { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 18px 0 0; font-size: 15px; }
+.c-jump a { display: inline-flex; align-items: center; min-height: 44px; }
+.cms-a .c-hero { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: center; padding-bottom: 40px; }
+.cms-a .c-hero-art { display: block; width: 100%; max-width: 300px; height: auto; justify-self: end; }
+.cms-a .c-demo { padding: 36px 0 8px; border-top: 1px solid var(--line); }
+.cms-a .c-features { margin-top: 20px; }
+.cms-a .c-feature { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 36px; align-items: center; padding: 34px 0; border-bottom: 1px solid var(--soft-line); }
+.cms-a .c-feature:nth-child(even) .c-feature-copy { order: 2; }
+.c-feature h2 { margin: 0 0 10px; font-size: 24px; line-height: 1.2; letter-spacing: -.4px; }
+.c-feature p:not(.eyebrow) { margin: 0; font-size: 16px; line-height: 1.55; }
+.c-feature .eyebrow { margin-bottom: 10px; }
+.c-shot { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); box-shadow: 0 1px 3px #59684a14; }
+@media (max-width: 850px) {
+  .cms-a .c-hero { grid-template-columns: minmax(0, 1fr) 190px; gap: 24px; }
+  .cms-a .c-feature { grid-template-columns: 1fr; gap: 18px; padding: 28px 0; }
+  .cms-a .c-feature:nth-child(even) .c-feature-copy { order: 0; }
+}
+@media (max-width: 620px) {
+  .cms-a .c-hero { grid-template-columns: 1fr; padding-bottom: 30px; }
+  .cms-a .c-hero-art { display: none; }
+  .c-feature h2 { font-size: 21px; }
+}
+@media screen and (prefers-color-scheme: dark) { .c-shot { box-shadow: none; } }
+
+
+@media screen and (prefers-color-scheme: dark) {
+  .cms { --muted: var(--soft); --box: #1a281f; --tile: var(--card); --line: var(--rule); --soft-line: var(--card-line); }
+  .c-checks li { border-color: var(--card-line); }
+}

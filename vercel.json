@@ -58,10 +58,7 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/subscribe/", "destination": "/api/subscribe" },
-    { "source": "/cloud-media-shrinker/", "destination": "https://danielyaa5.github.io/cloud-media-shrinker/" },
-    { "source": "/cloud-media-shrinker/:path+/", "destination": "https://danielyaa5.github.io/cloud-media-shrinker/:path+" },
-    { "source": "/cloud-media-shrinker/:path+", "destination": "https://danielyaa5.github.io/cloud-media-shrinker/:path+" }
+    { "source": "/api/subscribe/", "destination": "/api/subscribe" }
   ],
   "redirects": [
     {
@@ -76,6 +73,13 @@
       "destination": "https://danielyakobian.com/:path",
       "permanent": true
     },
+    { "source": "/cloud-media-shrinker/privacy.html", "destination": "/cloud-media-shrinker/privacy/", "permanent": true },
+    { "source": "/cloud-media-shrinker/demo.mp4", "destination": "/assets/cloud-media-shrinker/demo.mp4", "permanent": true },
+    { "source": "/cloud-media-shrinker/icon.svg", "destination": "/assets/cloud-media-shrinker/icon.svg", "permanent": true },
+    { "source": "/cloud-media-shrinker/screenshot-:name([a-z-]+).png", "destination": "/assets/cloud-media-shrinker/screenshot-:name.webp", "permanent": true },
+    { "source": "/cloud-media-shrinker/demo.gif", "destination": "https://danielyaa5.github.io/cloud-media-shrinker/demo.gif", "permanent": false },
+    { "source": "/photo-review/", "destination": "/cloud-media-shrinker/", "permanent": true },
+    { "source": "/photo-review/privacy.html", "destination": "/cloud-media-shrinker/privacy/", "permanent": true },
     {
       "source": "/m2",
       "destination": "https://m2.danielyakobian.com/",

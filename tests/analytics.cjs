@@ -137,7 +137,7 @@ const events = request => {
         { project: 'Beckon', link: 'tile', link_text: 'Beckon', destination: 'https://danielyaa5.github.io/beckon/', section: 'featured', position: 3, filter: undefined },
         { project: 'Netflix PiP Fixer', link: 'button', link_text: 'Get it on the Chrome Web Store →', destination: 'https://chromewebstore.google.com/detail/netflix-pip-fixer/ceiiadpnmbplofcefdafhfidmocjgikp', section: 'other', position: 4, filter: 'web' },
         { project: 'Buy or Rent', link: 'tile', link_text: 'Buy or Rent', destination: 'https://thebuyorrentcalculator.com/', section: 'other', position: 3, filter: 'web' },
-        { project: 'Cloud Media Shrinker', link: 'tile', link_text: 'Cloud Media Shrinker', destination: 'https://danielyaa5.github.io/cloud-media-shrinker/', section: 'other', position: 1, filter: 'ios' },
+        { project: 'Cloud Media Shrinker', link: 'tile', link_text: 'Cloud Media Shrinker', destination: 'https://danielyakobian.com/cloud-media-shrinker/', section: 'other', position: 1, filter: 'ios' },
       ], `project clicks at ${width}px; links outside the tiles send none`);
       assert.ok(clicks.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/`), `cookieless project clicks at ${width}px`);
       await tiles.close();
