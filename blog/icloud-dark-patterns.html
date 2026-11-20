@@ -24,7 +24,7 @@
   <link rel="canonical" href="https://danielyakobian.com/blog/icloud-dark-patterns.html">
   <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png?v=2">
   <link rel="stylesheet" href="../styles.css?v=mark-4">
-  <link rel="stylesheet" href="blog.css?v=14">
+  <link rel="stylesheet" href="blog.css?v=15">
   <script src="/analytics.js?v=14" defer></script>
   <script type="application/ld+json">
   {
@@ -76,22 +76,24 @@
 <aside class="article-tldr" aria-label="Short summary">
   <p class="tldr-kicker">TL;DR</p>
   <p>I built <a href="../cloud-media-shrinker/">Cloud Media Shrinker</a> because these dark patterns left me so frustrated.</p>
-  <p class="tldr-subhead">The design choices</p>
-<ul>
-<li>Photos shows file size one item at a time, with no size sort or filter. I&#x27;d call that <em>Obstruction</em>.</li>
-<li>iCloud&#x27;s free storage has stayed at 5 GB since 2011.</li>
-<li>With <code>Optimize Storage</code> on by default, your phone can have room to spare while originals fill iCloud.</li>
-<li>Once you&#x27;re over your iCloud limit, photos and videos you delete skip <code>Recently Deleted</code>.</li>
-<li>You can&#x27;t shrink a video in place in Photos. Exporting on a Mac makes a separate file.</li>
-</ul>
-  <p class="tldr-subhead">Apple&#x27;s side</p>
-<ul>
-<li>Short menus make sense when you just want to find a photo by date.</li>
-<li>Under your iCloud limit, <code>Recently Deleted</code> gives you 30 days to recover a photo or video.</li>
-<li>The <code>Duplicates</code> tool lets you merge duplicate photos and videos to save space.</li>
-<li>Storage costs Apple money, and I think the paid plans are cheap.</li>
-<li>Photos analyzes images on your device. My app needs full library access to review everything.</li>
-</ul>
+<div class="tldr-visual">
+  <p class="tv-head">What pushes you to pay</p>
+  <ul class="tv-cards">
+    <li><span class="tv-top"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 4v16M4 7l3-3 3 3M17 20V4M14 17l3 3 3-3"/><path d="M3 21 21 3"/></svg><span class="tv-tag">Obstruction</span></span><b>No sort by size</b><small>Size shows one item at a time</small></li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg><b>No shrink button</b><small>Mac export makes a separate file</small></li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="9.5" stroke-dasharray="1.6 2.4"/></svg><b>Live Photos are a chore</b><small>No way to convert multiple live images in one click</small></li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M11 3.5l1.7 4.6 4.6 1.7-4.6 1.7L11 16.1l-1.7-4.6L4.7 9.8l4.6-1.7z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg><b>AI for memories only</b><small>Nothing helps you clean up</small></li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6.1 9.5 4.25 4.25 0 0 0 7 18z"/></svg><b>Free tier stuck at 5 GB</b><small>Same as in 2011</small></li>
+  </ul>
+  <p class="tv-head">Apple&#x27;s side</p>
+  <ul class="tv-chips">
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/></svg>Simple on purpose</li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>30-day undo</li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Duplicates tool</li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12l-8 8-8-8V4h8z"/><circle cx="8" cy="8" r="1.5"/></svg>Cheap paid plans</li>
+    <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Private by design</li>
+  </ul>
+</div>
   <p class="tldr-links"><a href="#apple-s-side">Apple&#x27;s side →</a><a href="#why-i-still-think-it-adds-up">Why I think it adds up →</a><a href="why-iphone-videos-are-so-big.html">Why iPhone videos are so big</a></p>
 </aside>
 
