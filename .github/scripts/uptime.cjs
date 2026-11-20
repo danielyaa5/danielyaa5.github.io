@@ -5,6 +5,8 @@
 // GITHUB_REPOSITORY set) it also opens an issue that mentions the owner when a check fails, keeps that
 // issue's status current while checks keep failing, and comments and closes it once every check passes.
 // UPTIME_TEST_ALERT=true adds a pretend failure, to test the issue and its email.
+// With SLACK_WEBHOOK_URL set (the #alerts incoming webhook, a repository secret), it also posts to Slack when it
+// opens the issue and when it closes it, not on the updates in between. A failed Slack post never stops the issue work.
 const tls = require('node:tls');
 const fs = require('node:fs');
 
@@ -97,6 +99,20 @@ async function github(method, path, body) {
   return response.status === 204 ? null : response.json();
 }
 
+async function slack(text) {
+  if (!process.env.SLACK_WEBHOOK_URL) return;
+  try {
+    const response = await fetch(process.env.SLACK_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, unfurl_links: false }),
+    });
+    console.log(response.ok ? 'Posted to Slack' : `::warning title=Slack post failed::HTTP ${response.status}`);
+  } catch (error) {
+    console.log(`::warning title=Slack post failed::${error.message}`);
+  }
+}
+
 function report(results, now, runUrl) {
   const failed = results.filter(r => !r.ok);
   const lines = [
@@ -138,6 +154,10 @@ function report(results, now, runUrl) {
     const title = testAlert ? `${TITLE} (test, not a real outage)` : `${TITLE}: ${failed.map(r => r.name).join(', ')}`;
     const issue = await github('POST', '/issues', { title, body });
     console.log(`Opened issue #${issue.number}: ${issue.html_url}`);
+    const what = failed.map(r => `${r.name} (${r.detail})`).join(', ');
+    await slack(testAlert
+      ? `:test_tube: Uptime alert test, not a real outage. <${issue.html_url}|Issue #${issue.number}> closes on the next run.`
+      : `:red_circle: ${host} check failing: ${what}. <${issue.html_url}|Issue #${issue.number}>${runUrl ? ` · <${runUrl}|run>` : ''}`);
   } else if (failed.length) {
     await github('PATCH', `/issues/${open.number}`, { body });
     console.log(`Updated issue #${open.number}`);
@@ -145,6 +165,7 @@ function report(results, now, runUrl) {
     await github('POST', `/issues/${open.number}/comments`, { body: `Back up: ${body}` });
     await github('PATCH', `/issues/${open.number}`, { state: 'closed', state_reason: 'completed' });
     console.log(`Closed issue #${open.number}`);
+    await slack(`:large_green_circle: ${host} is back up: all ${results.length} checks pass. Closed <${open.html_url}|issue #${open.number}>.`);
   }
 })().catch(error => {
   console.error(error);

@@ -1,7 +1,8 @@
 name: Uptime check
 
 # Every 15 minutes, checks that danielyakobian.com, its sign-up function and the GitHub Pages copy answer.
-# A failure opens one issue that mentions the owner (so GitHub emails them); it closes itself when checks pass.
+# A failure opens one issue that mentions the owner (so GitHub emails them) and posts to Slack #alerts;
+# it closes itself, with a Slack "back up" post, when checks pass.
 # See .github/scripts/uptime.cjs and the Monitoring section of README.md.
 on:
   schedule:
@@ -37,3 +38,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           UPTIME_TEST_ALERT: ${{ inputs.test_alert }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_WEBHOOK }}
