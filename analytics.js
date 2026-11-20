@@ -149,6 +149,24 @@
   document.addEventListener('click', resumeClick);
   document.addEventListener('auxclick', resumeClick);
 
+  // An app_download_click event for each download button on an app page (links with data-store), naming the app
+  // (the page's folder), the store (`app_store` or `polar`, the direct download) and where the button sits: `hero` (top)
+  // or `end` (the closing box). These links carry `ph-no-capture`, so PostHog's autocapture doesn't count the click again.
+  const downloadClick = event => {
+    if (event.type === 'auxclick' && event.button !== 1) return;
+    const link = event.target.closest?.('a[href][data-store]');
+    if (!link) return;
+    track('app_download_click', {
+      app: location.pathname.split('/')[1] || 'home',
+      store: link.dataset.store,
+      placement: link.closest('.c-hero-copy') ? 'hero' : link.closest('.c-cta') ? 'end' : 'other',
+      link_text: link.textContent.replace(/\s+/g, ' ').replace(/\s*↗$/, '').trim(),
+      destination: link.href,
+    });
+  };
+  document.addEventListener('click', downloadClick);
+  document.addEventListener('auxclick', downloadClick);
+
   // A suggested_blog_click event when a reader clicks a recommended post card at the end of an article.
   const suggestedBlogClick = event => {
     if (event.type === 'auxclick' && event.button !== 1) return;

@@ -29,7 +29,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=13" defer><\/script>/g)?.length, 1, `${file} loads analytics v=13 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=14" defer><\/script>/g)?.length, 1, `${file} loads analytics v=14 once`);
   }
   // vercel.json sends /dy-relay/ to PostHog. The site-wide trailing slash turns /array/<token>/config into .../config/,
   // which PostHog answers with a 404, so a rule ahead of the general one strips that slash again.
@@ -332,6 +332,39 @@ const events = request => {
       ], `resume downloads at ${width}px; other links send none`);
       assert.ok(sent.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/resume/`), `cookieless resume downloads at ${width}px`);
       await resume.close();
+    }
+
+    // Download buttons on app pages send app_download_click naming the app, store and placement. They carry ph-no-capture,
+    // so autocapture skips them, while other links on the page (the More apps cards) are still autocaptured.
+    for (const width of [390, 1440]) {
+      const app = await context.newPage();
+      await app.setViewportSize({ width, height: 900 });
+      await app.goto(`${site}/cloud-media-shrinker/`, { waitUntil: 'networkidle' });
+      await app.waitForFunction(() => window.posthog?.__loaded === true);
+      await app.evaluate(() => {
+        for (const type of ['click', 'auxclick']) window.addEventListener(type, event => { if (event.target.closest?.('a[href]')) event.preventDefault(); });
+      });
+      const start = captured.length;
+      await app.locator('.c-hero-copy [data-store="app_store"]').click();
+      await app.locator('.c-hero-copy [data-store="polar"]').click({ button: 'middle' });
+      await app.locator('.c-jump a', { hasText: 'Features' }).click();
+      await app.locator('.c-cta [data-store="polar"]').click();
+      await app.locator('.c-app').first().click();
+      const autoMoreApps = () => captured.slice(start).filter(e => e.event === '$autocapture' && /ct=cms_more_apps/.test(e.properties.$elements_chain || ''));
+      for (let i = 0; i < 40 && !autoMoreApps().length; i += 1) await app.waitForTimeout(200);
+      await app.waitForTimeout(500);
+      const polar = await app.locator('.c-hero-copy [data-store="polar"]').getAttribute('href');
+      const store = await app.locator('.c-hero-copy [data-store="app_store"]').getAttribute('href');
+      const sent = captured.slice(start).filter(e => e.event === 'app_download_click').map(e => e.properties);
+      assert.deepEqual(sent.map(({ app: name, store: where, placement, link_text, destination }) => ({ name, where, placement, link_text, destination })), [
+        { name: 'cloud-media-shrinker', where: 'app_store', placement: 'hero', link_text: 'Download on the App Store', destination: store },
+        { name: 'cloud-media-shrinker', where: 'polar', placement: 'hero', link_text: 'Direct download for Mac · $9.49', destination: polar },
+        { name: 'cloud-media-shrinker', where: 'polar', placement: 'end', link_text: 'Direct download for Mac · $9.49', destination: polar },
+      ], `download clicks at ${width}px; other links send none`);
+      assert.ok(sent.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/cloud-media-shrinker/`), `cookieless download clicks at ${width}px`);
+      assert.ok(autoMoreApps().length > 0, `More apps clicks are still autocaptured at ${width}px`);
+      assert.ok(!captured.slice(start).some(e => e.event === '$autocapture' && /data-store|polar\.sh|id6824383256/.test(e.properties.$elements_chain || '')), `download buttons are not autocaptured too at ${width}px`);
+      await app.close();
     }
 
     // Blog articles send suggested_blog_click for recommended post cards and tldr_link_click for TL;DR links.
