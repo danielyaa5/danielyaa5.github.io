@@ -1,0 +1,37 @@
+name: Deploy alert
+
+# Posts to Slack #alerts when Vercel reports a failed deploy of main (its "Vercel" commit status). A failed deploy
+# leaves the previous version live, so the uptime check can't see it. Every other status (pending, success,
+# preview branches) skips the job. Run it by hand to post a test message.
+on:
+  status:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  notify:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.context == 'Vercel' &&
+       (github.event.state == 'failure' || github.event.state == 'error') &&
+       contains(github.event.branches.*.name, 'main'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Post to Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_WEBHOOK }}
+          EVENT: ${{ github.event_name }}
+          SHA: ${{ github.event.sha }}
+          TARGET: ${{ github.event.target_url }}
+          MESSAGE: ${{ github.event.commit.commit.message }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ]; then
+            text=":test_tube: Deploy alert test, not a real failure. A failed Vercel deploy of danielyakobian.com's main branch will post here."
+          else
+            subject=$(printf '%s\n' "$MESSAGE" | head -n 1)
+            text=":x: Vercel deploy failed for danielyakobian.com (${SHA:0:7}: ${subject}). The previous version is still live. <${TARGET}|Build log>"
+          fi
+          jq -n --arg text "$text" '{text: $text, unfurl_links: false}' | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null
+          echo "Posted to Slack"
