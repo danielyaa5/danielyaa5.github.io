@@ -296,6 +296,14 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 .signup-topic-name { display: block; font-size: 16px; line-height: 1.25; }
 .signup-topic-note { display: block; margin-top: 2px; font-size: 14px; line-height: 1.4; color: #455f3d; }
 .signup-topic-note strong { color: var(--green); }
+/* Beta tester invites stands out in violet, on purpose off the green palette. */
+.signup-topic-beta { border: 1.5px solid #8b5cf6; background: #f5f0ff; }
+.signup-topic-beta:hover { border-color: #6d28d9; }
+.signup-topic-beta:has(input:checked) { border-color: #5b21b6; background: #ebe2ff; }
+.signup-topic-beta:has(input:focus-visible) { outline-color: #6d28d9; }
+.signup-topic-beta input { accent-color: #6d28d9; }
+.signup-topic-beta .signup-topic-note { color: #4c3a75; }
+.signup-topic-beta .signup-topic-note strong { color: #6d28d9; }
 .signup-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .signup-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; margin-top: 16px; }
 .signup-email-label { grid-column: 1 / -1; font-size: 14px; font-weight: 700; color: #455f3d; }
@@ -403,6 +411,13 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
   .signup-topic { border-color: var(--card-line); background: var(--field); }
   .signup-topic:hover, .signup-email { border-color: var(--frame); }
   .signup-topic:has(input:checked) { border-color: var(--green); background: var(--hover); }
+  .signup-topic-beta { border-color: #7c5cd6; background: #201a33; }
+  .signup-topic-beta:hover { border-color: #a78bfa; }
+  .signup-topic-beta:has(input:checked) { border-color: #a78bfa; background: #2b2245; }
+  .signup-topic-beta:has(input:focus-visible) { outline-color: #a78bfa; }
+  .signup-topic-beta input { accent-color: #a78bfa; }
+  .signup-topic-beta .signup-topic-note { color: #cbbcf0; }
+  .signup-topic-beta .signup-topic-note strong { color: #c4b5fd; }
   .signup-email { background: var(--field); }
   .signup-email::placeholder { color: #7d8a78; }
   .signup-status[data-kind="error"], .signup-result-error { color: #f1a395; }

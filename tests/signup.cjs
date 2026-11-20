@@ -17,6 +17,8 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
     for (const width of widths) {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
       await page.goto(`${base}/`, { waitUntil: 'networkidle' });
+      // Read the option colors before anything is ticked.
+      const colors = await page.evaluate(() => [...document.querySelectorAll('.signup-topic')].map(label => ({ border: getComputedStyle(label).borderTopColor, bold: getComputedStyle(label.querySelector('.signup-topic-note strong') || label).color })));
       const layout = await page.evaluate(() => {
         const box = el => el.getBoundingClientRect();
         const signup = document.querySelector('.signup');
@@ -86,6 +88,10 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
       assert.ok(layout.targets.every(t => t.height >= 44), `touch targets are at least 44px tall at ${width}px: ${JSON.stringify(layout.targets)}`);
       assert.deepEqual(layout.topicLabels, ['Beta tester invites', 'New app and open source launches', 'Promos']);
       assert.deepEqual(layout.betaNote, { text: 'Try apps early and get them free for life!', bold: 'free for life!', weight: '700' }, 'beta note with "free for life!" in bold');
+      // The beta option stands out in violet; the other options keep the site's green-gray border.
+      assert.equal(colors[0].border, 'rgb(139, 92, 246)', 'beta option has a violet border');
+      assert.equal(colors[0].bold, 'rgb(109, 40, 217)', '"free for life!" is violet');
+      assert.ok(colors.slice(1).every(c => c.border === 'rgb(201, 208, 189)'), `other options keep the green-gray border: ${JSON.stringify(colors)}`);
       assert.equal(layout.checked, 0, 'no box is ticked in advance');
       assert.equal(layout.trapVisible, false, 'the bot trap field is off screen');
       assert.ok(layout.emailFont >= 16, 'email field is 16px so iOS does not zoom');
@@ -195,6 +201,12 @@ const endpoint = 'https://danielyakobian.com/api/subscribe/';
     await page.goto(`${base}/#signup-failed`);
     assert.ok(await page.locator('#signup-failed').isVisible(), 'failure message shows without JavaScript');
     await context.close();
+    // Dark mode keeps the violet beta option, in its dark shade.
+    const dark = await browser.newPage({ colorScheme: 'dark' });
+    await dark.goto(`${base}/`, { waitUntil: 'networkidle' });
+    assert.equal(await dark.locator('.signup-topic-beta').evaluate(el => getComputedStyle(el).borderTopColor), 'rgb(124, 92, 214)', 'dark mode beta option has a violet border');
+    assert.equal(await dark.locator('.signup-topic-beta .signup-topic-note strong').evaluate(el => getComputedStyle(el).color), 'rgb(196, 181, 253)', 'dark mode "free for life!" is light violet');
+    await dark.close();
   } finally {
     await browser.close();
   }
