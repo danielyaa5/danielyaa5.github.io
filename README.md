@@ -42,6 +42,8 @@ After changing the page or the navigation, run `node tests/rentals.cjs http://lo
 
 `cloud-media-shrinker/`, `beckon/`, `3d-print-monitor/` and `tagtracker/` are the apps' landing pages, with their privacy, terms or support pages in subfolders, the site's frame and navigation, and a More apps row linking the others. They share the hero, features, steps, buy box and privacy layout in `cloud-media-shrinker/cms.css`, plus `assets/apps/app-page.css` for the parts the other three add (FAQ, demos, code card). Images live in `assets/<app>/`, and each page's link preview is `assets/<app>/social-card.jpg`, rendered at 1200×630 from `assets/social/<app>-card.html`.
 
+`puml-for-markdown/` is the landing page for the open-source CLI and GitHub Action. It uses the same parts plus its own `puml.css` and `puml.js` (demo video, live GitHub and npm counts, diagram viewer). The viewer's SVGs in `assets/puml-for-markdown/diagrams/` are the repo's example diagrams exported by the tool itself (`puml-for-markdown --local-images -f svg`), and `demo.mp4`/`demo.webm` are the repo's `docs/demo.gif` converted. `tests/puml.cjs` covers the page.
+
 These pages used to be GitHub Pages project sites at `danielyaa5.github.io/<app>/`. Those sites now only forward here, with a canonical link and an instant refresh. Beckon's and TagTracker's update feeds (`appcast.xml`) still live on their project sites, because the installed apps check those addresses.
 
 ## Blog

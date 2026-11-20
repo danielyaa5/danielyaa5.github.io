@@ -12,7 +12,7 @@ const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '');
 const root = path.join(__dirname, '..');
 const site = 'http://danielyakobian.com';
 const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html', 'motorcycle-rentals/index.html', 'cloud-media-shrinker/index.html', 'cloud-media-shrinker/privacy/index.html',
-  'beckon/index.html', 'beckon/privacy/index.html', 'beckon/terms/index.html', '3d-print-monitor/index.html', '3d-print-monitor/privacy/index.html', '3d-print-monitor/support/index.html', 'tagtracker/index.html',
+  'beckon/index.html', 'beckon/privacy/index.html', 'beckon/terms/index.html', '3d-print-monitor/index.html', '3d-print-monitor/privacy/index.html', '3d-print-monitor/support/index.html', 'tagtracker/index.html', 'puml-for-markdown/index.html',
   ...fs.readdirSync(path.join(root, 'blog')).filter(name => name.endsWith('.html') && name !== 'index.html').map(name => `blog/${name}`)];
 const untracked = ['gate/index.html', 'quickdesk/privacy.html', 'bubcal/index.html', 'bubcal/astra-v1/index.html', 'bubcal/astra-v2/index.html'];
 
@@ -239,7 +239,7 @@ const events = request => {
       const pick = ({ project, link, link_text, destination, section, position, filter }) => ({ project, link, link_text, destination, section, position, filter });
       assert.deepEqual(clicks.map(pick), [
         { project: 'Cloud Media Shrinker', link: 'button', link_text: 'View on the App Store →', destination: 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=8', section: 'featured', position: 1, filter: undefined },
-        { project: 'puml-for-markdown', link: 'title', link_text: 'puml-for-markdown', destination: 'https://github.com/danielyaa5/puml-for-markdown', section: 'featured', position: 2, filter: undefined },
+        { project: 'puml-for-markdown', link: 'title', link_text: 'puml-for-markdown', destination: 'https://danielyakobian.com/puml-for-markdown/', section: 'featured', position: 2, filter: undefined },
         { project: 'Buy or Rent', link: 'tile', link_text: 'Buy or Rent', destination: 'https://thebuyorrentcalculator.com/', section: 'featured', position: 3, filter: undefined },
         { project: 'Netflix PiP Fixer', link: 'button', link_text: 'Get it on the Chrome Web Store →', destination: 'https://chromewebstore.google.com/detail/netflix-pip-fixer/ceiiadpnmbplofcefdafhfidmocjgikp', section: 'other', position: 5, filter: 'web' },
         { project: 'H2D Custom Dashboard', link: 'tile', link_text: 'H2D Custom Dashboard', destination: 'https://danielyakobian.com/blog/h2d-exhaust-fan.html', section: 'other', position: 11, filter: 'web' },

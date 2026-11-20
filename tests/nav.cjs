@@ -11,7 +11,7 @@ const blogPages = fs.readdirSync(path.join(__dirname, '..', 'blog')).filter(f =>
 const pages = [['', null], ['resume/', 'Resume'], ['motorcycle-rentals/', 'Motorcycle Rentals'], ['robot-vacuum-ramp/', null], ...blogPages.map(p => [p, 'Blog'])];
 
 // App pages, with their privacy, terms and support pages, are part of Work.
-pages.push(...['cloud-media-shrinker/', 'cloud-media-shrinker/privacy/', 'beckon/', 'beckon/privacy/', 'beckon/terms/', '3d-print-monitor/', '3d-print-monitor/privacy/', '3d-print-monitor/support/', 'tagtracker/'].map(p => [p, 'Work']));
+pages.push(...['cloud-media-shrinker/', 'cloud-media-shrinker/privacy/', 'beckon/', 'beckon/privacy/', 'beckon/terms/', '3d-print-monitor/', '3d-print-monitor/privacy/', '3d-print-monitor/support/', 'tagtracker/', 'puml-for-markdown/'].map(p => [p, 'Work']));
 
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
