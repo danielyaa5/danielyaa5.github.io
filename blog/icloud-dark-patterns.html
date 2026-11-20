@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Apple Photos shows one video&#x27;s size at a time, with no way to sort by size. I think dark patterns like this steer people toward an iCloud upgrade.">
+  <meta name="author" content="Daniel Yakobian">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
+  <meta property="og:site_name" content="Daniel Yakobian">
+  <meta property="og:title" content="The dark patterns that make iCloud storage hard to shrink">
+  <meta property="og:description" content="Apple Photos shows one video&#x27;s size at a time, with no way to sort by size. I think dark patterns like this steer people toward an iCloud upgrade.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://danielyakobian.com/blog/icloud-dark-patterns.html">
+  <meta property="og:image" content="https://danielyakobian.com/assets/writing/icloud-dark-patterns.jpg">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="900">
+  <meta property="article:published_time" content="2026-11-20">
+  <meta property="article:modified_time" content="2026-11-20">
+  <meta property="article:author" content="https://danielyakobian.com/">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>The dark patterns that make iCloud storage hard to shrink | Daniel Yakobian</title>
+  <link rel="canonical" href="https://danielyakobian.com/blog/icloud-dark-patterns.html">
+  <link rel="icon" type="image/png" sizes="128x128" href="../assets/favicon.png?v=2">
+  <link rel="stylesheet" href="../styles.css?v=mark-4">
+  <link rel="stylesheet" href="blog.css?v=13">
+  <script src="/analytics.js?v=13" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "The dark patterns that make iCloud storage hard to shrink",
+    "description": "Apple Photos shows one video's size at a time, with no way to sort by size. I think dark patterns like this steer people toward an iCloud upgrade.",
+    "url": "https://danielyakobian.com/blog/icloud-dark-patterns.html",
+    "mainEntityOfPage": "https://danielyakobian.com/blog/icloud-dark-patterns.html",
+    "image": "https://danielyakobian.com/assets/writing/icloud-dark-patterns.jpg",
+    "datePublished": "2026-11-20",
+    "dateModified": "2026-11-20",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "@id": "https://danielyakobian.com/#person",
+      "name": "Daniel Yakobian",
+      "url": "https://danielyakobian.com/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "@id": "https://danielyakobian.com/#person",
+      "name": "Daniel Yakobian",
+      "url": "https://danielyakobian.com/"
+    },
+    "isPartOf": {
+      "@type": "Blog",
+      "@id": "https://danielyakobian.com/blog/#blog",
+      "url": "https://danielyakobian.com/blog/"
+    }
+  }
+  </script>
+</head>
+<body class="blog-page" id="top">
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="page-frame">
+    <header class="site-header">
+      <a class="identity" href="../" aria-label="Daniel, home">Daniel</a>
+      <nav aria-label="Main navigation">
+        <a href="../#work" data-icon="work">Work</a>
+        <a href="./" aria-current="page" data-icon="blog">Blog</a>
+        <a href="../resume/" data-icon="resume">Resume</a>
+        <a href="https://www.etsy.com/shop/JustFitsStudio" data-icon="shop" aria-label="3D Print Shop"><span><span class="nav-extra">3D Print </span>Shop</span></a>
+        <a href="../motorcycle-rentals/" data-icon="moto" aria-label="Motorcycle Rentals"><span><span class="nav-extra">Motorcycle </span>Rentals</span></a>
+      </nav>
+    </header>
+    <a class="site-mark" href="https://www.goodreads.com/book/show/629.Zen_and_the_Art_of_Motorcycle_Maintenance" aria-label="Zen and the Art of Motorcycle Maintenance on Goodreads" title="Zen and the Art of Motorcycle Maintenance"><svg viewBox="0 0 192 192" aria-hidden="true" focusable="false"><path class="mark-leaf mark-back mark-r" d="M98.8 168.4C99.8 166.1 102.8 159 104.7 154.4C106.7 149.9 108.6 145.4 110.4 140.9C112.2 136.4 114 131.9 115.7 127.4C117.4 122.9 119 118.4 120.6 113.7C122.2 109.1 123.7 104.5 125 99.6C126.3 94.6 127.7 86.6 128.2 84C126.2 85.8 119.5 90.5 115.9 94.4C112.3 98.2 109.3 102.6 106.5 107.1C103.8 111.6 101.5 116.4 99.6 121.2C97.7 126.1 96.2 131.2 95.2 136.3C94.1 141.4 93.4 146.7 93.1 151.9C92.8 157.1 93.4 165 93.5 167.6Z"/><path class="mark-trace" d="M98.8 168.4C99.8 166.1 102.8 159 104.7 154.4C106.7 149.9 108.6 145.4 110.4 140.9C112.2 136.4 114 131.9 115.7 127.4C117.4 122.9 119 118.4 120.6 113.7C122.2 109.1 123.7 104.5 125 99.6C126.3 94.6 127.7 86.6 128.2 84C126.2 85.8 119.5 90.5 115.9 94.4C112.3 98.2 109.3 102.6 106.5 107.1C103.8 111.6 101.5 116.4 99.6 121.2C97.7 126.1 96.2 131.2 95.2 136.3C94.1 141.4 93.4 146.7 93.1 151.9C92.8 157.1 93.4 165 93.5 167.6Z" stroke-dasharray="192 192" stroke-dashoffset="192"/><path class="mark-leaf mark-back mark-l" d="M93.2 168.4C92.2 166.1 89.2 159 87.3 154.4C85.3 149.9 83.4 145.4 81.6 140.9C79.8 136.4 78 131.9 76.3 127.4C74.6 122.9 73 118.4 71.4 113.7C69.8 109.1 68.3 104.5 67 99.6C65.7 94.6 64.3 86.6 63.8 84C65.8 85.8 72.5 90.5 76.1 94.4C79.7 98.2 82.7 102.6 85.5 107.1C88.2 111.6 90.5 116.4 92.4 121.2C94.3 126.1 95.8 131.2 96.8 136.3C97.9 141.4 98.6 146.7 98.9 151.9C99.2 157.1 98.6 165 98.5 167.6Z"/><path class="mark-trace" d="M93.2 168.4C92.2 166.1 89.2 159 87.3 154.4C85.3 149.9 83.4 145.4 81.6 140.9C79.8 136.4 78 131.9 76.3 127.4C74.6 122.9 73 118.4 71.4 113.7C69.8 109.1 68.3 104.5 67 99.6C65.7 94.6 64.3 86.6 63.8 84C65.8 85.8 72.5 90.5 76.1 94.4C79.7 98.2 82.7 102.6 85.5 107.1C88.2 111.6 90.5 116.4 92.4 121.2C94.3 126.1 95.8 131.2 96.8 136.3C97.9 141.4 98.6 146.7 98.9 151.9C99.2 157.1 98.6 165 98.5 167.6Z" stroke-dasharray="192 192" stroke-dashoffset="192"/><g class="mark-wrench"><path class="mark-steel" d="M87.2 155L87.2 86.5Q87.2 75.1 82.1 71.9A27.5 27.5 0 0 1 93 20.8L85.5 43.9A11.3 11.3 0 0 0 107 50.9L114.5 27.8A27.5 27.5 0 0 1 109.9 71.9Q104.8 75.1 104.8 86.5L104.8 155A8.8 8.8 0 0 1 87.2 155Z"/><path class="mark-trace" d="M87.2 155L87.2 86.5Q87.2 75.1 82.1 71.9A27.5 27.5 0 0 1 93 20.8L85.5 43.9A11.3 11.3 0 0 0 107 50.9L114.5 27.8A27.5 27.5 0 0 1 109.9 71.9Q104.8 75.1 104.8 86.5L104.8 155A8.8 8.8 0 0 1 87.2 155Z" stroke-dasharray="404 404" stroke-dashoffset="404"/><path class="mark-groove" d="M96 83.2V155"/><path class="mark-trace" d="M96 83.2V155" stroke-dasharray="74 74" stroke-dashoffset="74"/></g><path class="mark-leaf mark-mid mark-r" d="M98.6 169.8C100.4 168.5 106 164.6 109.6 162.3C113.1 160 116.7 158 120.2 155.9C123.7 153.9 127.1 152.1 130.6 150.2C134.1 148.3 137.5 146.5 141.1 144.5C144.7 142.6 148.3 140.9 152.3 138.7C156.2 136.5 162.6 132.7 164.7 131.5C162.3 130.7 155.2 127.5 150.3 126.9C145.5 126.3 140.3 126.8 135.5 127.8C130.6 128.8 125.8 130.6 121.4 132.9C117 135.2 112.8 138.2 109.2 141.6C105.6 144.9 102.3 148.9 99.7 153C97.1 157.2 94.6 164.1 93.6 166.4Z"/><path class="mark-trace" d="M98.6 169.8C100.4 168.5 106 164.6 109.6 162.3C113.1 160 116.7 158 120.2 155.9C123.7 153.9 127.1 152.1 130.6 150.2C134.1 148.3 137.5 146.5 141.1 144.5C144.7 142.6 148.3 140.9 152.3 138.7C156.2 136.5 162.6 132.7 164.7 131.5C162.3 130.7 155.2 127.5 150.3 126.9C145.5 126.3 140.3 126.8 135.5 127.8C130.6 128.8 125.8 130.6 121.4 132.9C117 135.2 112.8 138.2 109.2 141.6C105.6 144.9 102.3 148.9 99.7 153C97.1 157.2 94.6 164.1 93.6 166.4Z" stroke-dasharray="175 175" stroke-dashoffset="175"/><path class="mark-leaf mark-mid mark-l" d="M93.4 169.8C91.6 168.5 86 164.6 82.4 162.3C78.9 160 75.3 158 71.8 155.9C68.3 153.9 64.9 152.1 61.4 150.2C57.9 148.3 54.5 146.5 50.9 144.5C47.3 142.6 43.7 140.9 39.7 138.7C35.8 136.5 29.4 132.7 27.3 131.5C29.7 130.7 36.8 127.5 41.7 126.9C46.5 126.3 51.7 126.8 56.5 127.8C61.4 128.8 66.2 130.6 70.6 132.9C75 135.2 79.2 138.2 82.8 141.6C86.4 144.9 89.7 148.9 92.3 153C94.9 157.2 97.4 164.1 98.4 166.4Z"/><path class="mark-trace" d="M93.4 169.8C91.6 168.5 86 164.6 82.4 162.3C78.9 160 75.3 158 71.8 155.9C68.3 153.9 64.9 152.1 61.4 150.2C57.9 148.3 54.5 146.5 50.9 144.5C47.3 142.6 43.7 140.9 39.7 138.7C35.8 136.5 29.4 132.7 27.3 131.5C29.7 130.7 36.8 127.5 41.7 126.9C46.5 126.3 51.7 126.8 56.5 127.8C61.4 128.8 66.2 130.6 70.6 132.9C75 135.2 79.2 138.2 82.8 141.6C86.4 144.9 89.7 148.9 92.3 153C94.9 157.2 97.4 164.1 98.4 166.4Z" stroke-dasharray="175 175" stroke-dashoffset="175"/><path class="mark-leaf mark-front mark-l" d="M93.4 168.6C92.5 167.4 89.6 163.6 87.8 161.1C86.1 158.6 84.4 156.2 82.9 153.8C81.3 151.3 79.9 148.9 78.6 146.4C77.3 143.8 76.1 141.3 75 138.6C73.9 135.9 72.9 133.2 72.1 130.1C71.3 127 70.7 121.6 70.4 119.8C72 120.5 77.2 122.2 80.1 124C82.9 125.8 85.3 128.2 87.5 130.6C89.7 133 91.6 135.8 93.1 138.7C94.7 141.5 95.9 144.6 96.8 147.7C97.7 150.9 98.3 154.2 98.6 157.5C98.8 160.7 98.4 165.7 98.4 167.4Z"/><path class="mark-trace" d="M93.4 168.6C92.5 167.4 89.6 163.6 87.8 161.1C86.1 158.6 84.4 156.2 82.9 153.8C81.3 151.3 79.9 148.9 78.6 146.4C77.3 143.8 76.1 141.3 75 138.6C73.9 135.9 72.9 133.2 72.1 130.1C71.3 127 70.7 121.6 70.4 119.8C72 120.5 77.2 122.2 80.1 124C82.9 125.8 85.3 128.2 87.5 130.6C89.7 133 91.6 135.8 93.1 138.7C94.7 141.5 95.9 144.6 96.8 147.7C97.7 150.9 98.3 154.2 98.6 157.5C98.8 160.7 98.4 165.7 98.4 167.4Z" stroke-dasharray="122 122" stroke-dashoffset="122"/><path class="mark-leaf mark-front mark-r" d="M98.4 168.7C99.3 167.6 102.2 164.3 103.9 162.1C105.6 159.9 107.3 157.8 108.8 155.7C110.3 153.6 111.7 151.5 113 149.2C114.3 147 115.5 144.8 116.6 142.4C117.7 140 118.7 137.6 119.6 134.8C120.4 131.9 121.2 127 121.6 125.4C120 126 115.1 127.1 112.4 128.5C109.6 130 107.3 132 105.1 134.1C103 136.2 101.1 138.6 99.6 141.2C98 143.7 96.7 146.5 95.8 149.4C94.8 152.2 94.1 155.2 93.8 158.2C93.5 161.2 93.8 165.8 93.8 167.4Z"/><path class="mark-trace" d="M98.4 168.7C99.3 167.6 102.2 164.3 103.9 162.1C105.6 159.9 107.3 157.8 108.8 155.7C110.3 153.6 111.7 151.5 113 149.2C114.3 147 115.5 144.8 116.6 142.4C117.7 140 118.7 137.6 119.6 134.8C120.4 131.9 121.2 127 121.6 125.4C120 126 115.1 127.1 112.4 128.5C109.6 130 107.3 132 105.1 134.1C103 136.2 101.1 138.6 99.6 141.2C98 143.7 96.7 146.5 95.8 149.4C94.8 152.2 94.1 155.2 93.8 158.2C93.5 161.2 93.8 165.8 93.8 167.4Z" stroke-dasharray="112 112" stroke-dashoffset="112"/></svg></a>
+    <main id="content"><article class="blog-article"><header class="article-header"><p class="eyebrow">Notes on building software</p><h1>The dark patterns that make iCloud storage hard to shrink</h1><p class="article-meta"><a href="../" rel="author">Daniel Yakobian</a> · <time datetime="2026-11-20">November 20, 2026</time></p></header><div class="article-body">
+<p>I quit my software engineering job to travel for two years and shot a lot of video. My iCloud Photos library hit 1.8 TB, mostly long videos. I wanted to know which ones were eating up the space, and Photos had no way to sort them by size. So I built an app that lists the biggest ones first.</p>
+
+<aside class="article-tldr" aria-label="Short summary">
+  <p class="tldr-kicker">TL;DR</p>
+  <p>Photos can tell you how big a video is, but finding the biggest ones and keeping smaller copies takes work. I think those choices steer people toward an iCloud upgrade. I sell Cloud Media Shrinker, an app that helps with both jobs.</p>
+  <p class="tldr-links"><a href="#apple-s-side">Apple&#x27;s side →</a><a href="#why-i-still-think-it-adds-up">Why I think it adds up →</a><a href="why-iphone-videos-are-so-big.html">Why iPhone videos are so big</a></p>
+</aside>
+
+
+<p>I sell that app, Cloud Media Shrinker, so I have a stake in this. I also think some of the design choices around iCloud storage deserve to be called dark patterns. You can see why by following a fairly ordinary task from start to finish. You have a library you want to keep, a storage plan you&#x27;d like to stay on, and a few videos that might be worth shrinking. Where do you start?</p>
+<h2 id="photos-knows-how-big-each-video-is">Photos knows how big each video is</h2>
+<p>Harry Brignull <a href="https://deceptive.design/about-us/dr-harry-brignull/">coined the term "dark patterns"</a> in 2010. In its September 2022 staff report, <a href="https://www.ftc.gov/reports/bringing-dark-patterns-light"><em>Bringing Dark Patterns to Light</em></a>, the FTC describes designs that can steer people into choices they otherwise wouldn&#x27;t make and that may harm them. One type in Brignull&#x27;s catalog fits my experience particularly well. He calls it "<a href="https://deceptive.design/types/obstruction/">Obstruction</a>," putting hurdles in the way of someone trying to do a task or find information.</p>
+<p>On iOS 27.2, the Photos sort menu offers Date Captured and Date Added, along with options for what&#x27;s been edited, saved, shared or viewed recently. File size is missing. On macOS 27.2, Photos sorts by date or title. A Smart Album gives me 18 conditions to choose from, including camera model, lens, ISO, keyword, filename and date captured. I can build an album around which lens I used. I can&#x27;t build one around which videos are bigger than a gigabyte.</p>
+<p>Open the info panel for one item and its file size is right there. That&#x27;s why I&#x27;d call this obstruction. The information exists, and I&#x27;m allowed to see it, one item at a time. To find the biggest video that way, I&#x27;d have to open each one and keep track of the winner. I&#x27;d have exactly the same job on my hands if I just wanted the five biggest ones to review over lunch.</p>
+<h2 id="the-phone-can-have-plenty-of-room">The phone can have plenty of room</h2>
+<p>When Apple <a href="https://www.apple.com/newsroom/2011/06/06Apple-Introduces-iCloud/">announced iCloud on June 6, 2011</a>, it included 5 GB of free storage. Set up iCloud today and you <a href="https://support.apple.com/en-us/108922">still get 5 GB</a>. Phone cameras have changed a fair bit in the meantime. I wrote about what that means per minute of recording in [why iPhone videos are so big](why-iphone-videos-are-so-big.html).</p>
+<p>There&#x27;s also a good reason you might not notice the growth on your phone. When you use iCloud Photos, <a href="https://support.apple.com/en-us/105061">Optimize Storage is on by default</a>. Your device keeps <a href="https://support.apple.com/en-us/108782">space-saving versions of photos and videos</a> while iCloud stores the full-resolution originals. That lets your phone have room to spare while those original videos keep filling iCloud.</p>
+<p>I like what that feature does. It does mean that the device I use every day can give me very little sense of how much space my videos are taking up elsewhere. By the time I&#x27;m looking for space to get back, I need a way to see the library from iCloud&#x27;s end of the arrangement. Sorting by when I last viewed something doesn&#x27;t get me very far.</p>
+<h2 id="deleting-gets-riskier-over-the-limit">Deleting gets riskier over the limit</h2>
+<p>Normally, a photo or video you delete <a href="https://support.apple.com/en-us/124460">stays in Recently Deleted for 30 days</a>. That gives you time to realize you picked the wrong item and recover it.</p>
+<p>Once you exceed your iCloud storage limit, the rule changes. Apple says your device <a href="https://support.apple.com/en-us/108922">immediately removes photos and videos you delete</a>, and you can&#x27;t recover them from Recently Deleted. There&#x27;s a meaningful difference between getting close to the limit and going over it, even if you&#x27;re doing exactly the same cleanup in Photos.</p>
+<p>That&#x27;s an awkward time to lose the safety net. The more urgently I need to get some space back, the more carefully I have to check each decision. And deleting a video is a bigger decision than I necessarily wanted to make. I might still want the video.</p>
+<h2 id="keeping-a-smaller-copy-takes-work">Keeping a smaller copy takes work</h2>
+<p>On iPhone, I looked for an option in Photos to make a video smaller. I couldn&#x27;t find one. On a Mac, Photos gets part of the way there. When you export a video, the <a href="https://support.apple.com/guide/photos/export-photos-videos-slideshows-and-memories-pht6e157c5f/mac">Movie Quality setting</a> offers 480p, 720p, 1080p or 4K, so you can choose a lower resolution and make a smaller copy.</p>
+<p>The result is a separate file outside your library. Photos doesn&#x27;t swap it in for the original. If my goal was to get a smaller file to send to someone, the export would have done the job. If my goal was to use less iCloud storage, the full-size video is still sitting in my library, taking up exactly as much space as when I started.</p>
+<h2 id="apple-s-side">Apple&#x27;s side</h2>
+<p>I take the simplicity argument seriously. Most people probably never want a sort-by-size menu in Photos. They want to find a picture they took on a particular day. Every extra option is one more thing for someone to puzzle over, and I can see a reasonable case for keeping the everyday menus short.</p>
+<p>Optimize Storage also does a useful job on a phone or Mac. Under the iCloud limit, Recently Deleted gives you a real 30-day safety net. And Photos has a cleanup tool that addresses a problem people can recognize without inspecting any file sizes. On iPhone, look under Utilities, then Duplicates. You can <a href="https://support.apple.com/guide/iphone/merge-duplicate-photos-and-videos-iph1978d9c23/ios">merge duplicate photos and videos</a> there to save space.</p>
+<p>Storage costs Apple real money. I think the paid plans are cheap, and they <a href="https://support.apple.com/en-us/108047">start at 50 GB</a>. For someone who wants to keep every original, paying for the space can be a perfectly reasonable choice.</p>
+<p>Privacy matters here, too. Apple says it "<a href="https://www.apple.com/legal/privacy/data/en/photos/">does not access your photos or videos</a>," and Photos analyzes things like scenes, people and pets, and image quality on your device. A third-party cleanup app, including mine, needs access to your whole library to review the whole thing. That&#x27;s a real trade-off for someone who just wants to find a few large files.</p>
+<h2 id="why-i-still-think-it-adds-up">Why I still think it adds up</h2>
+<p>Apple doesn&#x27;t report iCloud revenue separately. In its <a href="https://www.sec.gov/Archives/edgar/data/320193/000032019326000026/aapl-20260926.htm">fiscal 2026 Form 10-K</a>, filed November 3, 2026, Apple reported $123.3 billion in Services net sales, up 13% from $109.2 billion. Apple attributed the increase primarily to higher net sales from advertising and cloud services. That&#x27;s as far as the filing lets me take the numbers.</p>
+<p>No single choice here proves intent. Put them side by side, though. The free allowance is still 5 GB. My phone can feel roomy while iCloud fills up. When I go looking, I can&#x27;t sort by the number that matters or shrink a video in place. If I&#x27;ve already gone over the limit, deleting it carries more risk. An upgrade lets me keep every original and skip every one of those decisions. From where I sit, every path of least resistance leads to "upgrade." I think the intent is pretty clear.</p>
+<h2 id="what-you-can-do-today">What you can do today</h2>
+<p>Start with Settings &gt; Camera &gt; Record Video and check what you&#x27;ve chosen for future recordings. For what&#x27;s already in the library, try Utilities &gt; Duplicates in Photos. Do the cleanup while you&#x27;re under your iCloud limit. Items in Recently Deleted don&#x27;t count toward iCloud storage, so there&#x27;s no reason to empty it early.</p>
+<p>If you want the biggest-first list, I sell <a href="https://danielyakobian.com/cloud-media-shrinker/">Cloud Media Shrinker</a> for <a href="https://apps.apple.com/app/id6824383256">Mac, iPhone and iPad</a>. The scan is free. It shows the real size of every item, biggest first, so you can preview it and choose to keep, delete or compress it. Compress makes a smaller HEVC copy of a video, or an HEIC copy of a photo, and puts it back in Photos with the original&#x27;s date and location. You can keep both. If you choose Compress &amp; delete, the app checks the copy and asks before removing the original. Each device gets three free compressions, and one purchase covers all three platforms.</p>
+<p>When my library hit 1.8 TB, I wanted to look at the biggest videos before deciding whether I needed more storage. I&#x27;d still like to be able to make that decision in Photos.</p>
+
+</div>
+<nav class="article-related" aria-labelledby="related-heading">
+  <div class="article-related-header">
+    <h2 id="related-heading">Keep reading</h2>
+    <a class="related-work-link" href="../#work">Featured projects →</a>
+  </div>
+  <div class="article-related-grid">
+    <article class="related-card">
+      <p class="related-meta">November 20, 2026</p>
+      <h3><a href="why-iphone-videos-are-so-big.html">Why iPhone videos are so big, and how I shrink them</a></h3>
+      <p>An iPhone compresses video live, so it records a lot of data to be safe. What a minute costs at each setting, and how to shrink old videos.</p>
+      <span class="related-cta" aria-hidden="true">Read post →</span>
+    </article>
+    <article class="related-card">
+      <p class="related-meta">October 22, 2026</p>
+      <h3><a href="agent-qa-separate-macos-account.html">Giving my AI agent its own Mac account for QA</a></h3>
+      <p>How I use a second macOS account to give an AI agent its own desktop for app testing while I keep working.</p>
+      <span class="related-cta" aria-hidden="true">Read post →</span>
+    </article>
+  </div>
+  <p class="article-related-projects"><span>Project from this post:</span> <a href="../cloud-media-shrinker/">Cloud Media Shrinker</a> <a href="../#work">All projects →</a></p>
+</nav>
+<p class="article-back"><a href="./">← All posts</a></p></article></main>
+    <footer class="site-footer"><p><a href="../">Daniel</a> / Built to be useful.</p><a href="./">All posts</a></footer>
+  </div>
+</body>
+</html>
