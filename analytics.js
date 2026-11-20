@@ -1,4 +1,4 @@
-/* Anonymous page views, page speed (web vitals), browser errors, project, rental, blog suggestion and TL;DR clicks, resume downloads and email sign-up counts with PostHog,
+/* Anonymous page views, page speed (web vitals), browser errors, clicks and rage clicks, project, rental, blog suggestion and TL;DR clicks, resume downloads and email sign-up counts with PostHog,
    without cookies or browser storage. It runs only on the published hosts for non-automated browsers, so local previews, bots and headless checks send nothing,
    and the guest gate page never loads it. */
 (() => {
@@ -64,6 +64,31 @@
     if (!event.error && (!event.filename || event.message === 'Script error.')) return;
     reportError(event.error instanceof Error ? event.error : new Error(String(event.message || 'Unknown error')), { error_source: 'uncaught', error_file: event.filename || undefined });
   });
+  // Rage clicks: 3 or more clicks within 1 s inside a 30 px circle, on any element. PostHog's own rage click detection only
+  // counts links, buttons and other clickable-looking elements, which misses the case that matters most here: something that
+  // looks clickable but isn't. It sends PostHog's standard $rageclick event, one per burst and at most 10 per page.
+  let clickBurst = [];
+  let ragesSent = 0;
+  const describe = element => {
+    if (!element) return undefined;
+    const classes = [...element.classList].slice(0, 3).map(name => `.${name}`).join('');
+    return `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}${classes}`;
+  };
+  document.addEventListener('click', event => {
+    if (!event.detail) return; // keyboard activations have no position
+    const now = event.timeStamp;
+    clickBurst = clickBurst.filter(click => now - click.time < 1000 && Math.hypot(click.x - event.clientX, click.y - event.clientY) < 30);
+    clickBurst.push({ time: now, x: event.clientX, y: event.clientY });
+    if (clickBurst.length !== 3 || ragesSent >= 10) return;
+    ragesSent += 1;
+    const element = event.target instanceof Element ? event.target : event.target?.parentElement;
+    track('$rageclick', {
+      element: describe(element),
+      element_parent: describe(element?.parentElement),
+      element_text: (element?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80) || undefined,
+      link: element?.closest('a[href]')?.href,
+    });
+  }, true);
   addEventListener('unhandledrejection', event => {
     const reason = event.reason;
     reportError(reason instanceof Error ? reason : new Error(typeof reason === 'string' ? reason : 'Unhandled promise rejection'), { error_source: 'unhandled_rejection' });
@@ -182,8 +207,10 @@
       person_profiles: 'never',
       capture_pageview: true,
       capture_pageleave: true,
-      // Link clicks only, so the dashboard shows which projects people open.
-      autocapture: { dom_event_allowlist: ['click'], element_allowlist: ['a'] },
+      // Clicks on any interactive element (links, buttons, filters, form fields), not only links.
+      // Clicks only: no form changes or submits, and PostHog never records what is typed into fields.
+      autocapture: { dom_event_allowlist: ['click'] },
+      // Rage clicks come from the detector near the top of this file instead, which also covers non-interactive elements.
       rageclick: false,
       capture_dead_clicks: false,
       // Errors are reported by the listeners near the top of this file instead, so early errors aren't lost.
