@@ -1,6 +1,6 @@
 name: Deploy alert
 
-# Posts to Slack #alerts when Vercel reports a failed deploy of main (its "Vercel" commit status). A failed deploy
+# Posts to Slack #alerts-danielyakobian-com when Vercel reports a failed deploy of main (its "Vercel" commit status). A failed deploy
 # leaves the previous version live, so the uptime check can't see it. Every other status (pending, success,
 # preview branches) skips the job. Run it by hand to post a test message.
 on:

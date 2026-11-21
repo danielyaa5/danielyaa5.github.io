@@ -5,7 +5,7 @@
 // GITHUB_REPOSITORY set) it also opens an issue that mentions the owner when a check fails, keeps that
 // issue's status current while checks keep failing, and comments and closes it once every check passes.
 // UPTIME_TEST_ALERT=true adds a pretend failure, to test the issue and its email.
-// With SLACK_WEBHOOK_URL set (the #alerts incoming webhook, a repository secret), it also posts to Slack when it
+// With SLACK_WEBHOOK_URL set (the #alerts-danielyakobian-com incoming webhook, a repository secret), it also posts to Slack when it
 // opens the issue and when it closes it, not on the updates in between. A failed Slack post never stops the issue work.
 const tls = require('node:tls');
 const fs = require('node:fs');
