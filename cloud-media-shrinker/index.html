@@ -68,7 +68,7 @@
           </div>
           <p class="fine-print">Requires macOS 13 or later, iOS 27 or later, or iPadOS 27 or later. The App Store lists the price for your region.</p>
           <p class="fine-print">The direct download is the Mac app with everything unlocked, as a one-time purchase through Polar. It doesn’t unlock the iPhone or iPad app.</p>
-          <p class="c-jump"><a href="#demo">See it in action</a><a href="#features">Features</a><a href="#support">Support</a></p>
+          <p class="c-jump"><a href="#demo">See it in action</a><a href="#features">Features</a><a href="help/">How to use it</a><a href="#support">Support</a></p>
         </div>
         <figure class="c-hero-media">
           <div class="c-mac"><picture><source media="(max-width: 620px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="../assets/cloud-media-shrinker/savings-mac.avif"><img src="../assets/cloud-media-shrinker/savings-mac.webp" width="1200" height="954" alt="Cloud Media Shrinker on a Mac after its free scan: You could free about 1.24 TB" fetchpriority="high"></picture></div>
@@ -78,7 +78,7 @@
       </header>
       <section class="c-demo" id="demo" aria-labelledby="demo-title">
         <h2 class="section-title" id="demo-title">See it in action</h2>
-        <div class="c-media"><video controls playsinline preload="metadata" poster="../assets/cloud-media-shrinker/screenshot-library.webp" width="1360" height="960"><source src="../assets/cloud-media-shrinker/demo.mp4" type="video/mp4"></video></div>
+        <div class="c-media"><video controls playsinline preload="none" data-poster="../assets/cloud-media-shrinker/screenshot-library.webp" width="1360" height="960"><source src="../assets/cloud-media-shrinker/demo.mp4" type="video/mp4"></video></div>
         <p class="c-note">The demo and screenshots show the Mac interface with fictional media and file sizes. <a href="../assets/cloud-media-shrinker/demo.mp4">Watch the demo video</a></p>
       </section>
       <section class="c-features" id="features" aria-label="Features">
@@ -142,6 +142,7 @@
       <section class="c-support" id="support" aria-labelledby="support-title">
         <h2 class="section-title" id="support-title">Support</h2>
         <p><a href="https://github.com/danielyaa5/cloud-media-shrinker/issues">Report a bug or request a feature</a> on GitHub, or email <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
+        <p><a href="help/">How to use it</a>: the first scan, reviewing, what happens to originals, unlocking and offer codes.</p>
         <p><a href="privacy/">Privacy policy</a></p>
       </section>
     </main>
@@ -153,5 +154,17 @@
       </div>
     </footer>
   </div>
+  <script>
+    // The demo's poster loads only when the video nears the screen, so it doesn't compete with the first image.
+    (() => {
+      const video = document.querySelector('video[data-poster]');
+      if (!video) return;
+      const show = () => { video.poster = video.dataset.poster; };
+      if (!('IntersectionObserver' in window)) return show();
+      new IntersectionObserver((entries, observer) => {
+        if (entries.some((entry) => entry.isIntersecting)) { show(); observer.disconnect(); }
+      }, { rootMargin: '600px 0px' }).observe(video);
+    })();
+  </script>
 </body>
 </html>
