@@ -1,0 +1,16 @@
+/* What's coming. Uses the help page's sections and tags (../help/help.css) and adds the status labels. */
+.cms-roadmap { max-width: 820px; }
+.r-sec > h2 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.r-sec > h2 .eyebrow { flex-basis: 100%; }
+.r-status { display: inline-block; padding: 3px 10px; border-radius: 999px; border: 1px solid; font-size: 13px; font-weight: 700; letter-spacing: 0; line-height: 1.4; }
+.r-testing { background: var(--box); border-color: #b7c3a5; color: var(--green); }
+.r-building { background: #e7eef8; border-color: #b9c9e0; color: #23456f; }
+.r-idea { background: transparent; border-color: var(--line); border-style: dashed; color: var(--muted); }
+.r-list { margin: 4px 0 8px; padding: 0; list-style: none; }
+.r-list li { margin: 0; padding: 12px 0; border-top: 1px solid var(--soft-line); font-size: 16px; line-height: 1.6; }
+.r-list li:first-child { border-top: 0; }
+.r-list b { font-weight: 700; }
+@media screen and (prefers-color-scheme: dark) {
+  .r-testing { border-color: var(--chip-line); background: var(--chip); }
+  .r-building { background: #1b2a40; border-color: #2f4a70; color: #b9d3f5; }
+}
