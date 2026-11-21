@@ -49,13 +49,15 @@
   // Uncaught errors and unhandled promise rejections become PostHog `$exception` events for Error tracking.
   // These listeners start with this script, so errors raised before PostHog loads (it waits for the load event)
   // wait in `pendingErrors`. PostHog's own exception autocapture stays off, so nothing is reported twice.
-  // Errors from browser extensions and cross-origin "Script error." reports (no details) are skipped,
+  // Errors from browser extensions, crypto wallets that browsers add to every page (Brave's sets
+  // `window.ethereum` and throws on some phones) and cross-origin "Script error." reports (no details) are skipped,
   // and one page sends at most 10, so a loop can't flood the project.
   const pendingErrors = [];
   let errorsSent = 0;
   const sendError = ([error, properties]) => window.posthog?.captureException?.(error, properties);
   const reportError = (error, properties) => {
     if (errorsSent >= 10 || /extension:\/\//.test(`${properties.error_file || ''} ${error?.stack || ''}`)) return;
+    if (/\bethereum\b/i.test(`${error?.message || ''} ${error?.stack || ''}`)) return;
     errorsSent += 1;
     if (ready) sendError([error, properties]);
     else pendingErrors.push([error, properties]);
@@ -67,6 +69,7 @@
   // Rage clicks: 3 or more clicks within 1 s inside a 30 px circle, on any element. PostHog's own rage click detection only
   // counts links, buttons and other clickable-looking elements, which misses the case that matters most here: something that
   // looks clickable but isn't. It sends PostHog's standard $rageclick event, one per burst and at most 10 per page.
+  // Clicks on code samples don't count: a triple click there is how people select a line to copy.
   let clickBurst = [];
   let ragesSent = 0;
   const describe = element => {
@@ -76,12 +79,13 @@
   };
   document.addEventListener('click', event => {
     if (!event.detail) return; // keyboard activations have no position
+    const element = event.target instanceof Element ? event.target : event.target?.parentElement;
+    if (element?.closest('pre, code')) return;
     const now = event.timeStamp;
     clickBurst = clickBurst.filter(click => now - click.time < 1000 && Math.hypot(click.x - event.clientX, click.y - event.clientY) < 30);
     clickBurst.push({ time: now, x: event.clientX, y: event.clientY });
     if (clickBurst.length !== 3 || ragesSent >= 10) return;
     ragesSent += 1;
-    const element = event.target instanceof Element ? event.target : event.target?.parentElement;
     track('$rageclick', {
       element: describe(element),
       element_parent: describe(element?.parentElement),

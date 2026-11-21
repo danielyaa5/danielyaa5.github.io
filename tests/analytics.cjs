@@ -29,7 +29,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=14" defer><\/script>/g)?.length, 1, `${file} loads analytics v=14 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=15" defer><\/script>/g)?.length, 1, `${file} loads analytics v=15 once`);
   }
   // vercel.json sends /dy-relay/ to PostHog. The site-wide trailing slash turns /array/<token>/config into .../config/,
   // which PostHog answers with a 404, so a rule ahead of the general one strips that slash again.
@@ -194,13 +194,15 @@ const events = request => {
     assert.ok(!/utm_source=|private-fragment/.test(JSON.stringify(vitals)), 'no query or fragment inside web vitals');
 
     // Browser errors become $exception events: one thrown before PostHog has loaded (it waits for the load event),
-    // one after, and an unhandled promise rejection, each sent once with the page address cleaned.
+    // one after, and an unhandled promise rejection, each sent once with the page address cleaned. The error Brave's
+    // built-in crypto wallet throws on some phones is not the site's, so it is never sent.
     const errorPage = await context.newPage();
     await errorPage.addInitScript(() => addEventListener('DOMContentLoaded', () => setTimeout(() => { throw new Error('analytics-test early error'); }, 0)));
     const errorStart = captured.length;
     await errorPage.goto(`${site}/blog/?utm_source=analytics-test#private-fragment`, { waitUntil: 'networkidle' });
     await errorPage.waitForFunction(() => window.posthog?.__loaded === true);
     await errorPage.evaluate(() => {
+      setTimeout(() => { throw new TypeError("undefined is not an object (evaluating 'window.ethereum.selectedAddress = undefined')"); }, 0);
       setTimeout(() => { throw new Error('analytics-test late error'); }, 0);
       Promise.reject(new Error('analytics-test rejection'));
     });
@@ -239,6 +241,27 @@ const events = request => {
     assert.ok([...rage, ...autoClicks()].every(e => e.properties.$current_url === `${site}/` && e.properties.$cookieless_mode === true), 'cookieless clicks with a clean address');
     assert.ok(!/utm_source=|private-fragment|analytics-test-typed/.test(JSON.stringify(sinceRage())), 'no query, fragment or typed text in click events');
     await ragePage.close();
+
+    // A triple click on a code sample selects a line to copy, so it is not a rage click. A burst on the heading
+    // right after still is, which shows the code clicks were dropped rather than lost in a batch.
+    const codePage = await context.newPage();
+    const codeStart = captured.length;
+    await codePage.goto(`${site}/puml-for-markdown/`, { waitUntil: 'networkidle' });
+    await codePage.waitForFunction(() => window.posthog?.__loaded === true);
+    const sample = codePage.locator('.p-viewer-source code');
+    await sample.scrollIntoViewIfNeeded();
+    await sample.click({ clickCount: 3 });
+    await sample.click({ clickCount: 3 });
+    await codePage.waitForTimeout(1100);
+    const pumlTitle = codePage.locator('h1').first();
+    await pumlTitle.scrollIntoViewIfNeeded();
+    const pumlBox = await pumlTitle.boundingBox();
+    for (let i = 0; i < 3; i += 1) await codePage.mouse.click(pumlBox.x + pumlBox.width / 2, pumlBox.y + pumlBox.height / 2, { delay: 20 });
+    const codeRage = () => captured.slice(codeStart).filter(e => e.event === '$rageclick');
+    for (let i = 0; i < 40 && codeRage().length < 1; i += 1) await codePage.waitForTimeout(200);
+    await codePage.waitForTimeout(500);
+    assert.deepEqual(codeRage().map(e => (e.properties.element || '').split(/[.#]/)[0]), ['h1'], `code-sample clicks are not rage clicks; got ${JSON.stringify(codeRage().map(e => e.properties.element))}`);
+    await codePage.close();
 
     // Links in project tiles send a project_click named after the project, at phone, tablet and desktop widths.
     // Navigation is cancelled after the site's own listeners run, so the page stays put.
