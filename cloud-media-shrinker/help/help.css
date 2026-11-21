@@ -46,6 +46,20 @@
 .h-help { margin-top: 28px; }
 .h-help .c-actions { margin-top: 14px; }
 
+/* Frequent issues: a problem, then what to do. Each answer has a stable anchor and a # that copies a link to it. */
+.h-faqs { margin-top: 8px; border-top: 1px solid var(--soft-line); }
+.h-faq { margin: 0 -12px; padding: 14px 12px 4px; border-bottom: 1px solid var(--soft-line); border-radius: 6px; scroll-margin-top: 20px; }
+.h-faq:target, .h-faq.is-target { background: var(--box); }
+.h-faq h3 { margin: 0 0 6px; font-size: 18px; line-height: 1.35; }
+.h-faq p { margin: 0 0 10px; }
+.h-anchor { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin: -6px 0 -6px 4px; vertical-align: middle; border-radius: 6px; font-family: var(--mono); font-size: 16px; font-weight: 400; }
+.cms a.h-anchor { color: var(--muted); text-decoration: none; }
+.cms a.h-anchor:hover, .cms a.h-anchor:focus-visible { color: var(--green); background: var(--tile); }
+/* A 44 px tap area around the small mark. */
+.h-anchor::before { content: ""; position: absolute; inset: -7px; }
+.h-anchor[data-copied]::after { content: attr(data-copied); position: absolute; right: 0; top: calc(100% + 4px); z-index: 2; padding: 4px 8px; border-radius: 4px; background: var(--ink); color: var(--paper); font: 700 12px/1.4 Arial, Helvetica, sans-serif; white-space: nowrap; }
+.h-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
 @media (max-width: 620px) {
   .cms nav.h-toc { padding: 14px 16px 10px; }
   .h-toc ol { grid-template-columns: 1fr; }
