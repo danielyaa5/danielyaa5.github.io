@@ -23,7 +23,7 @@
   <link rel="icon" type="image/svg+xml" href="../../assets/cloud-media-shrinker/icon.svg">
   <link rel="stylesheet" href="../../styles.css?v=mark-4">
   <link rel="stylesheet" href="../../cloud-media-shrinker/cms.css?v=2">
-  <link rel="stylesheet" href="help.css?v=2">
+  <link rel="stylesheet" href="help.css?v=3">
   <script src="/analytics.js?v=15" defer></script>
   <script type="application/ld+json">
   {
@@ -60,19 +60,34 @@
       <p class="h-lede">Short answers for iPhone, iPad and Mac. Start with the free scan, review your biggest files, and nothing changes until you choose.</p>
       <p class="h-version">This page describes version 1.2.1. Anything marked <span class="soon">Coming in 1.2.2</span> isn't in the app yet.</p>
 
-      <nav class="h-toc" aria-labelledby="toc-title">
-        <h2 id="toc-title">On this page</h2>
-        <ol>
-          <li><a href="#start"><span>Getting started</span></a></li>
-          <li><a href="#frequent-issues"><span>Frequent issues</span></a></li>
-          <li><a href="#review"><span>Reviewing your biggest files</span></a></li>
-          <li><a href="#originals"><span>What happens to originals</span></a></li>
-          <li><a href="#queues"><span>Long queues</span></a></li>
-          <li><a href="#unlock"><span>Unlocking and offer codes</span></a></li>
-          <li><a href="#good-to-know"><span>Good to know</span></a></li>
-          <li><a href="#help"><span>Getting help</span></a></li>
-        </ol>
-      </nav>
+      <div class="h-layout">
+        <nav class="h-side" aria-labelledby="side-title">
+          <p class="h-side-title" id="side-title">On this page</p>
+          <ol>
+            <li><a href="#start"><span>Getting started</span></a></li>
+            <li><a href="#frequent-issues"><span>Frequent issues</span></a></li>
+            <li><a href="#review"><span>Reviewing your biggest files</span></a></li>
+            <li><a href="#originals"><span>What happens to originals</span></a></li>
+            <li><a href="#queues"><span>Long queues</span></a></li>
+            <li><a href="#unlock"><span>Unlocking and offer codes</span></a></li>
+            <li><a href="#good-to-know"><span>Good to know</span></a></li>
+            <li><a href="#help"><span>Getting help</span></a></li>
+          </ol>
+        </nav>
+        <div class="h-main">
+          <details class="h-jump">
+            <summary>Jump to a section</summary>
+            <ol>
+            <li><a href="#start"><span>Getting started</span></a></li>
+            <li><a href="#frequent-issues"><span>Frequent issues</span></a></li>
+            <li><a href="#review"><span>Reviewing your biggest files</span></a></li>
+            <li><a href="#originals"><span>What happens to originals</span></a></li>
+            <li><a href="#queues"><span>Long queues</span></a></li>
+            <li><a href="#unlock"><span>Unlocking and offer codes</span></a></li>
+            <li><a href="#good-to-know"><span>Good to know</span></a></li>
+            <li><a href="#help"><span>Getting help</span></a></li>
+            </ol>
+          </details>
 
       <section class="h-sec" id="start" aria-labelledby="start-title">
         <h2 id="start-title"><span class="eyebrow">01</span>Getting started</h2>
@@ -263,6 +278,8 @@
         <p>A report goes privately to me. You can add up to 3 screenshots and an email if you want a reply. App diagnostics are included unless you turn them off, and you can read them first: the app and system versions, the chip type and the app's recent events. They never include file names, library paths or your library history. Anything you can see in a screenshot you attach does get sent.</p>
         <p>Or email <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>. Here's the <a href="../privacy/">privacy policy</a>.</p>
       </section>
+        </div>
+      </div>
 
       <script>
         // The # beside an answer copies a link to it, and still jumps there without JavaScript or clipboard access.
@@ -277,6 +294,41 @@
           try { await navigator.clipboard.writeText(url); link.dataset.copied = 'Link copied'; } catch { link.dataset.copied = 'Copy the address above'; }
           setTimeout(() => { delete link.dataset.copied; }, 1800);
         }));
+      </script>
+
+      <script>
+        // On wide screens the sidebar marks the section you're reading. Without JavaScript it's a plain list of links.
+        (() => {
+          const side = document.querySelector('.h-side');
+          const links = [...side.querySelectorAll('a')];
+          const sections = links.map((link) => document.querySelector(link.getAttribute('href')));
+          const wide = matchMedia('(min-width: 1001px)');
+          let current = null, queued = false;
+          const update = () => {
+            queued = false;
+            if (!wide.matches) return;
+            const line = innerHeight * 0.3;
+            let active = 0;
+            sections.forEach((section, i) => { if (section.getBoundingClientRect().top <= line) active = i; });
+            if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) active = sections.length - 1;
+            if (active === current) return;
+            current = active;
+            links.forEach((link, i) => { if (i === active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
+            // A sidebar taller than the window scrolls on its own; keep the marked link in it.
+            const link = links[active];
+            if (side.scrollHeight > side.clientHeight) {
+              if (link.offsetTop < side.scrollTop) side.scrollTop = link.offsetTop - 8;
+              else if (link.offsetTop + link.offsetHeight > side.scrollTop + side.clientHeight) side.scrollTop = link.offsetTop + link.offsetHeight - side.clientHeight + 8;
+            }
+          };
+          const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+          addEventListener('scroll', queue, { passive: true });
+          addEventListener('resize', queue);
+          wide.addEventListener('change', queue);
+          // The jump menu closes once a section is picked.
+          document.querySelectorAll('.h-jump a').forEach((link) => link.addEventListener('click', () => { link.closest('details').open = false; }));
+          update();
+        })();
       </script>
     </main>
     <footer class="site-footer">
