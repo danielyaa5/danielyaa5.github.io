@@ -29,7 +29,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=15" defer><\/script>/g)?.length, 1, `${file} loads analytics v=15 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=16" defer><\/script>/g)?.length, 1, `${file} loads analytics v=16 once`);
   }
   // vercel.json sends /dy-relay/ to PostHog. The site-wide trailing slash turns /array/<token>/config into .../config/,
   // which PostHog answers with a 404, so a rule ahead of the general one strips that slash again.
@@ -194,8 +194,10 @@ const events = request => {
     assert.ok(!/utm_source=|private-fragment/.test(JSON.stringify(vitals)), 'no query or fragment inside web vitals');
 
     // Browser errors become $exception events: one thrown before PostHog has loaded (it waits for the load event),
-    // one after, and an unhandled promise rejection, each sent once with the page address cleaned. The error Brave's
-    // built-in crypto wallet throws on some phones is not the site's, so it is never sent.
+    // one after, and unhandled promise rejections, each sent once with the page address cleaned. A rejection with
+    // something other than an Error says what it was (an object's message, an event's type and element); one with
+    // nothing at all can't be traced and is skipped. The error Brave's built-in crypto wallet throws on some phones
+    // is not the site's, so it is never sent either.
     const errorPage = await context.newPage();
     await errorPage.addInitScript(() => addEventListener('DOMContentLoaded', () => setTimeout(() => { throw new Error('analytics-test early error'); }, 0)));
     const errorStart = captured.length;
@@ -205,14 +207,25 @@ const events = request => {
       setTimeout(() => { throw new TypeError("undefined is not an object (evaluating 'window.ethereum.selectedAddress = undefined')"); }, 0);
       setTimeout(() => { throw new Error('analytics-test late error'); }, 0);
       Promise.reject(new Error('analytics-test rejection'));
+      Promise.reject();
+      Promise.reject({ code: 42, message: 'analytics-test object' });
+      new Promise((resolve, reject) => { const image = new Image(); image.onerror = reject; image.src = '/analytics-test-missing.png?private=1'; });
     });
     // PostHog batches $exception events (about every 3 s), so wait for the batch, then a little longer to catch any duplicate.
     const errorsSoFar = () => captured.slice(errorStart).filter(e => e.event === '$exception');
-    for (let i = 0; i < 40 && errorsSoFar().length < 3; i += 1) await errorPage.waitForTimeout(200);
+    for (let i = 0; i < 40 && errorsSoFar().length < 5; i += 1) await errorPage.waitForTimeout(200);
     await errorPage.waitForTimeout(500);
     const exceptions = errorsSoFar();
-    assert.deepEqual(exceptions.map(e => e.properties.$exception_list?.[0]?.value).sort(), ['analytics-test early error', 'analytics-test late error', 'analytics-test rejection'], `each error is sent once; got ${JSON.stringify(captured.slice(errorStart).map(e => [e.event, e.properties.$current_url, e.properties.$exception_list?.[0]?.value]))}`);
-    assert.deepEqual(exceptions.map(e => e.properties.error_source).sort(), ['uncaught', 'uncaught', 'unhandled_rejection'], 'error source is recorded');
+    assert.deepEqual(exceptions.map(e => e.properties.$exception_list?.[0]?.value).sort(), [
+      'Unhandled promise rejection: Object: analytics-test object',
+      'Unhandled promise rejection: error event on img',
+      'analytics-test early error',
+      'analytics-test late error',
+      'analytics-test rejection',
+    ], `each error is sent once; got ${JSON.stringify(captured.slice(errorStart).map(e => [e.event, e.properties.$current_url, e.properties.$exception_list?.[0]?.value]))}`);
+    assert.deepEqual(exceptions.map(e => e.properties.error_source).sort(), ['uncaught', 'uncaught', 'unhandled_rejection', 'unhandled_rejection', 'unhandled_rejection'], 'error source is recorded');
+    const imageRejection = exceptions.find(e => /error event on img/.test(e.properties.$exception_list?.[0]?.value || ''));
+    assert.match(imageRejection.properties.error_file || '', /\/analytics-test-missing\.png$/, 'the failed image is named without its query');
     assert.ok(exceptions.every(e => e.properties.$current_url === `${site}/blog/` && e.properties.$cookieless_mode === true), 'cookieless errors with a clean address');
     assert.ok(!/utm_source=|private-fragment/.test(JSON.stringify(exceptions)), 'no query or fragment inside errors');
     await errorPage.close();
@@ -262,6 +275,31 @@ const events = request => {
     await codePage.waitForTimeout(500);
     assert.deepEqual(codeRage().map(e => (e.properties.element || '').split(/[.#]/)[0]), ['h1'], `code-sample clicks are not rage clicks; got ${JSON.stringify(codeRage().map(e => e.properties.element))}`);
     await codePage.close();
+
+    // A triple click that selects a heading's text (here a help-page question someone copies) is not a rage click
+    // either, but clicking on past the third click in the same spot is.
+    const selectPage = await context.newPage();
+    const selectStart = captured.length;
+    await selectPage.goto(`${site}/cloud-media-shrinker/help/`, { waitUntil: 'networkidle' });
+    await selectPage.waitForFunction(() => window.posthog?.__loaded === true);
+    const question = selectPage.locator('#iphone-background h3');
+    await question.scrollIntoViewIfNeeded();
+    const questionText = await selectPage.evaluate(() => {
+      const range = document.createRange();
+      range.selectNodeContents([...document.querySelector('#iphone-background h3').childNodes].find(node => node.nodeType === Node.TEXT_NODE));
+      const box = range.getBoundingClientRect();
+      return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+    });
+    await selectPage.mouse.click(questionText.x, questionText.y, { clickCount: 3, delay: 20 });
+    assert.match(await selectPage.evaluate(() => getSelection().toString()), /Compressing stops when I leave the app/, 'the triple click selected the question');
+    await selectPage.waitForTimeout(1100);
+    const selectRage = () => captured.slice(selectStart).filter(e => e.event === '$rageclick');
+    assert.deepEqual(selectRage(), [], 'a triple click that selects text is not a rage click');
+    await selectPage.mouse.click(questionText.x, questionText.y, { clickCount: 4, delay: 20 });
+    for (let i = 0; i < 40 && selectRage().length < 1; i += 1) await selectPage.waitForTimeout(200);
+    await selectPage.waitForTimeout(500);
+    assert.deepEqual(selectRage().map(e => e.properties.element_parent), ['div#iphone-background.h-faq'], `clicking on past three is a rage click; got ${JSON.stringify(selectRage().map(e => e.properties.element))}`);
+    await selectPage.close();
 
     // Links in project tiles send a project_click named after the project, at phone, tablet and desktop widths.
     // Navigation is cancelled after the site's own listeners run, so the page stays put.

@@ -69,13 +69,25 @@
   // Rage clicks: 3 or more clicks within 1 s inside a 30 px circle, on any element. PostHog's own rage click detection only
   // counts links, buttons and other clickable-looking elements, which misses the case that matters most here: something that
   // looks clickable but isn't. It sends PostHog's standard $rageclick event, one per burst and at most 10 per page.
-  // Clicks on code samples don't count: a triple click there is how people select a line to copy.
+  // Clicks on code samples don't count: a triple click there is how people select a line to copy. Elsewhere, a triple
+  // click that ends with the clicked text selected (copying a heading, say) is held for a moment and dropped unless the
+  // clicking goes on, since people clicking in frustration rarely stop at exactly three.
   let clickBurst = [];
   let ragesSent = 0;
+  let heldRage = null;
   const describe = element => {
     if (!element) return undefined;
     const classes = [...element.classList].slice(0, 3).map(name => `.${name}`).join('');
     return `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}${classes}`;
+  };
+  const sendRage = element => {
+    ragesSent += 1;
+    track('$rageclick', {
+      element: describe(element),
+      element_parent: describe(element?.parentElement),
+      element_text: (element?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80) || undefined,
+      link: element?.closest('a[href]')?.href,
+    });
   };
   document.addEventListener('click', event => {
     if (!event.detail) return; // keyboard activations have no position
@@ -84,18 +96,45 @@
     const now = event.timeStamp;
     clickBurst = clickBurst.filter(click => now - click.time < 1000 && Math.hypot(click.x - event.clientX, click.y - event.clientY) < 30);
     clickBurst.push({ time: now, x: event.clientX, y: event.clientY });
+    if (heldRage && clickBurst.length > 3) {
+      clearTimeout(heldRage.timer);
+      sendRage(heldRage.element);
+      heldRage = null;
+      return;
+    }
     if (clickBurst.length !== 3 || ragesSent >= 10) return;
-    ragesSent += 1;
-    track('$rageclick', {
-      element: describe(element),
-      element_parent: describe(element?.parentElement),
-      element_text: (element?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80) || undefined,
-      link: element?.closest('a[href]')?.href,
-    });
+    const selection = getSelection();
+    if (event.detail >= 3 && selection && !selection.isCollapsed && element && selection.containsNode(element, true)) {
+      const held = { element, timer: setTimeout(() => { if (heldRage === held) heldRage = null; }, 600) };
+      heldRage = held;
+      return;
+    }
+    sendRage(element);
   }, true);
+  // A promise rejected with something other than an Error has no stack, so the report says what it was: an event's type
+  // and element (a script or image that failed to load, say), or an object's class and message or keys. One rejected with
+  // nothing at all (undefined or null) can't be traced, so like "Script error." it is skipped.
+  const describeReason = reason => {
+    if (typeof reason === 'string') return { text: reason };
+    if (reason instanceof Event) {
+      const target = reason.target instanceof Element ? reason.target : null;
+      const url = target?.src || target?.href;
+      return { text: `${reason.type} event${target ? ` on ${describe(target)}` : ''}`, file: url ? String(url).split(/[?#]/)[0] : undefined };
+    }
+    if (typeof reason === 'object') {
+      const detail = reason.message ?? reason.reason ?? reason.error;
+      const name = reason.constructor?.name || 'Object';
+      return { text: detail != null ? `${name}: ${String(detail)}` : `${name} {${Object.keys(reason).slice(0, 6).join(', ')}}` };
+    }
+    return { text: `${typeof reason} ${String(reason)}` };
+  };
   addEventListener('unhandledrejection', event => {
     const reason = event.reason;
-    reportError(reason instanceof Error ? reason : new Error(typeof reason === 'string' ? reason : 'Unhandled promise rejection'), { error_source: 'unhandled_rejection' });
+    if (reason == null) return;
+    if (reason instanceof Error) return reportError(reason, { error_source: 'unhandled_rejection' });
+    const { text, file } = describeReason(reason);
+    const error = new Error(`Unhandled promise rejection: ${text}`.slice(0, 300));
+    reportError(error, { error_source: 'unhandled_rejection', error_file: file });
   });
   const tileClick = event => {
     if (event.type === 'auxclick' && event.button !== 1) return;
