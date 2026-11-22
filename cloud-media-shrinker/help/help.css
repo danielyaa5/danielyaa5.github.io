@@ -31,6 +31,11 @@
 .h-sec ul, .h-sec ol { margin: 0 0 14px; padding-left: 22px; }
 .h-sec li { margin: 0 0 6px; }
 .h-sec li::marker { color: var(--green); font-weight: 700; }
+/* A step with its own sub-steps, and a link target that lights up like a frequent issue does. */
+.h-sec li > ol, .h-sec li > ul { margin: 8px 0 10px; }
+.h-sec li > p { margin: 8px 0 4px; }
+.h-step { scroll-margin-top: 20px; border-radius: 6px; }
+.h-step:target { background: var(--box); box-shadow: 0 0 0 8px var(--box); }
 .h-sec b { font-weight: 700; }
 .ui { font-weight: 700; }
 .tag { display: inline-block; margin-right: 6px; padding: 2px 7px; border: 1px solid #b7c3a5; border-radius: 4px; background: var(--box); color: var(--green); font-size: 12px; font-weight: 700; line-height: 1.4; vertical-align: 1px; white-space: nowrap; }

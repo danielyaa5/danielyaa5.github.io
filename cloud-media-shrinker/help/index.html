@@ -23,7 +23,7 @@
   <link rel="icon" type="image/svg+xml" href="../../assets/cloud-media-shrinker/icon.svg">
   <link rel="stylesheet" href="../../styles.css?v=mark-4">
   <link rel="stylesheet" href="../../cloud-media-shrinker/cms.css?v=2">
-  <link rel="stylesheet" href="help.css?v=3">
+  <link rel="stylesheet" href="help.css?v=4">
   <script src="/analytics.js?v=15" defer></script>
   <script type="application/ld+json">
   {
@@ -103,7 +103,14 @@
         <ol>
           <li>The first launch runs a short tour with sample files. You can skip it.</li>
           <li>Choose <span class="ui">Apple Photos</span> in the sidebar and allow access when macOS asks.</li>
-          <li>On macOS 13 to 26 it also asks you to <span class="ui">Select Photos Library</span> once. That lets it read file sizes without downloading every original from iCloud.</li>
+          <li class="h-step" id="select-photos-library">On macOS 13 to 26 it also asks you to <span class="ui">Select Photos Library</span> once. That lets it read file sizes without downloading every original from iCloud. It only reads the library, and it doesn't switch libraries. In the window that opens:
+            <ol>
+              <li>Go to your Pictures folder. If the window opened in your home folder, double-click <span class="ui">Pictures</span>. Otherwise click Pictures in the window's sidebar if it's listed, or type ~/Pictures and press Return.</li>
+              <li>Click <span class="ui">Photos Library</span> once to select it. It may show as Photos Library.photoslibrary. Don't double-click it, because that opens it like a folder.</li>
+              <li>Click <span class="ui">Read Sizes</span>.</li>
+            </ol>
+            <p>Skip <span class="ui">Photos</span> under Media in the window's sidebar. It shows single photos, not the library, so <span class="ui">Read Sizes</span> stays grayed out. If Photos Library isn't in Pictures, open Photos, choose Photos &gt; Settings &gt; General and click <span class="ui">Show in Finder</span> next to the library's location. Then drag Photos Library from that Finder window onto the window that's asking. <span class="soon">Coming in 1.2.2</span> The window opens in Pictures for you.</p>
+          </li>
           <li>When your first queue starts, macOS asks whether the app can control Photos. Allow it. That's how titles, captions and keywords get copied. Without it the app keeps your originals.</li>
         </ol>
         <p>If you gave it access to only some photos, open System Settings &gt; Privacy &amp; Security &gt; Photos, give it full access, then quit and reopen the app.</p>
@@ -123,6 +130,11 @@
           <div class="h-faq" id="hollow-audio">
             <h3>A compressed video sounds hollow, like a tin can<a class="h-anchor" href="#hollow-audio" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
             <p>This seems to hit videos with more than one audio track, like spatial audio from newer iPhones. A fix is planned for 1.2.2. <span class="soon">Coming in 1.2.2</span> Until then, keep the originals of videos where the sound matters. If you already deleted one, it's usually still in Recently Deleted in Photos for 30 days, unless you were over your iCloud storage limit.</p>
+          </div>
+          <div class="h-faq" id="read-sizes">
+            <h3><span class="tag">Mac</span>Read Sizes is grayed out<a class="h-anchor" href="#read-sizes" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
+            <p>The window is probably showing single photos, not the library. That happens if you click <span class="ui">Photos</span> under Media in its sidebar. Go to your Pictures folder instead, click <span class="ui">Photos Library</span> once, then click <span class="ui">Read Sizes</span>. The <a href="#select-photos-library">setup steps</a> say where to look if it isn't there.</p>
+            <p>If the app then says it couldn't read size records, a folder was chosen instead of Photos Library itself. If it says the library doesn't match, choose the library Photos opens with. Click <span class="ui">Select Photos Library</span> to try again.</p>
           </div>
           <div class="h-faq" id="mac-queue-stuck">
             <h3><span class="tag">Mac</span>The queue got stuck or is very slow<a class="h-anchor" href="#mac-queue-stuck" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
