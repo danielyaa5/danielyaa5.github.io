@@ -1,0 +1,61 @@
+/* "Save space without deleting anything": the same frame from a 4K iPhone video and its Keep 4K copy, with a handle to drag
+   between them. The original fills the box and the copy sits on top, cut off left of --pos. The box keeps its 16:9 shape
+   before the images arrive, so nothing moves when they do. Without JavaScript it stays at the halfway mark. */
+.cms-a .c-save { padding: 36px 0 8px; border-top: 1px solid var(--line); }
+.c-compare { margin: 0; }
+.cmp { --pos: 50%; position: relative; overflow: hidden; aspect-ratio: 16 / 9; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); touch-action: pan-y; cursor: ew-resize; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+.cmp-img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.cmp-after { clip-path: inset(0 0 0 var(--pos)); }
+.cmp-label { position: absolute; z-index: 2; top: 14px; display: flex; flex-direction: column; gap: 3px; padding: 10px 16px; border-radius: 10px; background: rgba(17, 24, 16, .74); color: #fff; font-size: 24px; font-weight: 700; line-height: 1.1; letter-spacing: -.3px; pointer-events: none; transition: opacity .15s; }
+.cmp-label small { font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: .02em; }
+.cmp-label-l { left: 14px; }
+.cmp-label-r { right: 14px; align-items: flex-end; text-align: right; }
+/* The names are the big text and the saving sits just under Keep 4K, a little smaller. */
+.cmp-pct { font-size: 17px; line-height: 1.2; letter-spacing: 0; }
+.cmp[data-edge="start"] .cmp-label-l, .cmp[data-edge="end"] .cmp-label-r { opacity: 0; }
+.cmp-handle { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 44px; margin-left: -22px; display: grid; place-items: center; outline: none; cursor: ew-resize; }
+.cmp-handle::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px; background: #fff; box-shadow: 0 0 0 1px rgba(17, 24, 16, .3); }
+.cmp-knob { position: relative; z-index: 3; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #9aa596; border-radius: 50%; background: #fff; color: var(--green); box-shadow: 0 6px 16px -6px rgba(17, 24, 16, .55); }
+.cmp-handle:focus-visible .cmp-knob { outline: 3px solid var(--green); outline-offset: 2px; }
+.c-compare .c-note { margin-top: 10px; }
+.c-save-copy { max-width: 720px; margin-top: 18px; }
+.c-save-copy p { margin: 0 0 12px; font-size: 17px; line-height: 1.6; }
+@media (max-width: 620px) {
+  .cmp-label { top: 8px; padding: 7px 11px; border-radius: 8px; font-size: 17px; }
+  .cmp-label small { font-size: 11px; }
+  .cmp-pct { font-size: 13px; }
+  .cmp-label-l { left: 8px; }
+  .cmp-label-r { right: 8px; }
+  .c-save-copy p { font-size: 16px; }
+}
+@media (max-width: 380px) {
+  .cmp-label { top: 6px; padding: 5px 9px; font-size: 15px; }
+  .cmp-pct { font-size: 12px; }
+  .cmp-label-l { left: 6px; }
+  .cmp-label-r { right: 6px; }
+}
+@media (prefers-reduced-motion: reduce) { .cmp-label { transition: none; } }
+
+/* The labels sit above the divider line and the round handle above both. */
+
+/* Zoom: opens the full-width page. A link, so it works without JavaScript and can be opened in a new tab.
+   It sits above the handle, which would otherwise cover it whenever the divider is dragged over it. */
+.cms a.cmp-zoom, a.cmp-zoom { position: absolute; z-index: 3; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: 22px; background: rgba(17, 24, 16, .74); color: #fff; font-size: 15px; font-weight: 700; text-decoration: none; cursor: pointer; }
+a.cmp-zoom:hover { background: rgba(17, 24, 16, .9); }
+a.cmp-zoom:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+@media (max-width: 620px) { .cms a.cmp-zoom, a.cmp-zoom { right: 8px; bottom: 8px; min-height: 40px; padding: 0 12px; font-size: 14px; } }
+
+/* The full-width page: the slider spans the window, with a slim bar above and the caption below. */
+.cmp-zoom-page { margin: 0; }
+.cmp-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; }
+.cmp-bar h1 { margin: 0; font-size: 18px; letter-spacing: -.2px; }
+.cmp-bar a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+.cmp-bar .cmp-back { white-space: nowrap; font-size: 15px; }
+.cmp-full .cmp { border: 0; border-radius: 0; }
+.cmp-full .c-note { max-width: 900px; margin: 14px auto 0; padding: 0 20px 28px; font-size: 15px; line-height: 1.55; color: var(--muted, #5d6a5f); }
+.cmp-full .c-note a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 1200px) { .cmp-full .cmp-label { top: 24px; padding: 14px 22px; border-radius: 12px; font-size: 32px; } .cmp-full .cmp-label-l { left: 24px; } .cmp-full .cmp-label-r { right: 24px; } .cmp-full .cmp-pct { font-size: 22px; } .cmp-full a.cmp-zoom { right: 20px; bottom: 20px; } }
+.cmp-turn { display: none; margin: 10px auto 0; padding: 0 20px; max-width: 900px; font-size: 14px; color: var(--muted, #5d6a5f); }
+@media (max-width: 620px) { .cmp-bar { padding: 10px 14px; } .cmp-bar h1 { font-size: 16px; white-space: nowrap; } .cmp-back-long { display: none; } .cmp-bar .cmp-back { display: inline-flex; align-items: center; min-height: 44px; } }
+@media (max-width: 620px) and (orientation: portrait) { .cmp-turn { display: block; } }
+@media (max-width: 380px) { .cms a.cmp-zoom, a.cmp-zoom { right: 6px; bottom: 6px; min-height: 40px; padding: 0 10px; gap: 4px; font-size: 13px; } }

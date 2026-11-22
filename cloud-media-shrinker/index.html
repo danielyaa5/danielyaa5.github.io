@@ -23,6 +23,7 @@
   <link rel="icon" type="image/svg+xml" href="../assets/cloud-media-shrinker/icon.svg">
   <link rel="stylesheet" href="../styles.css?v=mark-4">
   <link rel="stylesheet" href="../cloud-media-shrinker/cms.css?v=2">
+  <link rel="stylesheet" href="compare.css?v=6">
   <script src="/analytics.js?v=15" defer></script>
   <script type="application/ld+json">
   {
@@ -68,7 +69,7 @@
           </div>
           <p class="fine-print">Requires macOS 13 or later, iOS 27 or later, or iPadOS 27 or later. The App Store lists the price for your region.</p>
           <p class="fine-print">The direct download is the Mac app with everything unlocked, as a one-time purchase through Polar. It doesn’t unlock the iPhone or iPad app.</p>
-          <p class="c-jump"><a href="#demo">See it in action</a><a href="#features">Features</a><a href="help/">How to use it</a><a href="#support">Support</a></p>
+          <p class="c-jump"><a href="#save-space">Save space</a><a href="#features">Features</a><a href="help/">How to use it</a><a href="#support">Support</a></p>
         </div>
         <figure class="c-hero-media">
           <div class="c-mac"><picture><source media="(max-width: 620px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><source type="image/avif" srcset="../assets/cloud-media-shrinker/savings-mac.avif"><img src="../assets/cloud-media-shrinker/savings-mac.webp" width="1200" height="954" alt="Cloud Media Shrinker on a Mac after its free scan: You could free about 1.24 TB" fetchpriority="high"></picture></div>
@@ -76,10 +77,24 @@
           <div class="c-ring"><picture><source media="(min-width: 621px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="><img src="../assets/cloud-media-shrinker/savings-iphone-ring.webp" width="924" height="729" alt="Cloud Media Shrinker on an iPhone: estimated savings 1.24 TB" fetchpriority="high"></picture></div>
         </figure>
       </header>
-      <section class="c-demo" id="demo" aria-labelledby="demo-title">
-        <h2 class="section-title" id="demo-title">See it in action</h2>
-        <div class="c-media"><video controls playsinline preload="none" data-poster="../assets/cloud-media-shrinker/screenshot-library.webp" width="1360" height="960"><source src="../assets/cloud-media-shrinker/demo.mp4" type="video/mp4"></video></div>
-        <p class="c-note">The demo and screenshots show the Mac interface with fictional media and file sizes. <a href="../assets/cloud-media-shrinker/demo.mp4">Watch the demo video</a></p>
+      <section class="c-save" id="save-space" aria-labelledby="save-title">
+        <h2 class="section-title" id="save-title">Save space without deleting anything</h2>
+        <figure class="c-compare">
+          <div class="cmp" style="--pos: 50%">
+            <img class="cmp-img" data-src="../assets/cloud-media-shrinker/compare-original-2000.webp" data-srcset="../assets/cloud-media-shrinker/compare-original-750.webp 750w, ../assets/cloud-media-shrinker/compare-original-1000.webp 1000w, ../assets/cloud-media-shrinker/compare-original-2000.webp 2000w" sizes="(max-width: 620px) calc(100vw - 62px), (max-width: 850px) calc(100vw - 126px), 962px" width="2000" height="1125" alt="Sea stacks and breaking waves at sunset in Indonesia, a frame from my original 4K iPhone video" decoding="async">
+            <img class="cmp-img cmp-after" data-src="../assets/cloud-media-shrinker/compare-keep4k-2000.webp" data-srcset="../assets/cloud-media-shrinker/compare-keep4k-750.webp 750w, ../assets/cloud-media-shrinker/compare-keep4k-1000.webp 1000w, ../assets/cloud-media-shrinker/compare-keep4k-2000.webp 2000w" sizes="(max-width: 620px) calc(100vw - 62px), (max-width: 850px) calc(100vw - 126px), 962px" width="2000" height="1125" alt="The same frame from its Keep 4K copy" decoding="async">
+            <noscript><img class="cmp-img" src="../assets/cloud-media-shrinker/compare-original-2000.webp" width="2000" height="1125" alt="Sea stacks and breaking waves at sunset in Indonesia, a frame from my original 4K iPhone video" loading="lazy"></noscript>
+            <span class="cmp-label cmp-label-l">Original</span>
+            <span class="cmp-label cmp-label-r">Keep 4K<strong class="cmp-pct">71% smaller</strong></span>
+            <a class="cmp-zoom" href="compare/"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Zoom</a>
+            <span class="cmp-handle" role="slider" tabindex="0" aria-label="Compare the original with the Keep 4K copy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="Half original, half Keep 4K"><span class="cmp-knob" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" focusable="false"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+          </div>
+          <figcaption class="c-note">A real video I took on my iPhone in Indonesia, and the same moment from its Keep 4K copy. Drag the handle to compare.</figcaption>
+        </figure>
+        <div class="c-save-copy">
+          <p>Phones record video at a much higher bitrate than the picture needs, because they have to encode it in real time while you film. Cloud Media Shrinker re-encodes it afterwards in HEVC at a lower bitrate, which keeps the picture very close to the original in a much smaller file. The 10 seconds shown here went from 81 MB to 24 MB, and the whole 1 minute 44 second video went from 802 MB to 246 MB.</p>
+          <p>It's still lossy, so a little fine detail can go. At the high quality Keep 4K uses, most people can't tell. You keep every video, at a fraction of the space.</p>
+        </div>
       </section>
       <section class="c-features" id="features" aria-label="Features">
         <article class="c-feature">
@@ -87,7 +102,7 @@
           <img class="c-shot" src="../assets/cloud-media-shrinker/screenshot-library.webp" srcset="../assets/cloud-media-shrinker/screenshot-library-476.webp 476w, ../assets/cloud-media-shrinker/screenshot-library-799.webp 799w, ../assets/cloud-media-shrinker/screenshot-library.webp 1360w" sizes="(max-width: 620px) calc(100vw - 62px), (max-width: 850px) calc(100vw - 126px), 540px" alt="The library, sorted largest first" loading="lazy" width="1360" height="960">
         </article>
         <article class="c-feature">
-          <div class="c-feature-copy"><p class="eyebrow">02</p><h2>Choose how much to compress</h2><p>Use Balanced, Maximum Savings, or Preserve 4K presets in Simple mode. Advanced mode gives you control over resolution, frame rate, format, and quality. Compress supported videos, RAW and JPEG photos, or make a still-only copy of a Live Photo.</p></div>
+          <div class="c-feature-copy"><p class="eyebrow">02</p><h2>Choose how much to compress</h2><p>Use Balanced, Max Savings, or Keep 4K presets in Simple mode. Advanced mode gives you control over resolution, frame rate, format, and quality. Compress supported videos, RAW and JPEG photos, or make a still-only copy of a Live Photo.</p></div>
           <img class="c-shot" src="../assets/cloud-media-shrinker/screenshot-shrink.webp" srcset="../assets/cloud-media-shrinker/screenshot-shrink-476.webp 476w, ../assets/cloud-media-shrinker/screenshot-shrink-799.webp 799w, ../assets/cloud-media-shrinker/screenshot-shrink.webp 1360w" sizes="(max-width: 620px) calc(100vw - 62px), (max-width: 850px) calc(100vw - 126px), 380px" alt="Compression presets and estimated output sizes" loading="lazy" width="1360" height="960">
         </article>
         <article class="c-feature">
@@ -155,17 +170,6 @@
       </div>
     </footer>
   </div>
-  <script>
-    // The demo's poster loads only when the video nears the screen, so it doesn't compete with the first image.
-    (() => {
-      const video = document.querySelector('video[data-poster]');
-      if (!video) return;
-      const show = () => { video.poster = video.dataset.poster; };
-      if (!('IntersectionObserver' in window)) return show();
-      new IntersectionObserver((entries, observer) => {
-        if (entries.some((entry) => entry.isIntersecting)) { show(); observer.disconnect(); }
-      }, { rootMargin: '600px 0px' }).observe(video);
-    })();
-  </script>
+  <script src="compare.js?v=1" defer></script>
 </body>
 </html>
