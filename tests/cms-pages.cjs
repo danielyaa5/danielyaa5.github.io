@@ -84,6 +84,7 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
         if (url.endsWith('whats-coming/')) assert.ok(!got.headings.some(h => (h.match(/\b\d+\.\d+(?:\.\d+)?\b/g) || []).some(v => compare(v, newestOut) <= 0)), `What's coming has no section for ${newestOut} or older`);
       });
     }
+    const barPositions = [];
     for (const url of pages) {
       await check(`/${url} has the product bar`, async () => {
         await page.goto(`${base}/${url}`, { waitUntil: 'domcontentloaded' });
@@ -99,6 +100,8 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
             current: [...bar.querySelectorAll('[aria-current="page"]')].map(a => a.textContent.trim()),
             get: bar.querySelector('.cms-nav-get') ? new URL(bar.querySelector('.cms-nav-get').href).pathname + new URL(bar.querySelector('.cms-nav-get').href).hash : null,
             oldBrand: document.querySelectorAll('main .c-brand, main > .eyebrow').length,
+            weights: [...bar.querySelectorAll('.cms-nav-links a')].map(a => Number(getComputedStyle(a).fontWeight)),
+            widths: [...bar.querySelectorAll('.cms-nav-links a')].map(a => Math.round(a.getBoundingClientRect().width)),
           };
         });
         assert.ok(got, 'the bar is right under the site header');
@@ -110,8 +113,15 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
         if (url === 'cloud-media-shrinker/') assert.equal(got.get, null, 'no Get the app on the product page, which has its own download buttons');
         else assert.equal(got.get, '/cloud-media-shrinker/#get', 'Get the app goes to the download box');
         assert.equal(got.oldBrand, 0, 'the old icon and label row is gone');
+        const currentIndex = barLinks.findIndex(([, href]) => href === url);
+        assert.ok(got.weights.every((w, i) => i === currentIndex ? w >= 700 : w < 600), `only the current page is bold (${got.weights})`);
+        barPositions.push([url, got.widths.join(',')]);
       });
     }
+    await check('the bar\'s links keep the same widths on every page', async () => {
+      // The bold current page must not push the links after it along, so each link is as wide on every page.
+      assert.equal(new Set(barPositions.map(([, lefts]) => lefts)).size, 1, barPositions.map(([u, l]) => `${u}: ${l}`).join(' | '));
+    });
     await check('Get the app lands on the download box with both downloads', async () => {
       await page.goto(`${base}/cloud-media-shrinker/#get`, { waitUntil: 'networkidle' });
       const got = await page.evaluate(() => ({ stores: [...document.querySelectorAll('#get a[data-store]')].map(a => a.dataset.store), top: document.getElementById('get').getBoundingClientRect().top }));
@@ -164,7 +174,7 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
               assert.ok(got.bar.band, 'narrower screens: a tinted band');
               assert.equal(got.bar.arrow, inner, inner ? 'a back arrow on inner pages' : 'no back arrow on the product page');
               assert.ok(got.bar.linkRows <= 2, `the pages fit on at most two lines (${got.bar.linkRows})`);
-              assert.equal(got.bar.get, inner && width >= 700, !inner ? 'no Get the app on the product page' : width >= 700 ? 'Get the app on wide tablets' : 'no Get the app below 700 px');
+              assert.equal(got.bar.get, inner && width >= 724, !inner ? 'no Get the app on the product page' : width >= 724 ? 'Get the app on wide tablets' : 'no Get the app below 724 px');
             }
             assert.equal(got.sideways, false, 'no sideways scroll');
             assert.equal(got.small, 0, 'jump links are at least 44 px');

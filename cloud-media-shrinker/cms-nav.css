@@ -2,7 +2,7 @@
    What's coming, privacy). It sits outside <main>, so it spans the frame on every page whatever width the page's
    content uses. Wide screens: one row with the app, the pages and Get the app, and a thin line below. Narrower
    screens: a tinted band, the app on the first row (with a back arrow on the inner pages), the pages wrapping below.
-   Get the app shows in the band only from 700 px, where it clears the Privacy link below it by 40 px or more. */
+   Get the app shows in the band only from 724 px, where it clears the Privacy link below it by 40 px or more. */
 .cms-nav { --muted: #5d6a5f; --tile: #edf1e3; --line: #a7b2a5; --pill: #124b30; --pill-hover: #1c6240; --pill-ink: #fdfaf3; }
 /* The site styles every nav like its menu bar, so this one resets that. */
 .page-frame > nav.cms-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; margin: 12px var(--rail) 0 0; padding: 4px 0 6px; border-bottom: 1px solid var(--line); font-size: 15px; }
@@ -12,9 +12,11 @@
 .cms-nav-home img { display: block; width: 28px; height: 28px; }
 .cms-nav-back { display: none; flex: 0 0 auto; }
 .cms-nav-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0 20px; margin: 0; padding: 0; list-style: none; }
-.cms-nav-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+.cms-nav-links a { display: inline-flex; flex-direction: column; justify-content: center; align-items: center; min-height: 44px; color: var(--muted); }
+/* Each link is as wide as its bold label, so the current page's bold doesn't shift the links after it. */
+.cms-nav-links a::after { content: attr(data-label); height: 0; overflow: hidden; visibility: hidden; font-weight: 700; pointer-events: none; user-select: none; }
 .cms-nav-links a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
-.cms-nav-links a[aria-current="page"] { color: var(--green); font-weight: 500; }
+.cms-nav-links a[aria-current="page"] { color: var(--green); font-weight: 700; }
 .cms-nav a.cms-nav-get { position: relative; display: inline-flex; align-items: center; min-height: 38px; border-radius: 999px; background: var(--pill); color: var(--pill-ink); font-weight: 700; }
 .cms-nav a.cms-nav-get:hover { background: var(--pill-hover); color: var(--pill-ink); }
 /* A 44 px tap area around the pill. */
@@ -32,7 +34,7 @@
   .cms-nav-links a { min-height: 40px; }
   .cms-nav + .cms { padding-top: 26px; }
 }
-@media (max-width: 699px) {
+@media (max-width: 723px) {
   /* Narrower than this, Get the app would sit over Privacy on the row below, so the band shows the app's name and
      the pages only. */
   .cms-nav-get { display: none !important; }
