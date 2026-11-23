@@ -70,7 +70,7 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
         await page.goto(`${base}/${url}`, { waitUntil: 'domcontentloaded' });
         const got = await page.evaluate(() => ({
           missing: [...document.querySelectorAll('a[href^="#"]')].map(a => a.getAttribute('href')).filter(h => h.length > 1 && !document.getElementById(decodeURIComponent(h.slice(1)))),
-          whatsNew: [...document.querySelectorAll('main a')].some(a => new URL(a.href).pathname.endsWith('/cloud-media-shrinker/whats-new/')),
+          whatsNew: [...document.querySelectorAll('.cms-nav a, main a')].some(a => new URL(a.href).pathname.endsWith('/cloud-media-shrinker/whats-new/')),
           badges: [...document.querySelectorAll('.soon')].map(b => b.textContent.trim()),
           headings: [...document.querySelectorAll('h2')].map(h => h.textContent.trim()),
         }));
