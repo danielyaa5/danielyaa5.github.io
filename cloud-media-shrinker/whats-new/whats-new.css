@@ -1,0 +1,29 @@
+/* What's new: release notes per version. Uses the help page's sections (../help/help.css) and What's coming's lists and labels (../whats-coming/roadmap.css). */
+
+/* The versions on this page, as a row of links under the intro. */
+.w-versions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 22px 0 4px; }
+.w-versions-title { margin-right: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--green); }
+.cms .w-versions a { display: inline-flex; align-items: center; justify-content: center; min-width: 56px; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); font-family: var(--mono); font-size: 15px; color: var(--ink); text-decoration: none; }
+.cms .w-versions a:hover, .cms .w-versions a:focus-visible { border-color: var(--green); background: var(--box); color: var(--green); }
+
+/* A version: where and when it came out, then what changed. */
+.w-ver { scroll-margin-top: 16px; }
+.w-ver:first-of-type { border-top: 0; margin-top: 18px; }
+.w-ver:target > h2 { color: var(--green); }
+.w-ver h3 { margin: 22px 0 2px; font-family: var(--mono); font-size: 12px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.h-sec ul.w-where { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; padding: 0; list-style: none; }
+.h-sec .w-where li { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; margin: 0; padding: 7px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); font-size: 14px; line-height: 1.4; }
+.w-place { font-weight: 700; }
+.w-when { color: var(--muted); }
+.h-sec .w-where li.w-pending { border-style: dashed; background: transparent; }
+.w-where .soon { vertical-align: 0; }
+.h-sec p.w-aside { margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.h-sec p.w-note { margin: 14px 0 4px; padding: 12px 14px; border-left: 3px solid var(--green); border-radius: 0 6px 6px 0; background: var(--tile); font-size: 15px; line-height: 1.55; }
+
+@media (max-width: 620px) {
+  /* Phones: the five versions fit on one row from 360 px up. */
+  .w-versions { gap: 6px; }
+  .w-versions-title { display: none; }
+  .cms .w-versions a { min-width: 44px; padding: 0 9px; font-size: 14px; }
+  .h-sec .w-where li { width: 100%; justify-content: space-between; }
+}

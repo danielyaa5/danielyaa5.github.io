@@ -1,0 +1,47 @@
+/* Cloud Media Shrinker's own navigation, under the site header on each of its pages (product, help, What's new,
+   What's coming, privacy). It sits outside <main>, so it spans the frame on every page whatever width the page's
+   content uses. Wide screens: one row with the app, the pages and Get the app, and a thin line below. Narrower
+   screens: a tinted band, the app on the first row (with a back arrow on the inner pages), the pages wrapping below. */
+.cms-nav { --muted: #5d6a5f; --tile: #edf1e3; --line: #a7b2a5; --pill: #124b30; --pill-hover: #1c6240; --pill-ink: #fdfaf3; }
+/* The site styles every nav like its menu bar, so this one resets that. */
+.page-frame > nav.cms-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; margin: 12px var(--rail) 0 0; padding: 4px 0 6px; border-bottom: 1px solid var(--line); font-size: 15px; }
+.page-frame > nav.cms-nav a { min-width: 0; padding: 0; white-space: nowrap; }
+.page-frame > nav.cms-nav a.cms-nav-get { padding: 0 16px; }
+.cms-nav a.cms-nav-home { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-right: auto; color: var(--ink); font-size: 17px; font-weight: 700; }
+.cms-nav-home img { display: block; width: 28px; height: 28px; }
+.cms-nav-back { display: none; flex: 0 0 auto; }
+.cms-nav-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0 20px; margin: 0; padding: 0; list-style: none; }
+.cms-nav-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
+.cms-nav-links a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.cms-nav-links a[aria-current="page"] { color: var(--green); font-weight: 500; }
+.cms-nav a.cms-nav-get { position: relative; display: inline-flex; align-items: center; min-height: 38px; border-radius: 999px; background: var(--pill); color: var(--pill-ink); font-weight: 700; }
+.cms-nav a.cms-nav-get:hover { background: var(--pill-hover); color: var(--pill-ink); }
+/* A 44 px tap area around the pill. */
+.cms-nav-get::after { content: ""; position: absolute; inset: -3px 0; }
+/* The page below starts closer, since the bar already separates it from the header. */
+.cms-nav + .cms { padding-top: 30px; }
+/* Get the app lands on the product page's download box with room above it. */
+#get { scroll-margin-top: 24px; }
+
+@media (max-width: 1000px) {
+  .page-frame > nav.cms-nav { gap: 0 16px; margin-top: 14px; padding: 2px 14px 6px; border: 0; border-radius: 6px; background: var(--tile); }
+  .cms-nav a.cms-nav-home { gap: 9px; }
+  .cms-nav:not(.cms-nav-on-home) .cms-nav-back { display: block; margin: 0 -1px 0 -2px; }
+  .cms-nav-links { order: 3; flex-basis: 100%; gap: 0 18px; }
+  .cms-nav-links a { min-height: 40px; }
+  .cms-nav + .cms { padding-top: 26px; }
+}
+@media (max-width: 620px) {
+  /* Phones: the app's name and the pages only. The product page's own buttons are near the top anyway. */
+  .cms-nav-get { display: none !important; }
+  .page-frame > nav.cms-nav { margin: 12px 0 0; padding: 2px 12px 6px; }
+  .cms-nav-links { gap: 0 16px; }
+  .cms-nav + .cms { padding-top: 22px; }
+}
+@media screen and (prefers-color-scheme: dark) {
+  .cms-nav { --muted: var(--soft); --tile: var(--card); --line: var(--rule); --pill: var(--fill); --pill-hover: var(--fill-hover); --pill-ink: var(--on-fill); }
+}
+@media screen and (prefers-color-scheme: dark) and (max-width: 1000px) {
+  /* The band is close to the page's color at night, so it gets a faint edge. */
+  .page-frame > nav.cms-nav { box-shadow: inset 0 0 0 1px var(--card-line); }
+}

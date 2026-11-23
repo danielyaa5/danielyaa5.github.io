@@ -11,7 +11,7 @@ const { chromium } = require('playwright');
 const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '');
 const root = path.join(__dirname, '..');
 const site = 'http://danielyakobian.com';
-const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html', 'motorcycle-rentals/index.html', 'cloud-media-shrinker/index.html', 'cloud-media-shrinker/privacy/index.html',
+const tracked = ['index.html', 'blog/index.html', 'quickdesk/index.html', 'resume/index.html', 'motorcycle-rentals/index.html', 'cloud-media-shrinker/index.html', 'cloud-media-shrinker/privacy/index.html', 'cloud-media-shrinker/help/index.html', 'cloud-media-shrinker/whats-new/index.html', 'cloud-media-shrinker/whats-coming/index.html',
   'beckon/index.html', 'beckon/privacy/index.html', 'beckon/terms/index.html', '3d-print-monitor/index.html', '3d-print-monitor/privacy/index.html', '3d-print-monitor/support/index.html', 'tagtracker/index.html', 'puml-for-markdown/index.html',
   ...fs.readdirSync(path.join(root, 'blog')).filter(name => name.endsWith('.html') && name !== 'index.html').map(name => `blog/${name}`)];
 const untracked = ['gate/index.html', 'quickdesk/privacy.html', 'bubcal/index.html', 'bubcal/astra-v1/index.html', 'bubcal/astra-v2/index.html'];
