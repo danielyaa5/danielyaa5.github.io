@@ -7,8 +7,9 @@ const { chromium } = require('playwright');
 // Cloud Media Shrinker's product, help, What's new and What's coming pages: What's new lists every version newest first,
 // with a working anchor per version and where it came out; the other pages link to it; no stale "Coming in" badge
 // is left once a version is out; in-page links resolve; nothing scrolls sideways at phone, tablet or desktop width.
-// Every page has the product bar: the app, the five pages with the current one marked, Get the app on wider screens,
-// and a back arrow on the inner pages when the bar is a band (1000 px and narrower).
+// Every page has the product bar: the app, the five pages with the current one marked, Get the app on wider screens
+// (except the product page, whose own download buttons are right below), and a back arrow on the inner pages when
+// the bar is a band (1000 px and narrower).
 const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '');
 const out = path.join(__dirname, '..', 'test-results');
 const pages = ['cloud-media-shrinker/', 'cloud-media-shrinker/help/', 'cloud-media-shrinker/whats-new/', 'cloud-media-shrinker/whats-coming/', 'cloud-media-shrinker/privacy/'];
@@ -98,7 +99,7 @@ const widths = [1440, 1024, 900, 768, 414, 375, 320];
             homeText: bar.querySelector('.cms-nav-home').textContent.trim(),
             links: [...bar.querySelectorAll('.cms-nav-links a')].map(a => [a.textContent.trim(), new URL(a.href).pathname]),
             current: [...bar.querySelectorAll('[aria-current="page"]')].map(a => a.textContent.trim()),
-            get: new URL(bar.querySelector('.cms-nav-get').href).pathname + new URL(bar.querySelector('.cms-nav-get').href).hash,
+            get: bar.querySelector('.cms-nav-get') ? new URL(bar.querySelector('.cms-nav-get').href).pathname + new URL(bar.querySelector('.cms-nav-get').href).hash : null,
             oldBrand: document.querySelectorAll('main .c-brand, main > .eyebrow').length,
           };
         });
@@ -108,7 +109,8 @@ const widths = [1440, 1024, 900, 768, 414, 375, 320];
         assert.equal(got.homeText, 'Cloud Media Shrinker');
         assert.deepEqual(got.links, barLinks.map(([text, href]) => [text, `/${href}`]), 'the five pages, in order');
         assert.deepEqual(got.current, [barLinks.find(([, href]) => href === url)[0]], 'this page is marked current');
-        assert.equal(got.get, '/cloud-media-shrinker/#get', 'Get the app goes to the download box');
+        if (url === 'cloud-media-shrinker/') assert.equal(got.get, null, 'no Get the app on the product page, which has its own download buttons');
+        else assert.equal(got.get, '/cloud-media-shrinker/#get', 'Get the app goes to the download box');
         assert.equal(got.oldBrand, 0, 'the old icon and label row is gone');
       });
     }
@@ -142,12 +144,13 @@ const widths = [1440, 1024, 900, 768, 414, 375, 320];
             assert.ok(got.bar.homeHeight >= 44, `the app name is a 44 px target (${got.bar.homeHeight})`);
             assert.equal(got.bar.smallLinks, 0, 'bar links are at least 40 px tall');
             if (width > 1000) {
-              assert.ok(got.bar.oneRow && !got.bar.band && !got.bar.arrow && got.bar.get, 'wide screens: one row, no band, no arrow, Get the app shown');
+              assert.ok(got.bar.oneRow && !got.bar.band && !got.bar.arrow, 'wide screens: one row, no band, no arrow');
+              assert.equal(got.bar.get, inner, inner ? 'Get the app shown' : 'no Get the app on the product page');
             } else {
               assert.ok(got.bar.band, 'narrower screens: a tinted band');
               assert.equal(got.bar.arrow, inner, inner ? 'a back arrow on inner pages' : 'no back arrow on the product page');
               assert.ok(got.bar.linkRows <= 2, `the pages fit on at most two lines (${got.bar.linkRows})`);
-              assert.equal(got.bar.get, width > 620, width > 620 ? 'Get the app on tablets' : 'no Get the app on phones');
+              assert.equal(got.bar.get, inner && width > 620, !inner ? 'no Get the app on the product page' : width > 620 ? 'Get the app on tablets' : 'no Get the app on phones');
             }
             assert.equal(got.sideways, false, 'no sideways scroll');
             assert.equal(got.small, 0, 'version and jump links are at least 44 px');
