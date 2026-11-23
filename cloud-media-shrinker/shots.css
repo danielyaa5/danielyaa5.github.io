@@ -1,0 +1,40 @@
+/* The feature screenshots on the product page link to their full-size files (behavior in shots.js). At 850px and
+   narrower a click or tap opens that file in the browser, where a phone can pinch to zoom; wider, a click opens the
+   full-screen viewer below. With a mouse, hovering zooms in where the pointer is. */
+.cms a.c-zoom { position: relative; display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); box-shadow: 0 1px 3px #59684a14; color: inherit; text-decoration: none; cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
+.cms a.c-zoom:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.c-zoom .c-shot { border: 0; border-radius: 0; box-shadow: none; transform-origin: var(--zoom-x, 50%) var(--zoom-y, 50%); transition: transform .25s ease; }
+.c-zoom.is-zoomed .c-shot { transform: scale(var(--zoom, 2)); }
+.c-zoom-badge { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 11px; border-radius: 999px; background: rgba(17, 24, 16, .8); color: #fbf8ef; font: 700 13px/1 Arial, Helvetica, sans-serif; white-space: nowrap; pointer-events: none; box-shadow: 0 2px 8px rgba(17, 24, 16, .25); }
+.c-zoom-badge::before { content: ""; flex: none; width: 14px; height: 14px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 2h4v4M6 14H2v-4M14 2 9.5 6.5M2 14l4.5-4.5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 2h4v4M6 14H2v-4M14 2 9.5 6.5M2 14l4.5-4.5'/%3E%3C/svg%3E") center / contain no-repeat; }
+.c-zoom-badge .for-mouse { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .c-zoom-badge { opacity: 0; transition: opacity .15s; }
+  .c-zoom:hover .c-zoom-badge, .c-zoom:focus-visible .c-zoom-badge { opacity: 1; }
+  .c-zoom-badge .for-mouse { display: inline; }
+  .c-zoom-badge .for-touch { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .c-zoom .c-shot, .c-zoom-badge { transition: none; } }
+@media screen and (prefers-color-scheme: dark) { .cms a.c-zoom { box-shadow: none; } }
+
+/* The full-screen viewer (wider than 850px): one screenshot at a time with its feature's number and title. */
+html.c-viewer-open { overflow: hidden; }
+.c-viewer { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 0; background: #0e130f; color: #f3f0e6; }
+.c-viewer::backdrop { background: rgba(0, 0, 0, .85); }
+.c-viewer-top { position: absolute; top: 0; left: 0; right: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: max(10px, env(safe-area-inset-top)) 12px 10px 18px; font: 13px/1 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: #b9c4b3; pointer-events: none; }
+.c-viewer button { display: grid; place-items: center; padding: 0; border: 0; background: rgba(255, 255, 255, .12); color: #fff; cursor: pointer; pointer-events: auto; }
+.c-viewer button:hover { background: rgba(255, 255, 255, .2); }
+.c-viewer button:focus-visible { outline: 3px solid #8fd0a6; outline-offset: 2px; }
+.c-viewer-close { width: 44px; height: 44px; border-radius: 22px; }
+.c-viewer-track { display: flex; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.c-viewer-track::-webkit-scrollbar { display: none; }
+.c-viewer-slide { flex: 0 0 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; box-sizing: border-box; margin: 0; padding: 64px 80px 70px; scroll-snap-align: center; }
+.c-viewer-slide img { display: block; width: auto; height: auto; max-width: min(100%, 1360px); max-height: calc(100dvh - 170px); border-radius: 6px; }
+.c-viewer-slide figcaption { max-width: 640px; font: 700 16px/1.35 Arial, Helvetica, sans-serif; text-align: center; }
+.c-viewer-slide figcaption span { display: block; margin-bottom: 4px; font: 400 12px/1 ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .14em; color: #8fd0a6; }
+.c-viewer-nav { position: absolute; top: 50%; z-index: 2; width: 48px; height: 48px; margin-top: -24px; border-radius: 24px; }
+.c-viewer-nav.is-prev { left: 16px; }
+.c-viewer-nav.is-next { right: 16px; }
+.c-viewer-nav:disabled { opacity: .3; cursor: default; }
+.c-viewer-hint { position: absolute; left: 72px; right: 72px; bottom: max(14px, env(safe-area-inset-bottom)); margin: 0; text-align: center; font: 13px/1.4 Arial, Helvetica, sans-serif; color: #93a08f; pointer-events: none; }
+@media (hover: none) { .c-viewer-hint { display: none; } }
