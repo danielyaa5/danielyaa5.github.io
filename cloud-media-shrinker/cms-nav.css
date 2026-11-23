@@ -1,7 +1,8 @@
 /* Cloud Media Shrinker's own navigation, under the site header on each of its pages (product, help, What's new,
    What's coming, privacy). It sits outside <main>, so it spans the frame on every page whatever width the page's
    content uses. Wide screens: one row with the app, the pages and Get the app, and a thin line below. Narrower
-   screens: a tinted band, the app on the first row (with a back arrow on the inner pages), the pages wrapping below. */
+   screens: a tinted band, the app on the first row (with a back arrow on the inner pages), the pages wrapping below.
+   Get the app shows in the band only from 700 px, where it clears the Privacy link below it by 40 px or more. */
 .cms-nav { --muted: #5d6a5f; --tile: #edf1e3; --line: #a7b2a5; --pill: #124b30; --pill-hover: #1c6240; --pill-ink: #fdfaf3; }
 /* The site styles every nav like its menu bar, so this one resets that. */
 .page-frame > nav.cms-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; margin: 12px var(--rail) 0 0; padding: 4px 0 6px; border-bottom: 1px solid var(--line); font-size: 15px; }
@@ -31,9 +32,12 @@
   .cms-nav-links a { min-height: 40px; }
   .cms-nav + .cms { padding-top: 26px; }
 }
-@media (max-width: 620px) {
-  /* Phones: the app's name and the pages only. The product page's own buttons are near the top anyway. */
+@media (max-width: 699px) {
+  /* Narrower than this, Get the app would sit over Privacy on the row below, so the band shows the app's name and
+     the pages only. */
   .cms-nav-get { display: none !important; }
+}
+@media (max-width: 620px) {
   .page-frame > nav.cms-nav { margin: 12px 0 0; padding: 2px 12px 6px; }
   .cms-nav-links { gap: 0 16px; }
   .cms-nav + .cms { padding-top: 22px; }

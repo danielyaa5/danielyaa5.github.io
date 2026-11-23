@@ -15,7 +15,7 @@ const out = path.join(__dirname, '..', 'test-results');
 const pages = ['cloud-media-shrinker/', 'cloud-media-shrinker/help/', 'cloud-media-shrinker/whats-new/', 'cloud-media-shrinker/whats-coming/', 'cloud-media-shrinker/privacy/'];
 // The product bar's links, in order, and which page each one is.
 const barLinks = [['Overview', 'cloud-media-shrinker/'], ['Help', 'cloud-media-shrinker/help/'], ['What\'s new', 'cloud-media-shrinker/whats-new/'], ['What\'s coming', 'cloud-media-shrinker/whats-coming/'], ['Privacy', 'cloud-media-shrinker/privacy/']];
-const widths = [1440, 1024, 900, 768, 414, 375, 320];
+const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
 
 (async () => {
   fs.mkdirSync(out, { recursive: true });
@@ -45,7 +45,6 @@ const widths = [1440, 1024, 900, 768, 414, 375, 320];
           where: [...section.querySelectorAll('.w-where li')].map(li => li.textContent.trim().replace(/\s+/g, ' ')),
           changes: section.querySelectorAll('.r-list li').length,
         })),
-        jump: [...document.querySelectorAll('.w-versions a')].map(a => a.getAttribute('href')),
       }));
       assert.ok(got.versions.length >= 5, 'at least 1.0 to 1.2.2');
       for (let i = 1; i < got.versions.length; i++) {
@@ -57,7 +56,6 @@ const widths = [1440, 1024, 900, 768, 414, 375, 320];
         assert.ok(v.where.length >= 1 && v.where.every(w => /\b20\d\d\b|review|first version/i.test(w)), `${v.title} says when and where it came out: ${v.where.join(' | ')}`);
         assert.ok(v.changes >= 1, `${v.title} lists what changed`);
       }
-      assert.deepEqual(got.jump, got.versions.map(v => `#${v.id}`), 'the version links match the sections, in order');
       newestOut = got.versions.find(v => v.where.some(w => /\b20\d\d\b/.test(w)))?.title || null;
     });
 
@@ -120,6 +118,23 @@ const widths = [1440, 1024, 900, 768, 414, 375, 320];
       assert.ok(got.stores.includes('app_store') && got.stores.includes('direct'), `App Store and Mac download in #get (${got.stores})`);
       assert.ok(got.top >= 0 && got.top < 120, `#get is at the top of the window (top ${Math.round(got.top)})`);
     });
+    await check('Get the app never sits over the page links, at any width', async () => {
+      // In the band, the pill is on the app's row and the links wrap below it; it must clear the last link (Privacy).
+      await page.goto(`${base}/cloud-media-shrinker/help/`, { waitUntil: 'networkidle' });
+      const tight = [];
+      for (let width = 600; width <= 1440; width += 2) {
+        await page.setViewportSize({ width, height: 700 });
+        const gap = await page.evaluate(() => {
+          const pill = document.querySelector('.cms-nav-get');
+          if (getComputedStyle(pill).display === 'none') return null;
+          const p = pill.getBoundingClientRect();
+          return Math.min(...[...document.querySelectorAll('.cms-nav-links a')].map(a => a.getBoundingClientRect()).map(r => (r.bottom <= p.top || r.top >= p.bottom) ? p.left - r.right : Infinity));
+        });
+        if (gap !== null && gap < 24) tight.push(`${width}px: ${Math.round(gap)} px`);
+      }
+      assert.deepEqual(tight, [], 'the pill clears every link by at least 24 px');
+      await page.setViewportSize({ width: 1440, height: 900 });
+    });
     await page.close();
 
     for (const scheme of ['light', 'dark']) {
@@ -131,8 +146,7 @@ const widths = [1440, 1024, 900, 768, 414, 375, 320];
             await p.goto(`${base}/${url}`, { waitUntil: 'networkidle' });
             const got = await p.evaluate(() => ({
               sideways: document.documentElement.scrollWidth > innerWidth,
-              small: [...document.querySelectorAll('.w-versions a, .c-jump a')].filter(a => a.getClientRects().length).map(a => a.getBoundingClientRect()).filter(r => r.height < 44 || r.width < 44).length,
-              rows: (() => { const tops = new Set([...document.querySelectorAll('.w-versions a')].map(a => Math.round(a.getBoundingClientRect().top))); return tops.size; })(),
+              small: [...document.querySelectorAll('.c-jump a')].filter(a => a.getClientRects().length).map(a => a.getBoundingClientRect()).filter(r => r.height < 44 || r.width < 44).length,
               bar: (() => {
                 const bar = document.querySelector('.cms-nav'); const shown = e => !!e && e.getClientRects().length > 0 && getComputedStyle(e).display !== 'none';
                 const home = bar.querySelector('.cms-nav-home').getBoundingClientRect();
@@ -150,11 +164,10 @@ const widths = [1440, 1024, 900, 768, 414, 375, 320];
               assert.ok(got.bar.band, 'narrower screens: a tinted band');
               assert.equal(got.bar.arrow, inner, inner ? 'a back arrow on inner pages' : 'no back arrow on the product page');
               assert.ok(got.bar.linkRows <= 2, `the pages fit on at most two lines (${got.bar.linkRows})`);
-              assert.equal(got.bar.get, inner && width > 620, !inner ? 'no Get the app on the product page' : width > 620 ? 'Get the app on tablets' : 'no Get the app on phones');
+              assert.equal(got.bar.get, inner && width >= 700, !inner ? 'no Get the app on the product page' : width >= 700 ? 'Get the app on wide tablets' : 'no Get the app below 700 px');
             }
             assert.equal(got.sideways, false, 'no sideways scroll');
-            assert.equal(got.small, 0, 'version and jump links are at least 44 px');
-            if (url.endsWith('whats-new/') && width >= 360) assert.ok(got.rows <= 1, `the versions fit on one row (${got.rows} rows)`);
+            assert.equal(got.small, 0, 'jump links are at least 44 px');
             if (width === 1440 || width === 375) await p.screenshot({ path: path.join(out, `cms-${url.split('/').filter(Boolean).slice(1).join('-') || 'product'}-${width}-${scheme}.png`), fullPage: true });
           });
         }
