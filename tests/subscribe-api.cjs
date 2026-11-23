@@ -80,7 +80,7 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
 (async () => {
   process.env.RESEND_API_KEY = 're_test_key';
 
-  // First sign-up: the three topics are created opted out by default and public, then the contact is created opted in to what was ticked.
+  // First sign-up: the four topics are created opted out by default and public, then the contact is created opted in to what was ticked.
   handler.resetCache();
   let resend = fakeResend();
   let result = await call({ body: 'email=reader%40example.com&topic=new_apps&topic=promos&company=', headers: { origin: 'https://danielyaa5.github.io' } });
@@ -92,6 +92,7 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
     ['New app and open source launches', 'opt_out', 'public'],
     ['Beta tester invites', 'opt_out', 'public'],
     ['Promos', 'opt_out', 'public'],
+    ['3D Print Monitor updates', 'opt_out', 'public'],
   ]);
   assert.ok(resend.topics.every(t => t.name.length <= 50 && t.description.length <= 200), 'topic names and descriptions fit Resend limits');
   const ids = Object.fromEntries(resend.topics.map(t => [t.name, t.id]));
@@ -113,7 +114,7 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
   resend = fakeResend({ topics: resend.topics, contacts: resend.contacts });
   result = await call({ body: 'email=second%40example.com&topic=beta' });
   assert.equal(result.status, 200);
-  assert.equal(resend.topics.length, 3, 'no duplicate topics');
+  assert.equal(resend.topics.length, 4, 'no duplicate topics');
   assert.ok(!resend.calls.some(c => c.method === 'POST' && c.pathname === '/topics'));
   assert.deepEqual(resend.contacts.get('second@example.com').topics, { [ids['Beta tester invites']]: 'opt_in' });
 
@@ -123,11 +124,12 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
     { id: 'old-new-apps', name: 'New app launches', description: 'An email when Daniel releases a new app.', default_subscription: 'opt_out', created_at: '2026-11-07T18:09:00Z' },
     { id: 'old-beta', name: 'Beta tester invites', description: 'x', default_subscription: 'opt_out', created_at: '2026-11-07T18:09:00Z' },
     { id: 'old-promos', name: 'Promos', description: 'x', default_subscription: 'opt_out', created_at: '2026-11-07T18:09:00Z' },
+    { id: 'old-print', name: '3D Print Monitor updates', description: 'x', default_subscription: 'opt_out', created_at: '2026-11-23T18:09:00Z' },
   ];
   resend = fakeResend({ topics: legacy, contacts: new Map([['owner@example.com', { unsubscribed: false, topics: { 'old-new-apps': 'opt_in' } }]]) });
   result = await call({ body: 'email=fifth%40example.com&topic=new_apps' });
   assert.equal(result.status, 200);
-  assert.equal(resend.topics.length, 3, 'no new topic is created for a rename');
+  assert.equal(resend.topics.length, 4, 'no new topic is created for a rename');
   assert.equal(resend.topics[0].name, 'New app and open source launches');
   assert.equal(resend.topics[0].description, 'An email when Daniel releases a new app or open source project.');
   assert.deepEqual(resend.contacts.get('fifth@example.com').topics, { 'old-new-apps': 'opt_in' }, 'new sign-ups join the renamed topic');
@@ -140,7 +142,21 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
   assert.equal(result.status, 200);
   assert.equal(resend.calls[0].pathname, '/topics');
   assert.equal(resend.calls[1].pathname, '/topics', 'retried after 429');
-  assert.equal(resend.topics.length, 3);
+  assert.equal(resend.topics.length, 4);
+
+  // The 3D Print Monitor page's sign-up lands on its own topic only, apart from the home page's topics,
+  // and adding it to an existing contact leaves their other topics alone.
+  handler.resetCache();
+  resend = fakeResend({ topics: resend.topics, contacts: new Map([['reader@example.com', { unsubscribed: false, topics: { [resend.topics.find(t => t.name === 'Beta tester invites').id]: 'opt_in' } }]]) });
+  const printTopic = resend.topics.find(t => t.name === '3D Print Monitor updates');
+  const betaTopic = resend.topics.find(t => t.name === 'Beta tester invites');
+  assert.equal(printTopic.description, 'An email when a new version of 3D Print Monitor ships.');
+  result = await call({ body: 'email=maker%40example.com&topic=print_monitor&return=%2F3d-print-monitor%2F&company=', headers: { origin: 'https://danielyakobian.com' } });
+  assert.deepEqual([result.status, result.json], [200, { ok: true }]);
+  assert.deepEqual(resend.contacts.get('maker@example.com'), { unsubscribed: false, topics: { [printTopic.id]: 'opt_in' } }, 'only the 3D Print Monitor topic');
+  result = await call({ body: 'email=reader%40example.com&topic=print_monitor' });
+  assert.equal(result.status, 200);
+  assert.deepEqual(resend.contacts.get('reader@example.com').topics, { [betaTopic.id]: 'opt_in', [printTopic.id]: 'opt_in' }, 'existing topics are kept');
 
   // Bad input never reaches Resend.
   for (const [body, error] of [
@@ -184,6 +200,15 @@ async function call({ method = 'POST', body, headers = {} } = {}) {
   assert.deepEqual([result.status, result.headers.location], [303, 'https://danielyaa5.github.io/#signup-thanks']);
   result = await call({ body: 'email=nojs%40example.com', headers: { accept: 'text/html' } });
   assert.deepEqual([result.status, result.headers.location], [303, 'https://danielyakobian.com/#signup-failed']);
+  // An app page's form names its own page to come back to; only known pages on this site are allowed.
+  result = await call({ body: 'email=nojs%40example.com&topic=print_monitor&return=%2F3d-print-monitor%2F', headers: { accept: 'text/html', origin: 'https://danielyakobian.com' } });
+  assert.deepEqual([result.status, result.headers.location], [303, 'https://danielyakobian.com/3d-print-monitor/#signup-thanks']);
+  result = await call({ body: 'email=bad&topic=print_monitor&return=%2F3d-print-monitor%2F', headers: { accept: 'text/html' } });
+  assert.deepEqual([result.status, result.headers.location], [303, 'https://danielyakobian.com/3d-print-monitor/#signup-failed']);
+  for (const back of ['https://evil.example/', '//evil.example/', '/somewhere-else/', '/3d-print-monitor']) {
+    result = await call({ body: `email=nojs%40example.com&topic=print_monitor&return=${encodeURIComponent(back)}`, headers: { accept: 'text/html' } });
+    assert.equal(result.headers.location, 'https://danielyakobian.com/#signup-thanks', `${back} falls back to the home page`);
+  }
 
   // Without the key the form says sign-ups aren't open, and nothing is sent.
   delete process.env.RESEND_API_KEY;

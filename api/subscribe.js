@@ -1,5 +1,6 @@
-// Email sign-up for the home page form, run as a Vercel function at /api/subscribe/.
-// Each sign-up becomes a Resend contact opted in to the topics the visitor ticked.
+// Email sign-up for the home page form and the 3D Print Monitor page, run as a Vercel
+// function at /api/subscribe/. Each sign-up becomes a Resend contact opted in to the
+// topics the visitor ticked (or the one topic an app page's form sends).
 // RESEND_API_KEY (a full-access key) is a Vercel environment variable; nothing
 // secret lives in this repository. GitHub Pages serves this file as plain text
 // and never runs it, so the form on danielyaa5.github.io posts here too.
@@ -17,7 +18,12 @@ const TOPICS = {
   new_apps: { name: 'New app and open source launches', description: 'An email when Daniel releases a new app or open source project.', formerly: ['New app launches'] },
   beta: { name: 'Beta tester invites', description: 'Try apps early and get them free for life!' },
   promos: { name: 'Promos', description: 'Discounts and promo codes for paid apps.' },
+  // The 3D Print Monitor page's form: an email when a new version ships, kept apart from the home page's topics.
+  print_monitor: { name: '3D Print Monitor updates', description: 'An email when a new version of 3D Print Monitor ships.' },
 };
+
+// Pages a form may send a no-JavaScript visitor back to; anything else goes to the home page.
+const RETURN_PATHS = new Set(['/', '/3d-print-monitor/']);
 
 const EMAIL = /^[^\s@<>()",;:]+@[^\s@<>()",;:]+\.[^\s@<>()",;:]{2,}$/;
 let topicIds = null;
@@ -136,8 +142,8 @@ function readBody(req) {
 }
 
 // Without JavaScript the browser posts the form directly; send it back to the
-// page, where the matching message is shown with :target.
-function finish(req, res, status, result) {
+// page it came from (its hidden `return` field), where the matching message is shown with :target.
+function finish(req, res, status, result, page = '/') {
   const wantsJson = /application\/json/.test(req.headers.accept || '');
   if (wantsJson) {
     res.statusCode = status;
@@ -147,7 +153,7 @@ function finish(req, res, status, result) {
   }
   const origin = ORIGINS.has(req.headers.origin) ? req.headers.origin : SITE;
   res.statusCode = 303;
-  res.setHeader('Location', `${origin}/#${status < 300 ? 'signup-thanks' : 'signup-failed'}`);
+  res.setHeader('Location', `${origin}${page}#${status < 300 ? 'signup-thanks' : 'signup-failed'}`);
   res.end();
 }
 
@@ -173,36 +179,38 @@ async function handler(req, res) {
   }
 
   const body = readBody(req);
+  const page = RETURN_PATHS.has(body.return) ? body.return : '/';
+  const done = (status, result) => finish(req, res, status, result, page);
   // A field people never see; bots that fill it are told they signed up.
   if (typeof body.company === 'string' && body.company.trim()) {
-    finish(req, res, 200, { ok: true });
+    done(200, { ok: true });
     return;
   }
   const email = typeof body.email === 'string' ? body.email.trim() : '';
   const topics = [...new Set([].concat(body.topic ?? body.topics ?? []))].filter(topic => typeof topic === 'string' && Object.hasOwn(TOPICS, topic));
   if (!email || email.length > 254 || !EMAIL.test(email)) {
-    finish(req, res, 400, { ok: false, error: 'invalid_email' });
+    done(400, { ok: false, error: 'invalid_email' });
     return;
   }
   if (!topics.length) {
-    finish(req, res, 400, { ok: false, error: 'no_topics' });
+    done(400, { ok: false, error: 'no_topics' });
     return;
   }
   if (!process.env.RESEND_API_KEY) {
-    finish(req, res, 503, { ok: false, error: 'not_configured' });
+    done(503, { ok: false, error: 'not_configured' });
     return;
   }
   try {
     await subscribe(email, topics);
-    finish(req, res, 200, { ok: true });
+    done(200, { ok: true });
   } catch (error) {
     console.error('signup failed', error.message);
     topicIds = null;
     if (error instanceof ResendError && error.status === 422 && /email/i.test(error.message)) {
-      finish(req, res, 400, { ok: false, error: 'invalid_email' });
+      done(400, { ok: false, error: 'invalid_email' });
       return;
     }
-    finish(req, res, 502, { ok: false, error: 'provider_error' });
+    done(502, { ok: false, error: 'provider_error' });
   }
 }
 
