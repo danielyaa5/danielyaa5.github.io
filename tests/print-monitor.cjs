@@ -3,14 +3,15 @@ const fs = require('node:fs/promises');
 const path = require('node:path');
 const { chromium } = require('playwright');
 
-// The 3D Print Monitor page: layout at 11 widths, its product bar (also on Support and Privacy), the links that
+// The 3D Print Monitor page: layout at 13 widths, its product bar (also on Support and Privacy), the links that
 // matter, and its email sign-up. Sign-ups go through the real function (api/subscribe.js) with a fake Resend API
 // in this process, so nothing is sent anywhere and the test sees which Resend topic each address lands on.
 // Run: node tests/print-monitor.cjs http://localhost:4173
 // Screenshots go to test-results/print-monitor-<width>.png.
 const base = (process.argv[2] || 'http://localhost:4173').replace(/\/$/, '');
 const page3d = `${base}/3d-print-monitor/`;
-const widths = [1920, 1440, 1280, 1024, 900, 768, 600, 414, 390, 375, 320];
+// 260 and 240 are an iPhone with Safari's page zoom at 150% and 175%.
+const widths = [1920, 1440, 1280, 1024, 900, 768, 600, 414, 390, 375, 320, 260, 240];
 const endpoint = 'https://danielyakobian.com/api/subscribe/';
 const storeLink = 'https://apps.apple.com/app/id6824940843';
 const handler = require(path.join(__dirname, '..', 'api', 'subscribe.js'));
@@ -77,7 +78,7 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
         const parts = [...signup.querySelectorAll('h2, p:not(:empty), .signup-email, .signup-button')].filter(el => el.getClientRects().length);
         return {
           sideways: document.documentElement.scrollWidth > innerWidth,
-          heroShown: hero.complete && hero.naturalWidth > 0 && box(hero).width > 200 && box(hero).right <= innerWidth,
+          heroShown: hero.complete && hero.naturalWidth > 0 && box(hero).width > Math.min(200, innerWidth * 0.7) && box(hero).right <= innerWidth,
           heroSrc: hero.currentSrc.split('/').pop(),
           heroNote: document.querySelector('.pm-hero-media figcaption')?.textContent,
           homeShot: document.querySelector('.pm-phone img').getAttribute('src').split('/').pop(),

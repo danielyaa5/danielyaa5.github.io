@@ -53,3 +53,7 @@
   .pm-phone .c-shot { border-color: #2b352e; }
   .pm-hero-shot { box-shadow: none; }
 }
+
+/* Long unbroken text, such as the support email address, wraps instead of widening the page on very narrow
+   screens (Safari's 175% page zoom makes an iPhone about 223 px wide). */
+.cms.pm, .cms.pm p, .cms.pm li, .cms-privacy { overflow-wrap: break-word; }
