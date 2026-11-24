@@ -157,6 +157,12 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
       assert.deepEqual(tight, [], 'the pill clears every link by at least 24 px');
       await page.setViewportSize({ width: 1440, height: 900 });
     });
+    await check('every Cloud Media Shrinker page is in the sitemap', async () => {
+      const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
+      const listed = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+      const missing = [...pages, 'cloud-media-shrinker/compare/'].map(u => `https://danielyakobian.com/${u}`).filter(u => !listed.includes(u));
+      assert.deepEqual(missing, [], 'listed in sitemap.xml');
+    });
     await check('privacy: the at-a-glance diagram, and the policy sentences it summarizes', async () => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(`${base}/cloud-media-shrinker/privacy/`, { waitUntil: 'domcontentloaded' });
