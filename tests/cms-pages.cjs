@@ -157,6 +157,41 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
       assert.deepEqual(tight, [], 'the pill clears every link by at least 24 px');
       await page.setViewportSize({ width: 1440, height: 900 });
     });
+    await check('privacy: the at-a-glance diagram, and the policy sentences it summarizes', async () => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(`${base}/cloud-media-shrinker/privacy/`, { waitUntil: 'domcontentloaded' });
+      const got = await page.evaluate(() => {
+        const glance = document.querySelector('.c-legal .p-glance');
+        const policy = [...document.querySelectorAll('.c-legal > p, .c-legal > h2')].map(e => e.textContent).join(' ').replace(/\s+/g, ' ');
+        return {
+          afterTitle: glance?.previousElementSibling?.classList.contains('c-updated'),
+          device: glance?.querySelectorAll('.p-device li:not(.p-chips li)').length,
+          dests: [...(glance?.querySelectorAll('.p-dest b') || [])].map(b => b.textContent),
+          cards: [...(glance?.querySelectorAll('.p-card h3') || [])].map(h => h.textContent),
+          policy,
+        };
+      });
+      assert.ok(got.afterTitle, 'the diagram sits under the title and date, above the policy');
+      assert.equal(got.device, 4, 'four things never sent automatically');
+      assert.deepEqual(got.dests, ['Apple', 'Polar, or the developer’s unlock relay', 'The support inbox', 'The developer']);
+      assert.deepEqual(got.cards, ['Stays on your device', 'Only if you choose', 'Not in the app at all']);
+      // Every line on the diagram summarizes one of these. If the policy changes, change the diagram with it.
+      for (const source of [
+        'does not automatically send your photos, videos, filenames, captions, location information or library contents to the developer',
+        'no advertising, tracking or analytics SDKs and does not require a Cloud Media Shrinker account',
+        'Apple Photos may download media from iCloud when you preview or compress it',
+        'App Store editions use Apple’s purchase system',
+        'a random reference for this installation',
+        'every hour while it runs',
+        'The app never sends Polar your photos, filenames, library information or your Mac’s name',
+        'The app never sends your photos, filenames, library information or your Mac’s name',
+        'the text you entered, your optional reply email, selected screenshots, and app diagnostics if included',
+        'You can review the exact diagnostics and exclude them before sending',
+        'They are not sent to the developer',
+        'does not request your Google password or connect directly to your Google account',
+        'The developer has no server copy of your library',
+      ]) assert.ok(got.policy.includes(source), `the policy still says: ${source}`);
+    });
     await page.close();
 
     for (const scheme of ['light', 'dark']) {
@@ -189,6 +224,12 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
               assert.equal(got.bar.get, inner && width >= 724, !inner ? 'no Get the app on the product page' : width >= 724 ? 'Get the app on wide tablets' : 'no Get the app below 724 px');
             }
             assert.equal(got.sideways, false, 'no sideways scroll');
+            if (url.endsWith('privacy/')) {
+              // The map's line runs inside the frame: on phones the cards step in from the device block.
+              const map = await p.evaluate(() => { const d = document.querySelector('.p-device').getBoundingClientRect(); const c = document.querySelector('.p-dest').getBoundingClientRect(); const f = document.querySelector('.c-legal').getBoundingClientRect(); return { device: d.left, dest: c.left, deviceRight: d.right, frame: f.left }; });
+              if (width <= 620) assert.ok(map.dest >= map.device + 30, `phone: the cards step in from the device block (${Math.round(map.dest - map.device)} px)`);
+              else assert.ok(map.dest >= map.deviceRight + 30, `the cards sit right of the device block (${Math.round(map.dest - map.deviceRight)} px)`);
+            }
             assert.equal(got.small, 0, 'jump links and release rows are at least 44 px');
             if (width === 1440 || width === 375) await p.screenshot({ path: path.join(out, `cms-${url.split('/').filter(Boolean).slice(1).join('-') || 'product'}-${width}-${scheme}.png`), fullPage: true });
           });
