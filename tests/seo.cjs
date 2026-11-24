@@ -74,9 +74,12 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   const vercel = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
   const hostRedirects = vercel.redirects.filter(rule => rule.has?.[0]?.type === 'host');
   const hosts = hostRedirects.map(rule => rule.has[0].value);
-  assert.deepEqual(hosts, ['www.danielyakobian.com', 'danielyakobian-com.vercel.app']);
+  assert.deepEqual(hosts, ['www.danielyakobian.com', 'danielyakobian-com.vercel.app', 'cloudmediashrinker.com', 'www.cloudmediashrinker.com']);
   // `/:path*` would not match `/` or paths ending in `/`, so the redirects capture the whole path.
-  assert.ok(hostRedirects.every(rule => rule.permanent && rule.source === '/:path(.*)' && rule.destination === `${site}/:path`));
+  // The site's own hosts keep the path as is; cloudmediashrinker.com sends every path to the same path under the app's page.
+  const siteHosts = ['www.danielyakobian.com', 'danielyakobian-com.vercel.app'];
+  assert.ok(hostRedirects.every(rule => rule.permanent && rule.source === '/:path(.*)'));
+  assert.ok(hostRedirects.every(rule => rule.destination === (siteHosts.includes(rule.has[0].value) ? `${site}/:path` : `${site}/cloud-media-shrinker/:path`)));
   // Like GitHub Pages, send /blog to /blog/ so the page's relative links resolve.
   assert.equal(vercel.trailingSlash, true);
 
