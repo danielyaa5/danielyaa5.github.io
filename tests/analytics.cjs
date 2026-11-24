@@ -444,7 +444,7 @@ const events = request => {
         for (const type of ['click', 'auxclick']) window.addEventListener(type, event => { if (event.target.closest?.('a[href]')) event.preventDefault(); });
       });
       const start = captured.length;
-      await news.locator('[id="1-2-2"] .w-where [data-store="app_store"]').click();
+      await news.locator('[id="1-2-2"] .w-where a', { hasText: 'Mac App Store' }).click();
       await news.locator('[id="1-2-2"] .w-where [data-store="direct"]').click({ button: 'middle' });
       await news.locator('[id="1-2-1"] .w-where a', { hasText: 'iPhone and iPad' }).click();
       await news.waitForTimeout(500);

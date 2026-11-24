@@ -29,6 +29,8 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
   };
   // The newest version What's new shows as out somewhere (a dated release), read from the page.
   let newestOut = null;
+  // Whether the newest version is still in Apple's review on some platform (a row marked w-pending on What's new).
+  let newestPending = true;
   const check = async (label, fn) => {
     try { await fn(); console.log(`ok  ${label}`); } catch (error) { failures.push(`${label}: ${error.message.split('\n')[0]}`); console.log(`FAIL ${label}: ${error.message}`); }
   };
@@ -69,6 +71,7 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
         }
       }
       newestOut = got.versions.find(v => v.where.some(w => /\b20\d\d\b/.test(w)))?.title || null;
+      newestPending = got.versions[0].rows.some(r => r.pending);
     });
 
     await check('a version link opens at its section', async () => {
@@ -93,6 +96,8 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
         assert.ok(newestOut, 'What\'s new shows a version that is out');
         const stale = got.badges.filter(b => { const m = b.match(/^Coming in (\d+(?:\.\d+)+)$/); return m && compare(m[1], newestOut) <= 0; });
         assert.deepEqual(stale, [], `no "Coming in" badge for ${newestOut} or older`);
+        // Once the newest version is out on every platform, nothing may still say it's coming to one of them.
+        if (!newestPending) assert.deepEqual(got.badges.filter(b => /^Coming to /.test(b)), [], 'no "Coming to" label once every platform has the newest version');
         if (url.endsWith('whats-coming/')) assert.ok(!got.headings.some(h => (h.match(/\b\d+\.\d+(?:\.\d+)?\b/g) || []).some(v => compare(v, newestOut) <= 0)), `What's coming has no section for ${newestOut} or older`);
       });
     }
