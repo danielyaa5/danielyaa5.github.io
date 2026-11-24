@@ -80,6 +80,7 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
           sideways: document.documentElement.scrollWidth > innerWidth,
           heroShown: hero.complete && hero.naturalWidth > 0 && box(hero).width > Math.min(200, innerWidth * 0.7) && box(hero).right <= innerWidth,
           heroSrc: hero.currentSrc.split('/').pop(),
+          heroInWindow: !!hero.closest('.c-mac') && !!document.querySelector('.c-mac').getClientRects().length,
           heroNote: document.querySelector('.pm-hero-media figcaption')?.textContent,
           homeShot: document.querySelector('.pm-phone img').getAttribute('src').split('/').pop(),
           buttonsFit: [...document.querySelectorAll('.c-hero .c-actions .button')].every(el => box(el).left >= 0 && box(el).right <= innerWidth),
@@ -103,8 +104,9 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
       assert.deepEqual(errors, [], `no script errors at ${width}px`);
       assert.equal(layout.sideways, false, `no sideways scroll at ${width}px`);
       assert.ok(layout.heroShown, `the camera widget shows in the hero at ${width}px`);
-      // A camera picture leads the page: the two-camera Mac widget, or the one-camera iPhone widget on phones.
-      assert.match(layout.heroSrc, width <= 620 ? /^camera-iphone-light/ : /^cameras-xl-light/, `hero picture at ${width}px`);
+      // A camera picture leads the page at every width: the Mac app with two printers' camera snapshots, in a dark window.
+      assert.match(layout.heroSrc, /^hero-cameras-(900|1600)\.webp$/, `hero picture at ${width}px`);
+      assert.ok(layout.heroInWindow, `the hero picture sits in the Mac window at ${width}px`);
       assert.equal(layout.heroNote, 'Sample readings over real camera snapshots.', 'the camera picture says its readings are samples');
       assert.equal(layout.homeShot, 'home-screen-light-600.webp', 'the widgets feature shows the iPhone Home Screen with the camera widget');
       assert.ok(layout.buttonsFit, `hero buttons fit the screen at ${width}px`);
@@ -214,8 +216,8 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
     assert.ok(await page.locator('#signup-failed').isVisible(), 'failure message shows without JavaScript');
     await context.close();
 
-    // Dark mode swaps in the dark camera widgets and Home Screen.
-    for (const [width, hero] of [[1280, /cameras-xl-dark-(800|1430)\.webp$/], [390, /camera-iphone-dark-700\.webp$/]]) {
+    // Dark mode keeps the dark window and swaps in the dark Home Screen.
+    for (const [width, hero] of [[1280, /hero-cameras-(900|1600)\.webp$/], [390, /hero-cameras-(900|1600)\.webp$/]]) {
       const dark = await browser.newPage({ colorScheme: 'dark', viewport: { width, height: 900 } });
       await dark.goto(page3d, { waitUntil: 'networkidle' });
       assert.match(await dark.locator('.pm-hero-shot').evaluate(img => img.currentSrc), hero, `dark hero at ${width}px`);

@@ -5,14 +5,14 @@
 /* The app's icon is an iPhone icon, so it gets the rounded corners. */
 .pm-nav .cms-nav-home img { border-radius: 22.5%; }
 
-/* Hero: the Mac widget with two printers' camera snapshots; on phones, the iPhone widget with one (see the <picture>).
-   Nothing in the hero may be wider than its column, so the picture, buttons and text all shrink with the screen. */
+/* Hero: the Mac app with two printers' camera snapshots, in a dark window, at every width. Nothing in the hero may be
+   wider than its column, so the picture, buttons and text all shrink with the screen. */
 .cms-a.pm .c-hero, .cms-a.pm .c-hero-copy, .cms-a.pm .c-hero-copy > * { min-width: 0; max-width: 100%; }
-.cms-a.pm .pm-hero-media { min-width: 0; }
 .cms-a.pm .c-hero .c-actions .button { max-width: 100%; white-space: normal; }
-.pm-hero-media { display: block; margin: 0; }
-.pm-hero-media picture { display: block; }
-.pm-hero-shot { display: block; width: 100%; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 22px 44px -24px rgba(17, 24, 16, .45), 0 2px 6px rgba(17, 24, 16, .06); }
+.cms-a.pm .pm-hero-media { display: block; min-width: 0; }
+.cms-a.pm .c-mac { width: 100%; border-color: #2c3530; background: #111714; }
+.cms-a.pm .c-mac::before { border-bottom-color: #2a322d; background: radial-gradient(circle at 14px 11px, #ec6a5e 4.5px, transparent 5px), radial-gradient(circle at 30px 11px, #f4bf4f 4.5px, transparent 5px), radial-gradient(circle at 46px 11px, #61c554 4.5px, transparent 5px), #1f2723; }
+.pm-hero-shot { display: block; width: 100%; max-width: 100%; height: auto; }
 .pm-hero-media .c-note { margin-top: 10px; font-size: 13px; }
 
 /* Printers it works with: one row per connection, the name and how it connects on the left. */
@@ -41,9 +41,7 @@
 #updates { scroll-margin-top: 24px; }
 
 @media (max-width: 620px) {
-  /* The iPhone widget has its own rounded corners, so it gets a soft shadow that follows them instead of a frame. */
-  .cms-a.pm .pm-hero-media { max-width: min(100%, 420px); }
-  .pm-hero-shot { border: 0; border-radius: 0; box-shadow: none; filter: drop-shadow(0 12px 18px rgba(17, 24, 16, .2)); }
+  .cms-a.pm .c-mac { display: block; }
   .cms-a.pm .c-hero .c-actions { margin-top: 20px; }
   .pm-printer-list li { grid-template-columns: 1fr; }
   .pm-what { grid-column: 1; grid-row: auto; margin-top: 4px; }
@@ -51,7 +49,6 @@
 }
 @media screen and (prefers-color-scheme: dark) {
   .pm-phone .c-shot { border-color: #2b352e; }
-  .pm-hero-shot { box-shadow: none; }
 }
 
 /* Long unbroken text, such as the support email address, wraps instead of widening the page on very narrow
