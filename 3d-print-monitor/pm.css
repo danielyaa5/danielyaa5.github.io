@@ -5,16 +5,17 @@
 /* The app's icon is an iPhone icon, so it gets the rounded corners. */
 .pm-nav .cms-nav-home img { border-radius: 22.5%; }
 
-/* Hero: the Mac app with two printers' camera snapshots in a dark window, and an iPhone with its widgets, at every width. Nothing in the hero may be
+/* Hero: a Mac desktop with the app's two-camera widget, and an iPhone with its widgets, at every width. Nothing in the hero may be
    wider than its column, so the picture, buttons and text all shrink with the screen. */
 .cms-a.pm .c-hero, .cms-a.pm .c-hero-copy, .cms-a.pm .c-hero-copy > * { min-width: 0; max-width: 100%; }
 .cms-a.pm .c-hero .c-actions .button { max-width: 100%; white-space: normal; }
-/* The iPhone sits over the window's lower right corner, below the K1 Max's progress, as on the Cloud Media Shrinker page. */
+/* The iPhone sits over the desktop's lower right corner, below the K1 Max's progress, as on the Cloud Media Shrinker page. */
 .cms-a.pm .pm-hero-media { min-width: 0; }
-.cms-a.pm .c-mac { border-color: #2c3530; background: #111714; }
-.cms-a.pm .c-phone { margin-top: 45%; }
+.cms-a.pm .c-phone { margin-top: 36.5%; }
 .cms-a.pm .pm-hero-media .c-note { grid-row: 2; }
-.cms-a.pm .c-mac::before { border-bottom-color: #2a322d; background: radial-gradient(circle at 14px 11px, #ec6a5e 4.5px, transparent 5px), radial-gradient(circle at 30px 11px, #f4bf4f 4.5px, transparent 5px), radial-gradient(circle at 46px 11px, #61c554 4.5px, transparent 5px), #1f2723; }
+/* The hero picture is a Mac desktop with its own menu bar, so it gets a screen's rounded corners instead of a window's title bar. */
+.cms-a.pm .c-mac.pm-desktop { border-color: #b9c2ce; border-radius: 12px; background: #9aa6e8; }
+.cms-a.pm .c-mac.pm-desktop::before { display: none; }
 .pm-hero-shot { display: block; width: 100%; max-width: 100%; height: auto; }
 .pm-hero-media .c-note { margin-top: 10px; font-size: 13px; }
 

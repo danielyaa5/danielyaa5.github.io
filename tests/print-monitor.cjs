@@ -106,8 +106,8 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
       assert.deepEqual(errors, [], `no script errors at ${width}px`);
       assert.equal(layout.sideways, false, `no sideways scroll at ${width}px`);
       assert.ok(layout.heroShown, `the camera widget shows in the hero at ${width}px`);
-      // A camera picture leads the page at every width: the Mac app with two printers' camera snapshots, in a dark window.
-      assert.match(layout.heroSrc, /^hero-cameras-(900|1600)\.webp$/, `hero picture at ${width}px`);
+      // A camera picture leads the page at every width: a Mac desktop with the two-camera widget.
+      assert.match(layout.heroSrc, /^hero-desktop-(900|1500)\.webp$/, `hero picture at ${width}px`);
       assert.ok(layout.heroInWindow, `the hero picture sits in the Mac window at ${width}px`);
       assert.equal(layout.heroNote, 'Sample readings over real camera snapshots.', 'the camera picture says its readings are samples');
       // An iPhone with the camera widget sits over the Mac window's corner, as on the Cloud Media Shrinker page.
@@ -221,8 +221,8 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
     assert.ok(await page.locator('#signup-failed').isVisible(), 'failure message shows without JavaScript');
     await context.close();
 
-    // Dark mode keeps the dark window and swaps in the dark iPhone Home Screen and widget.
-    for (const [width, hero] of [[1280, /hero-cameras-(900|1600)\.webp$/], [390, /hero-cameras-(900|1600)\.webp$/]]) {
+    // Dark mode keeps the desktop picture and swaps in the dark iPhone Home Screen and widget.
+    for (const [width, hero] of [[1280, /hero-desktop-(900|1500)\.webp$/], [390, /hero-desktop-(900|1500)\.webp$/]]) {
       const dark = await browser.newPage({ colorScheme: 'dark', viewport: { width, height: 900 } });
       await dark.goto(page3d, { waitUntil: 'networkidle' });
       assert.match(await dark.locator('.pm-hero-shot').evaluate(img => img.currentSrc), hero, `dark hero at ${width}px`);
