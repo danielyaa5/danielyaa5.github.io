@@ -43,6 +43,10 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
           title: section.querySelector('h2').childNodes[1]?.textContent.trim(),
           anchor: section.querySelector('h2 .h-anchor')?.getAttribute('href'),
           where: [...section.querySelectorAll('.w-where li')].map(li => li.textContent.trim().replace(/\s+/g, ' ')),
+          rows: [...section.querySelectorAll('.w-where li')].map(li => {
+            const a = li.querySelector('a');
+            return { pending: li.classList.contains('w-pending'), text: li.querySelector('.w-place').textContent, href: a?.href || null, store: a?.dataset.store || null, noCapture: !!a?.classList.contains('ph-no-capture') };
+          }),
           changes: section.querySelectorAll('.r-list li').length,
         })),
       }));
@@ -55,6 +59,14 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
         assert.equal(v.anchor, `#${v.id}`, `${v.title}'s # links to itself`);
         assert.ok(v.where.length >= 1 && v.where.every(w => /\b20\d\d\b|review|first version/i.test(w)), `${v.title} says when and where it came out: ${v.where.join(' | ')}`);
         assert.ok(v.changes >= 1, `${v.title} lists what changed`);
+        // Each release row is a link to where you get it, except a platform still in review.
+        for (const r of v.rows) {
+          if (r.pending) { assert.equal(r.href, null, `${v.title} ${r.text}: a row in review isn't a link`); continue; }
+          const direct = r.text === 'Free download for Mac';
+          assert.equal(r.store, direct ? 'direct' : 'app_store', `${v.title} ${r.text}: data-store`);
+          assert.equal(r.href, direct ? `https://github.com/danielyaa5/cloud-media-shrinker/releases/download/v${v.title}/Cloud-Media-Shrinker-${v.title}.zip` : 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256', `${v.title} ${r.text}: link`);
+          assert.ok(r.noCapture, `${v.title} ${r.text}: ph-no-capture, so the click counts once`);
+        }
       }
       newestOut = got.versions.find(v => v.where.some(w => /\b20\d\d\b/.test(w)))?.title || null;
     });
@@ -156,7 +168,7 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
             await p.goto(`${base}/${url}`, { waitUntil: 'networkidle' });
             const got = await p.evaluate(() => ({
               sideways: document.documentElement.scrollWidth > innerWidth,
-              small: [...document.querySelectorAll('.c-jump a')].filter(a => a.getClientRects().length).map(a => a.getBoundingClientRect()).filter(r => r.height < 44 || r.width < 44).length,
+              small: [...document.querySelectorAll('.c-jump a, .w-where a')].filter(a => a.getClientRects().length).map(a => a.getBoundingClientRect()).filter(r => r.height < 44 || r.width < 44).length,
               bar: (() => {
                 const bar = document.querySelector('.cms-nav'); const shown = e => !!e && e.getClientRects().length > 0 && getComputedStyle(e).display !== 'none';
                 const home = bar.querySelector('.cms-nav-home').getBoundingClientRect();
@@ -177,7 +189,7 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
               assert.equal(got.bar.get, inner && width >= 724, !inner ? 'no Get the app on the product page' : width >= 724 ? 'Get the app on wide tablets' : 'no Get the app below 724 px');
             }
             assert.equal(got.sideways, false, 'no sideways scroll');
-            assert.equal(got.small, 0, 'jump links are at least 44 px');
+            assert.equal(got.small, 0, 'jump links and release rows are at least 44 px');
             if (width === 1440 || width === 375) await p.screenshot({ path: path.join(out, `cms-${url.split('/').filter(Boolean).slice(1).join('-') || 'product'}-${width}-${scheme}.png`), fullPage: true });
           });
         }

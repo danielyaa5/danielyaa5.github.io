@@ -10,10 +10,26 @@
 .w-place { font-weight: 700; }
 .w-when { color: var(--muted); }
 .h-sec .w-where li.w-pending { border-style: dashed; background: transparent; }
+/* Rows for a store are links to it (the App Store page or the free Mac download): the box moves onto the link,
+   with a ↗ after it and a hover and pressed state. The ↗ is drawn here, so it isn't in the link's text. */
+.h-sec .w-where li.w-has-link { padding: 0; border: 0; background: none; }
+.cms .w-where a.w-link { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; min-height: 44px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); color: var(--ink); text-decoration: none; -webkit-tap-highlight-color: transparent; }
+.cms .w-where a.w-link::after { content: "\2197"; content: "\2197" / ""; margin-left: 2px; color: var(--green); font-weight: 700; }
+.cms .w-where a.w-link:hover { border-color: var(--green); background: var(--box); }
+.cms .w-where a.w-link:hover .w-place { text-decoration: underline; text-underline-offset: 3px; }
+.cms .w-where a.w-link:active { background: var(--soft-line); }
+.cms .w-where a.w-link:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
 .w-where .soon { vertical-align: 0; }
 .h-sec p.w-aside { margin: 4px 0 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
 .h-sec p.w-note { margin: 14px 0 4px; padding: 12px 14px; border-left: 3px solid var(--green); border-radius: 0 6px 6px 0; background: var(--tile); font-size: 15px; line-height: 1.55; }
 
 @media (max-width: 620px) {
   .h-sec .w-where li { width: 100%; justify-content: space-between; }
+  /* Phones: one line, the date right before the arrow. On the narrowest screens the name wraps, never the date or the arrow. */
+  .cms .w-where a.w-link { flex-wrap: nowrap; gap: 0 8px; width: 100%; }
+  .cms .w-where a.w-link .w-place { min-width: 0; }
+  .cms .w-where a.w-link .w-when { margin-left: auto; white-space: nowrap; }
+  .cms .w-where a.w-link::after { margin-left: 0; }
+  /* and the month is short (Nov 23, 2026), so every row fits on one line from 360 px up. */
+  .w-mo { display: none; }
 }

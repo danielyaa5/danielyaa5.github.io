@@ -29,7 +29,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=16" defer><\/script>/g)?.length, 1, `${file} loads analytics v=16 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=17" defer><\/script>/g)?.length, 1, `${file} loads analytics v=17 once`);
   }
   // vercel.json sends /dy-relay/ to PostHog. The site-wide trailing slash turns /array/<token>/config into .../config/,
   // which PostHog answers with a 404, so a rule ahead of the general one strips that slash again.
@@ -431,6 +431,33 @@ const events = request => {
       assert.ok(autoMoreApps().length > 0, `More apps clicks are still autocaptured at ${width}px`);
       assert.ok(!captured.slice(start).some(e => e.event === '$autocapture' && /data-store|polar\.sh|releases\/download|id6824383256/.test(e.properties.$elements_chain || '')), `download buttons are not autocaptured too at ${width}px`);
       await app.close();
+    }
+
+    // What's new: a version's release rows link to the App Store or the free Mac download and send app_download_click
+    // with placement whats_new. A row still in review is not a link.
+    for (const width of [390, 1440]) {
+      const news = await context.newPage();
+      await news.setViewportSize({ width, height: 900 });
+      await news.goto(`${site}/cloud-media-shrinker/whats-new/`, { waitUntil: 'networkidle' });
+      await news.waitForFunction(() => window.posthog?.__loaded === true);
+      await news.evaluate(() => {
+        for (const type of ['click', 'auxclick']) window.addEventListener(type, event => { if (event.target.closest?.('a[href]')) event.preventDefault(); });
+      });
+      const start = captured.length;
+      await news.locator('[id="1-2-2"] .w-where [data-store="app_store"]').click();
+      await news.locator('[id="1-2-2"] .w-where [data-store="direct"]').click({ button: 'middle' });
+      await news.locator('[id="1-2-1"] .w-where a', { hasText: 'iPhone and iPad' }).click();
+      await news.waitForTimeout(500);
+      const sent = captured.slice(start).filter(e => e.event === 'app_download_click').map(e => e.properties);
+      const store = 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256';
+      const direct = 'https://github.com/danielyaa5/cloud-media-shrinker/releases/download/v1.2.2/Cloud-Media-Shrinker-1.2.2.zip';
+      assert.deepEqual(sent.map(({ app: name, store: where, placement, link_text, destination }) => ({ name, where, placement, link_text, destination })), [
+        { name: 'cloud-media-shrinker', where: 'app_store', placement: 'whats_new', link_text: 'Mac App Store November 23, 2026', destination: store },
+        { name: 'cloud-media-shrinker', where: 'direct', placement: 'whats_new', link_text: 'Free download for Mac November 23, 2026', destination: direct },
+        { name: 'cloud-media-shrinker', where: 'app_store', placement: 'whats_new', link_text: 'iPhone and iPad November 13, 2026', destination: store },
+      ], `What's new release row clicks at ${width}px`);
+      assert.ok(!captured.slice(start).some(e => e.event === '$autocapture' && /data-store|releases\/download|id6824383256/.test(e.properties.$elements_chain || '')), `release rows are not autocaptured too at ${width}px`);
+      await news.close();
     }
 
     // Blog articles send suggested_blog_click for recommended post cards and tldr_link_click for TL;DR links.

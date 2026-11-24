@@ -193,8 +193,9 @@
   document.addEventListener('auxclick', resumeClick);
 
   // An app_download_click event for each download button on an app page (links with data-store), naming the app
-  // (the page's folder), the store (`app_store`, `direct` for the free Mac download, or `polar` for its license key) and where the button sits: `hero` (top)
-  // or `end` (the closing box). These links carry `ph-no-capture`, so PostHog's autocapture doesn't count the click again.
+  // (the page's folder), the store (`app_store`, `direct` for the free Mac download, or `polar` for its license key) and where the button sits: `hero` (top),
+  // `end` (the closing box) or `whats_new` (a version's release rows on What's new). These links carry `ph-no-capture`, so PostHog's autocapture doesn't
+  // count the click again.
   const downloadClick = event => {
     if (event.type === 'auxclick' && event.button !== 1) return;
     const link = event.target.closest?.('a[href][data-store]');
@@ -202,7 +203,7 @@
     track('app_download_click', {
       app: location.pathname.split('/')[1] || 'home',
       store: link.dataset.store,
-      placement: link.closest('.c-hero-copy') ? 'hero' : link.closest('.c-cta') ? 'end' : 'other',
+      placement: link.closest('.c-hero-copy') ? 'hero' : link.closest('.c-cta') ? 'end' : link.closest('.w-where') ? 'whats_new' : 'other',
       link_text: link.textContent.replace(/\s+/g, ' ').replace(/\s*↗$/, '').trim(),
       destination: link.href,
     });
