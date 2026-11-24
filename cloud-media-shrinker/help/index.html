@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="../../styles.css?v=mark-4">
   <link rel="stylesheet" href="../../cloud-media-shrinker/cms.css?v=2">
   <link rel="stylesheet" href="../cms-nav.css?v=2">
-  <link rel="stylesheet" href="help.css?v=5">
+  <link rel="stylesheet" href="help.css?v=6">
   <script src="/analytics.js?v=17" defer></script>
   <script type="application/ld+json">
   {
@@ -130,7 +130,7 @@
 
       <section class="h-sec" id="frequent-issues" aria-labelledby="frequent-title">
         <h2 id="frequent-title"><span class="eyebrow">02</span>Frequent questions</h2>
-        <p>Short answers to what people ask most, with the most-asked first in each group. Tap the # next to one to copy a link to it.</p>
+        <p>Short answers to what people ask most, with the most-asked first in each group. Tap a question to see its answer. The 🔗 beside it copies a link to that answer.</p>
         <ul class="h-chips">
           <li><a href="#faq-buying">Buying, codes and unlocking</a></li>
           <li><a href="#faq-copies">Copies and quality</a></li>
@@ -138,153 +138,304 @@
           <li><a href="#faq-space">Storage space</a></li>
           <li><a href="#faq-queues">Queues and setup</a></li>
         </ul>
+        <p class="h-tools" hidden><button type="button" class="h-openall" aria-pressed="false">Open all answers</button></p>
         <p class="h-group" id="faq-buying">Buying, codes and unlocking</p>
         <div class="h-faqs">
           <div class="h-faq" id="one-time">
-            <h3>Is it a subscription? Do I still pay if I have a code?<a class="h-anchor" href="#one-time" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>There's no subscription. You pay once and that's it. Most offer codes are a discount, not a free unlock: the App Store shows the lower price before you confirm, and you pay it once.</p>
+            <a class="h-anchor h-copy" href="#one-time" aria-label="Copy link to this answer: Is it a subscription? Do I still pay if I have a code?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Is it a subscription? Do I still pay if I have a code?</h3></summary>
+              <div class="h-answer">
+                <p>There's no subscription. You pay once and that's it. Most offer codes are a discount, not a free unlock: the App Store shows the lower price before you confirm, and you pay it once.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="family-or-individual">
-            <h3>Individual or Family: which one do I need?<a class="h-anchor" href="#family-or-individual" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Individual unlocks your own iPhone, iPad and Mac on one Apple Account. Family Access shares the unlock with up to five people in your Apple Family Sharing group, each on their own Apple Account. Already have Individual, including from a code? Choose <span class="ui">Upgrade to Family</span> in the app: under the gear on iPhone, in the sidebar on the Mac. It costs less than buying Family on its own.</p>
+            <a class="h-anchor h-copy" href="#family-or-individual" aria-label="Copy link to this answer: Individual or Family: which one do I need?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Individual or Family: which one do I need?</h3></summary>
+              <div class="h-answer">
+                <p>Individual unlocks your own iPhone, iPad and Mac on one Apple Account. Family Access shares the unlock with up to five people in your Apple Family Sharing group, each on their own Apple Account. Already have Individual, including from a code? Choose <span class="ui">Upgrade to Family</span> in the app: under the gear on iPhone, in the sidebar on the Mac. It costs less than buying Family on its own.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="family-sharing">
-            <h3>My family doesn't have it<a class="h-anchor" href="#family-sharing" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Family Access is shared through Apple's Family Sharing. The person who bought it needs Purchase Sharing turned on, and so does each family member (<span class="ui">Settings</span> &gt; <span class="ui">Family</span> &gt; <span class="ui">Purchase Sharing</span>). Then each family member opens the app and taps <span class="ui">Restore Purchase</span>. A new purchase can take a while to reach family members. If it isn't there yet, try again later, and restart the device if it still isn't.</p>
-            <p>An Individual purchase isn't shared. Family won't show up under subscription sharing, since it's a one-time purchase: <a href="#share-family">how to share it</a>.</p>
+            <a class="h-anchor h-copy" href="#family-sharing" aria-label="Copy link to this answer: My family doesn&#x27;t have it" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>My family doesn't have it</h3></summary>
+              <div class="h-answer">
+                <p>Family Access is shared through Apple's Family Sharing. The person who bought it needs Purchase Sharing turned on, and so does each family member (<span class="ui">Settings</span> &gt; <span class="ui">Family</span> &gt; <span class="ui">Purchase Sharing</span>). Then each family member opens the app and taps <span class="ui">Restore Purchase</span>. A new purchase can take a while to reach family members. If it isn't there yet, try again later, and restart the device if it still isn't.</p>
+                <p>An Individual purchase isn't shared. Family won't show up under subscription sharing, since it's a one-time purchase: <a href="#share-family">how to share it</a>.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="share-family">
-            <h3>I bought Family. How do I share it? It isn't under Subscriptions.<a class="h-anchor" href="#share-family" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>That's normal. Family is a one-time purchase, not a subscription, so it never shows up in subscription sharing. Turn on Purchase Sharing instead: on iPhone go to <span class="ui">Settings</span> &gt; <span class="ui">Family</span> &gt; <span class="ui">Purchase Sharing</span>, or on a Mac to <span class="ui">System Settings</span> &gt; <span class="ui">Family</span> &gt; <span class="ui">Purchase Sharing</span>. Then each family member installs Cloud Media Shrinker from the App Store with their own Apple Account, opens it, and taps <span class="ui">Restore Purchase</span> (on a Mac, <span class="ui">Restore purchase</span>). Family Access and Family Upgrade are shared this way. An Individual purchase isn't.</p>
+            <a class="h-anchor h-copy" href="#share-family" aria-label="Copy link to this answer: I bought Family. How do I share it? It isn&#x27;t under Subscriptions." title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>I bought Family. How do I share it? It isn't under Subscriptions.</h3></summary>
+              <div class="h-answer">
+                <p>That's normal. Family is a one-time purchase, not a subscription, so it never shows up in subscription sharing. Turn on Purchase Sharing instead: on iPhone go to <span class="ui">Settings</span> &gt; <span class="ui">Family</span> &gt; <span class="ui">Purchase Sharing</span>, or on a Mac to <span class="ui">System Settings</span> &gt; <span class="ui">Family</span> &gt; <span class="ui">Purchase Sharing</span>. Then each family member installs Cloud Media Shrinker from the App Store with their own Apple Account, opens it, and taps <span class="ui">Restore Purchase</span> (on a Mac, <span class="ui">Restore purchase</span>). Family Access and Family Upgrade are shared this way. An Individual purchase isn't.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="still-locked">
-            <h3>I paid or redeemed a code, but it still looks locked<a class="h-anchor" href="#still-locked" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Restore the purchase. On iPhone, tap the gear on the Photos tab, then <span class="ui">Restore Purchase</span> under Purchase. On the Mac, click <span class="ui">Restore purchase</span> on the free scan card or in the unlock window. Make sure the App Store is signed in with the same Apple Account you bought with.</p>
-            <p>Still locked? Restart your iPhone, iPad or Mac, open the app and restore again. Sometimes the App Store on a device doesn't hand a new purchase to apps until it has restarted, and a restart has fixed that for people who had paid.</p>
-            <p>On a Mac, an App Store purchase or code unlocks the Mac App Store version. The free download from this website <a href="#code-on-website">unlocks a different way</a>. In 1.2.2 the Mac's sidebar button can also keep its padlock after you unlock. If the unlock window says full access is unlocked, it is.</p>
-            <p>If it's still locked after all that, email <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
+            <a class="h-anchor h-copy" href="#still-locked" aria-label="Copy link to this answer: I paid or redeemed a code, but it still looks locked" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>I paid or redeemed a code, but it still looks locked</h3></summary>
+              <div class="h-answer">
+                <p>Restore the purchase. On iPhone, tap the gear on the Photos tab, then <span class="ui">Restore Purchase</span> under Purchase. On the Mac, click <span class="ui">Restore purchase</span> on the free scan card or in the unlock window. Make sure the App Store is signed in with the same Apple Account you bought with.</p>
+                <p>Still locked? Restart your iPhone, iPad or Mac, open the app and restore again. Sometimes the App Store on a device doesn't hand a new purchase to apps until it has restarted, and a restart has fixed that for people who had paid.</p>
+                <p>On a Mac, an App Store purchase or code unlocks the Mac App Store version. The free download from this website <a href="#code-on-website">unlocks a different way</a>. In 1.2.2 the Mac's sidebar button can also keep its padlock after you unlock. If the unlock window says full access is unlocked, it is.</p>
+                <p>If it's still locked after all that, email <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="redeem-code">
-            <h3>Where do I enter a code?<a class="h-anchor" href="#redeem-code" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Tap the code's link if you have one. It opens the App Store with the code filled in. Or open the App Store and use <span class="ui">Redeem Gift Card or Code</span>: on iPhone it's under your account picture, and on a Mac under your name at the bottom of the sidebar. There's no code field inside the app. If the app still looks locked afterwards, <a href="#still-locked">restore the purchase</a>.</p>
+            <a class="h-anchor h-copy" href="#redeem-code" aria-label="Copy link to this answer: Where do I enter a code?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Where do I enter a code?</h3></summary>
+              <div class="h-answer">
+                <p>Tap the code's link if you have one. It opens the App Store with the code filled in. Or open the App Store and use <span class="ui">Redeem Gift Card or Code</span>: on iPhone it's under your account picture, and on a Mac under your name at the bottom of the sidebar. There's no code field inside the app. If the app still looks locked afterwards, <a href="#still-locked">restore the purchase</a>.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="code-on-website">
-            <h3>My code doesn't work on the website download<a class="h-anchor" href="#code-on-website" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>App Store codes only work in the App Store, not at the website checkout. One App Store purchase covers your iPhone and Mac on the same Apple Account. The free download for Mac on this website unlocks with a license key from Polar, which is a separate purchase. If you already have the App Store version, it unlocks free with the Order ID from Apple's receipt instead (<a href="#app-store-order-id">how</a>). If you ended up paying for both, email <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
+            <a class="h-anchor h-copy" href="#code-on-website" aria-label="Copy link to this answer: My code doesn&#x27;t work on the website download" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>My code doesn't work on the website download</h3></summary>
+              <div class="h-answer">
+                <p>App Store codes only work in the App Store, not at the website checkout. One App Store purchase covers your iPhone and Mac on the same Apple Account. The free download for Mac on this website unlocks with a license key from Polar, which is a separate purchase. If you already have the App Store version, it unlocks free with the Order ID from Apple's receipt instead (<a href="#app-store-order-id">how</a>). If you ended up paying for both, email <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="iphone-and-mac">
-            <h3>Does one purchase cover my iPhone and my Mac?<a class="h-anchor" href="#iphone-and-mac" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Yes. One App Store purchase unlocks the iPhone, iPad and Mac App Store apps on the same Apple Account. Buy or redeem on one, then use <span class="ui">Restore Purchase</span> on the others. The free download for Mac from this website is separate: it takes a license key, or unlocks free with the Order ID from your App Store receipt (<a href="#app-store-order-id">how</a>).</p>
+            <a class="h-anchor h-copy" href="#iphone-and-mac" aria-label="Copy link to this answer: Does one purchase cover my iPhone and my Mac?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Does one purchase cover my iPhone and my Mac?</h3></summary>
+              <div class="h-answer">
+                <p>Yes. One App Store purchase unlocks the iPhone, iPad and Mac App Store apps on the same Apple Account. Buy or redeem on one, then use <span class="ui">Restore Purchase</span> on the others. The free download for Mac from this website is separate: it takes a license key, or unlocks free with the Order ID from your App Store receipt (<a href="#app-store-order-id">how</a>).</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="local-price">
-            <h3>The price shows a different amount<a class="h-anchor" href="#local-price" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>The App Store shows prices in your local currency, with your country's tax where it applies, so the number won't always match the US price. Offer codes work in every country's App Store, and you don't need a VPN.</p>
+            <a class="h-anchor h-copy" href="#local-price" aria-label="Copy link to this answer: The price shows a different amount" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>The price shows a different amount</h3></summary>
+              <div class="h-answer">
+                <p>The App Store shows prices in your local currency, with your country's tax where it applies, so the number won't always match the US price. Offer codes work in every country's App Store, and you don't need a VPN.</p>
+              </div>
+            </details>
           </div>
         </div>
         <p class="h-group" id="faq-copies">Copies and quality</p>
         <div class="h-faqs">
           <div class="h-faq" id="metadata">
-            <h3>Does a copy keep its date, location and albums?<a class="h-anchor" href="#metadata" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Yes. A copy keeps the capture date, location, Favorite, Hidden, albums, caption and keywords, and since 1.2.2 the lens details too. Before an original goes, the app compares the two and keeps the original if something doesn't match.</p>
-            <p>One thing changes: Photos counts the copy as newly added, so it shows up at the top of Recents. Sort by capture date to see it in its old spot.</p>
+            <a class="h-anchor h-copy" href="#metadata" aria-label="Copy link to this answer: Does a copy keep its date, location and albums?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Does a copy keep its date, location and albums?</h3></summary>
+              <div class="h-answer">
+                <p>Yes. A copy keeps the capture date, location, Favorite, Hidden, albums, caption and keywords, and since 1.2.2 the lens details too. Before an original goes, the app compares the two and keeps the original if something doesn't match.</p>
+                <p>One thing changes: Photos counts the copy as newly added, so it shows up at the top of Recents. Sort by capture date to see it in its old spot.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="quality">
-            <h3>Does compressing lower the quality?<a class="h-anchor" href="#quality" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>A little. A smaller copy is a new encoding of the video, so it isn't identical to the original, but with Balanced or Keep 4K it looks very close. Keep 4K keeps the resolution and frame rate and still comes out about 45% smaller, because cameras record more data than you need for watching. Max Savings goes down to 720p, so use it for videos you want to keep but don't need at full size. HDR stays HDR.</p>
-            <p>Photos are only changed if you pick them: JPEG and RAW photos become HEIC copies. Not sure about a video? <a href="#check-copy">Check the copy first</a>.</p>
+            <a class="h-anchor h-copy" href="#quality" aria-label="Copy link to this answer: Does compressing lower the quality?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Does compressing lower the quality?</h3></summary>
+              <div class="h-answer">
+                <p>A little. A smaller copy is a new encoding of the video, so it isn't identical to the original, but with Balanced or Keep 4K it looks very close. Keep 4K keeps the resolution and frame rate and still comes out about 45% smaller, because cameras record more data than you need for watching. Max Savings goes down to 720p, so use it for videos you want to keep but don't need at full size. HDR stays HDR.</p>
+                <p>Photos are only changed if you pick them: JPEG and RAW photos become HEIC copies. Not sure about a video? <a href="#check-copy">Check the copy first</a>.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="check-copy">
-            <h3>Can I check a copy before its original is deleted?<a class="h-anchor" href="#check-copy" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Yes. Before you start a queue, turn off <span class="ui">Delete originals when done</span> (iPhone) or untick <span class="ui">Delete each original once its smaller copy is in Photos</span> (Mac). The copies are saved next to the originals. Look them over in Photos, then delete the originals from Savings. If you don't like a copy, <span class="ui">Undo</span> deletes it and keeps the original.</p>
-            <p>A deleted original also stays in Recently Deleted for 30 days, unless you're over your iCloud storage limit.</p>
+            <a class="h-anchor h-copy" href="#check-copy" aria-label="Copy link to this answer: Can I check a copy before its original is deleted?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Can I check a copy before its original is deleted?</h3></summary>
+              <div class="h-answer">
+                <p>Yes. Before you start a queue, turn off <span class="ui">Delete originals when done</span> (iPhone) or untick <span class="ui">Delete each original once its smaller copy is in Photos</span> (Mac). The copies are saved next to the originals. Look them over in Photos, then delete the originals from Savings. If you don't like a copy, <span class="ui">Undo</span> deletes it and keeps the original.</p>
+                <p>A deleted original also stays in Recently Deleted for 30 days, unless you're over your iCloud storage limit.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="original-kept">
-            <h3>Why were some originals kept?<a class="h-anchor" href="#original-kept" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Right before deleting, the app compares each copy with its original: date, location, albums, caption, keywords and more. If anything doesn't match, or Photos can't confirm it, the original stays and the queue says why. Up to 1.2.1 this also happened to photos whose caption or keywords had been removed in Photos. That's fixed in 1.2.2.</p>
-            <p>Kept originals are listed in Savings, where you can delete them yourself once you've looked. On iPhone, a card there says how many originals are still here.</p>
+            <a class="h-anchor h-copy" href="#original-kept" aria-label="Copy link to this answer: Why were some originals kept?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Why were some originals kept?</h3></summary>
+              <div class="h-answer">
+                <p>Right before deleting, the app compares each copy with its original: date, location, albums, caption, keywords and more. If anything doesn't match, or Photos can't confirm it, the original stays and the queue says why. Up to 1.2.1 this also happened to photos whose caption or keywords had been removed in Photos. That's fixed in 1.2.2.</p>
+                <p>Kept originals are listed in Savings, where you can delete them yourself once you've looked. On iPhone, a card there says how many originals are still here.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="hollow-audio">
-            <h3>A compressed video sounds hollow, like a tin can<a class="h-anchor" href="#hollow-audio" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>This hit videos with more than one audio track, like spatial audio from newer iPhones. Fixed in 1.2.2: a copy now plays the same audio as its original. Update the app, then compress those videos again from their originals. If you already deleted one, it's usually still in Recently Deleted in Photos for 30 days, unless you were over your iCloud storage limit.</p>
+            <a class="h-anchor h-copy" href="#hollow-audio" aria-label="Copy link to this answer: A compressed video sounds hollow, like a tin can" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>A compressed video sounds hollow, like a tin can</h3></summary>
+              <div class="h-answer">
+                <p>This hit videos with more than one audio track, like spatial audio from newer iPhones. Fixed in 1.2.2: a copy now plays the same audio as its original. Update the app, then compress those videos again from their originals. If you already deleted one, it's usually still in Recently Deleted in Photos for 30 days, unless you were over your iCloud storage limit.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="live-photos">
-            <h3>What happens to a Live Photo?<a class="h-anchor" href="#live-photos" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Its smaller copy is the still photo only, without the short video and its sound. That's optional: a Live Photo only changes if you make a still copy of it, and the scan counts Live Photo savings separately. Skip the ones where the moving part matters to you.</p>
+            <a class="h-anchor h-copy" href="#live-photos" aria-label="Copy link to this answer: What happens to a Live Photo?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>What happens to a Live Photo?</h3></summary>
+              <div class="h-answer">
+                <p>Its smaller copy is the still photo only, without the short video and its sound. That's optional: a Live Photo only changes if you make a still copy of it, and the scan counts Live Photo savings separately. Skip the ones where the moving part matters to you.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="slo-mo">
-            <h3>I can't edit the slow part of a slo-mo after compressing<a class="h-anchor" href="#slo-mo" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>The copy plays the same, but Photos no longer treats it as slo-mo, so you can't move the slow part or set it back to normal speed. Skip slo-mo videos if you might edit them later. Since 1.2.2 the app warns you before you compress one, tags Slo-mo videos in the list, and has a Slo-mo filter.</p>
+            <a class="h-anchor h-copy" href="#slo-mo" aria-label="Copy link to this answer: I can&#x27;t edit the slow part of a slo-mo after compressing" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>I can't edit the slow part of a slo-mo after compressing</h3></summary>
+              <div class="h-answer">
+                <p>The copy plays the same, but Photos no longer treats it as slo-mo, so you can't move the slow part or set it back to normal speed. Skip slo-mo videos if you might edit them later. Since 1.2.2 the app warns you before you compress one, tags Slo-mo videos in the list, and has a Slo-mo filter.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="duplicates">
-            <h3>The same video shows up twice<a class="h-anchor" href="#duplicates" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>If one has (compressed) in its name, it's the smaller copy, and the original goes once the queue finishes or when you delete it. Otherwise it's usually two real copies in your library. Photos can merge them: look for Duplicates under Utilities.</p>
+            <a class="h-anchor h-copy" href="#duplicates" aria-label="Copy link to this answer: The same video shows up twice" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>The same video shows up twice</h3></summary>
+              <div class="h-answer">
+                <p>If one has (compressed) in its name, it's the smaller copy, and the original goes once the queue finishes or when you delete it. Otherwise it's usually two real copies in your library. Photos can merge them: look for Duplicates under Utilities.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="photo-types">
-            <h3>Why can't I compress this photo?<a class="h-anchor" href="#photo-types" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>The app makes smaller copies of videos, RAW photos, JPEG photos and Live Photos. HEIC photos, the kind an iPhone takes by default, are already compact, so they're left as they are. PNG and TIFF files and screenshots aren't compressed either. You can still keep or delete any of them from the list.</p>
-            <p>A RAW photo with edits in Photos is skipped too, because a copy made from the RAW file would lose the edits.</p>
+            <a class="h-anchor h-copy" href="#photo-types" aria-label="Copy link to this answer: Why can&#x27;t I compress this photo?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Why can't I compress this photo?</h3></summary>
+              <div class="h-answer">
+                <p>The app makes smaller copies of videos, RAW photos, JPEG photos and Live Photos. HEIC photos, the kind an iPhone takes by default, are already compact, so they're left as they are. PNG and TIFF files and screenshots aren't compressed either. You can still keep or delete any of them from the list.</p>
+                <p>A RAW photo with edits in Photos is skipped too, because a copy made from the RAW file would lose the edits.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="already-small">
-            <h3>Why does the list show videos that are already small?<a class="h-anchor" href="#already-small" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>The list is everything in your library, largest first, so small videos are in it too. <span class="ui">Show already shrunk</span> on iPhone and <span class="ui">Hide already shrunk</span> on the Mac only cover copies the app made and files named like one, with (compressed) at the end of the name. A video that was small to begin with isn't one of those.</p>
-            <p>If a copy wouldn't come out clearly smaller with your preset, the app says the video is already compact, or already small enough, and doesn't re-encode it. A lower preset, like Max Savings, may still shrink it.</p>
+            <a class="h-anchor h-copy" href="#already-small" aria-label="Copy link to this answer: Why does the list show videos that are already small?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Why does the list show videos that are already small?</h3></summary>
+              <div class="h-answer">
+                <p>The list is everything in your library, largest first, so small videos are in it too. <span class="ui">Show already shrunk</span> on iPhone and <span class="ui">Hide already shrunk</span> on the Mac only cover copies the app made and files named like one, with (compressed) at the end of the name. A video that was small to begin with isn't one of those.</p>
+                <p>If a copy wouldn't come out clearly smaller with your preset, the app says the video is already compact, or already small enough, and doesn't re-encode it. A lower preset, like Max Savings, may still shrink it.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="size-differs">
-            <h3>A video shows a bigger size here than in Photos<a class="h-anchor" href="#size-differs" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>That can happen with a video you edited in Photos, for example a trimmed one. iCloud keeps the original and the edited version, and the app counts both, because both take up space. The smaller copy is made from the edited version, so once the original is gone the edit can't be reverted.</p>
+            <a class="h-anchor h-copy" href="#size-differs" aria-label="Copy link to this answer: A video shows a bigger size here than in Photos" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>A video shows a bigger size here than in Photos</h3></summary>
+              <div class="h-answer">
+                <p>That can happen with a video you edited in Photos, for example a trimmed one. iCloud keeps the original and the edited version, and the app counts both, because both take up space. The smaller copy is made from the edited version, so once the original is gone the edit can't be reverted.</p>
+              </div>
+            </details>
           </div>
         </div>
         <p class="h-group" id="faq-works-with">What it works with</p>
         <div class="h-faqs">
           <div class="h-faq" id="other-services">
-            <h3>Does it work with Google Photos, WhatsApp or Windows?<a class="h-anchor" href="#other-services" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>No. It works with Apple Photos, including iCloud Photos, on iPhone, iPad and Mac. It also works with folders: any folder in Files on iPhone, and on a Mac any folder in Finder, including an external drive or Google Drive for desktop. It doesn't work with Google Photos, Immich or WhatsApp, and there's no Windows or Android version. Messages attachments aren't covered yet. That one is on the <a href="../whats-coming/">What's coming</a> page, for Mac.</p>
+            <a class="h-anchor h-copy" href="#other-services" aria-label="Copy link to this answer: Does it work with Google Photos, WhatsApp or Windows?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Does it work with Google Photos, WhatsApp or Windows?</h3></summary>
+              <div class="h-answer">
+                <p>No. It works with Apple Photos, including iCloud Photos, on iPhone, iPad and Mac. It also works with folders: any folder in Files on iPhone, and on a Mac any folder in Finder, including an external drive or Google Drive for desktop. It doesn't work with Google Photos, Immich or WhatsApp, and there's no Windows or Android version. Messages attachments aren't covered yet. That one is on the <a href="../whats-coming/">What's coming</a> page, for Mac.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="private">
-            <h3>Does it upload my photos anywhere?<a class="h-anchor" href="#private" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>No. Compressing happens on your iPhone, iPad or Mac. There's no account, no ads and no analytics in the app, and I never see your library. What can leave your device: Apple Photos downloading from iCloud, your purchase going through Apple (or the license check in the free download for Mac), and a bug report, only if you send one. The <a href="../privacy/">privacy page</a> shows it in one picture.</p>
+            <a class="h-anchor h-copy" href="#private" aria-label="Copy link to this answer: Does it upload my photos anywhere?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Does it upload my photos anywhere?</h3></summary>
+              <div class="h-answer">
+                <p>No. Compressing happens on your iPhone, iPad or Mac. There's no account, no ads and no analytics in the app, and I never see your library. What can leave your device: Apple Photos downloading from iCloud, your purchase going through Apple (or the license check in the free download for Mac), and a bug report, only if you send one. The <a href="../privacy/">privacy page</a> shows it in one picture.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="backup-originals">
-            <h3>Can I back up the originals before they're deleted?<a class="h-anchor" href="#backup-originals" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>On a Mac, yes, for items you pick with <span class="ui">Delete</span>: <span class="ui">Copy to a folder, then delete…</span> in the bar at the bottom copies the originals to a folder you choose, such as an external drive or a network drive, and then deletes them. For compressions, turn off deleting originals, export them from Photos yourself, and delete them later from Savings. The iPhone app doesn't have a backup option.</p>
+            <a class="h-anchor h-copy" href="#backup-originals" aria-label="Copy link to this answer: Can I back up the originals before they&#x27;re deleted?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Can I back up the originals before they're deleted?</h3></summary>
+              <div class="h-answer">
+                <p>On a Mac, yes, for items you pick with <span class="ui">Delete</span>: <span class="ui">Copy to a folder, then delete…</span> in the bar at the bottom copies the originals to a folder you choose, such as an external drive or a network drive, and then deletes them. For compressions, turn off deleting originals, export them from Photos yourself, and delete them later from Savings. The iPhone app doesn't have a backup option.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="shared-library">
-            <h3>What about iCloud Shared Photo Library?<a class="h-anchor" href="#shared-library" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>A smaller copy always goes into your Personal Library, because Apple gives apps no way to add to a Shared Library. To put it back, select the copy in Photos and choose <span class="ui">Move to Shared Library</span>. Keep in mind that deleting an original from the Shared Library removes it for everyone in it.</p>
+            <a class="h-anchor h-copy" href="#shared-library" aria-label="Copy link to this answer: What about iCloud Shared Photo Library?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>What about iCloud Shared Photo Library?</h3></summary>
+              <div class="h-answer">
+                <p>A smaller copy always goes into your Personal Library, because Apple gives apps no way to add to a Shared Library. To put it back, select the copy in Photos and choose <span class="ui">Move to Shared Library</span>. Keep in mind that deleting an original from the Shared Library removes it for everyone in it.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="ios-27">
-            <h3>Which iPhones and Macs does it work on?<a class="h-anchor" href="#ios-27" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>The iPhone and iPad app needs iOS 27 or iPadOS 27 or later. That's the first version that lets an app read the real size of each photo and video without downloading it, which is how the app finds your biggest files. The Mac app needs macOS 13 or later. If your iPhone is on an older iOS, the Mac app works on the same iCloud Photos library, and one purchase covers both.</p>
-            <p>On older Intel Macs, some 4K HDR videos can't be compressed. The app says this Mac can't encode that size and format, and leaves the original alone.</p>
+            <a class="h-anchor h-copy" href="#ios-27" aria-label="Copy link to this answer: Which iPhones and Macs does it work on?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Which iPhones and Macs does it work on?</h3></summary>
+              <div class="h-answer">
+                <p>The iPhone and iPad app needs iOS 27 or iPadOS 27 or later. That's the first version that lets an app read the real size of each photo and video without downloading it, which is how the app finds your biggest files. The Mac app needs macOS 13 or later. If your iPhone is on an older iOS, the Mac app works on the same iCloud Photos library, and one purchase covers both.</p>
+                <p>On older Intel Macs, some 4K HDR videos can't be compressed. The app says this Mac can't encode that size and format, and leaves the original alone.</p>
+              </div>
+            </details>
           </div>
         </div>
         <p class="h-group" id="faq-space">Storage space</p>
         <div class="h-faqs">
           <div class="h-faq" id="recently-deleted">
-            <h3>Do I need to empty Recently Deleted to get my iCloud space back?<a class="h-anchor" href="#recently-deleted" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>No. <a href="https://support.apple.com/en-us/108922">Apple says</a> items in Recently Deleted don't count toward your iCloud storage. They can still take space on your iPhone or Mac for up to 30 days, so empty Recently Deleted in Photos only if that device itself is short on space. If you're over your iCloud storage limit, Photos skips Recently Deleted, and deleted items can't be recovered.</p>
+            <a class="h-anchor h-copy" href="#recently-deleted" aria-label="Copy link to this answer: Do I need to empty Recently Deleted to get my iCloud space back?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>Do I need to empty Recently Deleted to get my iCloud space back?</h3></summary>
+              <div class="h-answer">
+                <p>No. <a href="https://support.apple.com/en-us/108922">Apple says</a> items in Recently Deleted don't count toward your iCloud storage. They can still take space on your iPhone or Mac for up to 30 days, so empty Recently Deleted in Photos only if that device itself is short on space. If you're over your iCloud storage limit, Photos skips Recently Deleted, and deleted items can't be recovered.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="iphone-storage">
-            <h3>My iCloud space went down but my iPhone storage went up. Why?<a class="h-anchor" href="#iphone-storage" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>To compress a video that's only in iCloud, your iPhone first downloads the full original. Once the smaller copy is in Photos, the original moves to Recently Deleted, still full size on the phone, for up to 30 days. It no longer counts toward iCloud, so iCloud goes down while the phone goes up. That space comes back on its own as items leave Recently Deleted. If you need it now, empty Recently Deleted in Photos, which removes the 30-day undo.</p>
-            <p>The storage numbers in Settings can also take a while to catch up after a big queue.</p>
+            <a class="h-anchor h-copy" href="#iphone-storage" aria-label="Copy link to this answer: My iCloud space went down but my iPhone storage went up. Why?" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3>My iCloud space went down but my iPhone storage went up. Why?</h3></summary>
+              <div class="h-answer">
+                <p>To compress a video that's only in iCloud, your iPhone first downloads the full original. Once the smaller copy is in Photos, the original moves to Recently Deleted, still full size on the phone, for up to 30 days. It no longer counts toward iCloud, so iCloud goes down while the phone goes up. That space comes back on its own as items leave Recently Deleted. If you need it now, empty Recently Deleted in Photos, which removes the 30-day undo.</p>
+                <p>The storage numbers in Settings can also take a while to catch up after a big queue.</p>
+              </div>
+            </details>
           </div>
         </div>
         <p class="h-group" id="faq-queues">Queues and setup</p>
         <div class="h-faqs">
           <div class="h-faq" id="mac-queue-stuck">
-            <h3><span class="tag">Mac</span>The queue got stuck or is very slow<a class="h-anchor" href="#mac-queue-stuck" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>Update to 1.2.2. It fixes long queues that slowed to a crawl or started failing after 20 or 30 videos. A video that stops making progress for 10 minutes now starts over once by itself. If it gets stuck again, it's marked so you can <span class="ui">Try again</span> later, and the rest carries on. Keep the Mac plugged in and leave free space on the disk. You can still click <span class="ui">Cancel</span> on a video in the queue to skip it.</p>
-            <p>Still crawling on 1.2.2? Quit the app, restart the Mac and start the queue again. That got one long queue moving again.</p>
+            <a class="h-anchor h-copy" href="#mac-queue-stuck" aria-label="Copy link to this answer: MacThe queue got stuck or is very slow" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3><span class="tag">Mac</span>The queue got stuck or is very slow</h3></summary>
+              <div class="h-answer">
+                <p>Update to 1.2.2. It fixes long queues that slowed to a crawl or started failing after 20 or 30 videos. A video that stops making progress for 10 minutes now starts over once by itself. If it gets stuck again, it's marked so you can <span class="ui">Try again</span> later, and the rest carries on. Keep the Mac plugged in and leave free space on the disk. You can still click <span class="ui">Cancel</span> on a video in the queue to skip it.</p>
+                <p>Still crawling on 1.2.2? Quit the app, restart the Mac and start the queue again. That got one long queue moving again.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="iphone-background">
-            <h3><span class="tag">iPhone</span>Compressing stops when I leave the app<a class="h-anchor" href="#iphone-background" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>iOS can pause the work in the background. Nothing is lost: the video goes back in the queue and carries on when you open the app again, or later by itself while your iPhone isn't in use. If iOS closed the app, open the queue and tap <span class="ui">Carry On</span>. A Mac doesn't have this limit, so it's the better place for a very long queue.</p>
+            <a class="h-anchor h-copy" href="#iphone-background" aria-label="Copy link to this answer: iPhoneCompressing stops when I leave the app" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3><span class="tag">iPhone</span>Compressing stops when I leave the app</h3></summary>
+              <div class="h-answer">
+                <p>iOS can pause the work in the background. Nothing is lost: the video goes back in the queue and carries on when you open the app again, or later by itself while your iPhone isn't in use. If iOS closed the app, open the queue and tap <span class="ui">Carry On</span>. A Mac doesn't have this limit, so it's the better place for a very long queue.</p>
+              </div>
+            </details>
           </div>
           <div class="h-faq" id="read-sizes">
-            <h3><span class="tag">Mac</span>Read Sizes is grayed out<a class="h-anchor" href="#read-sizes" title="Copy a link to this answer"><span aria-hidden="true">#</span><span class="h-sr">Copy a link to this answer</span></a></h3>
-            <p>The window is probably showing single photos, not the library. That happens if you click <span class="ui">Photos</span> under Media in its sidebar. Go to your Pictures folder instead, click <span class="ui">Photos Library</span> once, then click <span class="ui">Read Sizes</span>. The <a href="#select-photos-library">setup steps</a> say where to look if it isn't there.</p>
-            <p>If the app then says it couldn't read size records, a folder was chosen instead of Photos Library itself. If it says the library doesn't match, choose the library Photos opens with. Click <span class="ui">Select Photos Library</span> to try again.</p>
+            <a class="h-anchor h-copy" href="#read-sizes" aria-label="Copy link to this answer: MacRead Sizes is grayed out" title="Copy link to this answer"><span aria-hidden="true">🔗</span></a>
+            <details>
+              <summary><h3><span class="tag">Mac</span>Read Sizes is grayed out</h3></summary>
+              <div class="h-answer">
+                <p>The window is probably showing single photos, not the library. That happens if you click <span class="ui">Photos</span> under Media in its sidebar. Go to your Pictures folder instead, click <span class="ui">Photos Library</span> once, then click <span class="ui">Read Sizes</span>. The <a href="#select-photos-library">setup steps</a> say where to look if it isn't there.</p>
+                <p>If the app then says it couldn't read size records, a folder was chosen instead of Photos Library itself. If it says the library doesn't match, choose the library Photos opens with. Click <span class="ui">Select Photos Library</span> to try again.</p>
+              </div>
+            </details>
           </div>
         </div>
       </section>
@@ -418,18 +569,57 @@
       </div>
 
       <script>
-        // The # beside an answer copies a link to it, and still jumps there without JavaScript or clipboard access.
-        document.querySelectorAll('.h-anchor').forEach((link) => link.addEventListener('click', async (event) => {
-          const url = location.origin + location.pathname + link.getAttribute('href');
-          if (!navigator.clipboard) return;
-          event.preventDefault();
-          history.replaceState(null, '', link.getAttribute('href'));
-          link.closest('.h-faq').scrollIntoView({ block: 'start' });
-          document.querySelectorAll('.h-faq.is-target').forEach((el) => el.classList.remove('is-target'));
-          link.closest('.h-faq').classList.add('is-target');
-          try { await navigator.clipboard.writeText(url); link.dataset.copied = 'Link copied'; } catch { link.dataset.copied = 'Copy the address above'; }
-          setTimeout(() => { delete link.dataset.copied; }, 1800);
-        }));
+        // Frequent questions start closed. Without JavaScript each one still opens with a tap, and its link still jumps to it.
+        (() => {
+          const faqs = [...document.querySelectorAll('.h-faq')];
+          const mark = (faq) => faqs.forEach((el) => el.classList.toggle('is-target', el === faq));
+          const faqFor = (hash) => {
+            if (!hash || hash.length < 2) return null;
+            let target = null;
+            try { target = document.getElementById(decodeURIComponent(hash.slice(1))); } catch { return null; }
+            return target ? target.closest('.h-faq') : null;
+          };
+          // A link to an answer opens it: on arrival, when the address changes, and when a link on this page is clicked.
+          const reveal = (hash, scroll) => {
+            const faq = faqFor(hash);
+            if (!faq) return;
+            faq.querySelector('details').open = true;
+            mark(faq);
+            if (scroll) faq.scrollIntoView({ block: 'start' });
+          };
+          reveal(location.hash, false);
+          addEventListener('hashchange', () => reveal(location.hash, true));
+          document.addEventListener('click', (event) => {
+            const link = event.target.closest('a[href^="#"]');
+            if (link && !link.classList.contains('h-copy')) reveal(link.getAttribute('href'), false);
+          });
+
+          // The link mark copies a link to its answer. It never opens or closes the answer.
+          document.querySelectorAll('.h-copy').forEach((link) => link.addEventListener('click', async (event) => {
+            if (!navigator.clipboard) return;
+            event.preventDefault();
+            const hash = link.getAttribute('href');
+            history.replaceState(null, '', hash);
+            mark(link.closest('.h-faq'));
+            try { await navigator.clipboard.writeText(location.origin + location.pathname + hash); link.dataset.copied = 'Link copied'; } catch { link.dataset.copied = 'Copy the address above'; }
+            setTimeout(() => { delete link.dataset.copied; }, 1800);
+          }));
+
+          // One button opens or closes every answer, for skimming and for searching the page in browsers that don't look inside closed answers.
+          const all = document.querySelector('.h-openall');
+          const everything = () => faqs.map((faq) => faq.querySelector('details'));
+          const sync = () => {
+            const open = everything().every((d) => d.open);
+            all.textContent = open ? 'Close all answers' : 'Open all answers';
+            all.setAttribute('aria-pressed', String(open));
+          };
+          all.addEventListener('click', () => { const open = all.getAttribute('aria-pressed') !== 'true'; everything().forEach((d) => { d.open = open; }); sync(); });
+          everything().forEach((d) => d.addEventListener('toggle', sync));
+          all.parentElement.hidden = false;
+          sync();
+          // Paper gets every answer.
+          addEventListener('beforeprint', () => everything().forEach((d) => { d.open = true; }));
+        })();
       </script>
 
       <script>

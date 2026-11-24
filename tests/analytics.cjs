@@ -277,7 +277,8 @@ const events = request => {
     await codePage.close();
 
     // A triple click that selects a heading's text (here a help-page question someone copies) is not a rage click
-    // either, but clicking on past the third click in the same spot is.
+    // either, but clicking on past the third click in the same spot is. The question sits in a <summary>, so the
+    // clicks also open and close its answer.
     const selectPage = await context.newPage();
     const selectStart = captured.length;
     await selectPage.goto(`${site}/cloud-media-shrinker/help/`, { waitUntil: 'networkidle' });
@@ -298,7 +299,7 @@ const events = request => {
     await selectPage.mouse.click(questionText.x, questionText.y, { clickCount: 4, delay: 20 });
     for (let i = 0; i < 40 && selectRage().length < 1; i += 1) await selectPage.waitForTimeout(200);
     await selectPage.waitForTimeout(500);
-    assert.deepEqual(selectRage().map(e => e.properties.element_parent), ['div#iphone-background.h-faq'], `clicking on past three is a rage click; got ${JSON.stringify(selectRage().map(e => e.properties.element))}`);
+    assert.deepEqual(selectRage().map(e => e.properties.element_parent), ['summary'], `clicking on past three is a rage click; got ${JSON.stringify(selectRage().map(e => e.properties.element))}`);
     await selectPage.close();
 
     // Links in project tiles send a project_click named after the project, at phone, tablet and desktop widths.

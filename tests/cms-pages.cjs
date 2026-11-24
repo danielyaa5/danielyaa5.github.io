@@ -162,6 +162,136 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
       assert.deepEqual(tight, [], 'the pill clears every link by at least 24 px');
       await page.setViewportSize({ width: 1440, height: 900 });
     });
+    // Help: Frequent questions start closed. A link to an answer (ours go out in support replies) opens it, scrolls to
+    // it and lights it up; the link mark copies the answer's link without opening or closing anything.
+    const helpUrl = `${base}/cloud-media-shrinker/help/`;
+    const helpContext = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
+    const faqState = (p) => p.evaluate(() => [...document.querySelectorAll('.h-faq')].filter(f => f.querySelector('details').open).map(f => f.id));
+    await check('help: every frequent question starts closed, with its answer in the page', async () => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(helpUrl, { waitUntil: 'networkidle' });
+      const got = await page.evaluate(() => [...document.querySelectorAll('.h-faq')].map(f => {
+        const details = f.querySelector(':scope > details');
+        const copy = f.querySelector('a.h-copy');
+        const box = copy.getBoundingClientRect();
+        return {
+          id: f.id, open: details?.open, question: details?.querySelector(':scope > summary > h3')?.textContent.trim() || '',
+          answer: details?.querySelector(':scope > .h-answer')?.textContent.trim().length || 0,
+          inSummary: !!copy.closest('summary'), href: copy.getAttribute('href'), mark: copy.querySelector('[aria-hidden]').textContent,
+          name: copy.getAttribute('aria-label') || copy.textContent, w: box.width, h: box.height,
+          rowH: details.querySelector('summary').getBoundingClientRect().height,
+        };
+      }));
+      assert.equal(got.length, 30, 'thirty answers');
+      for (const f of got) {
+        assert.equal(f.open, false, `#${f.id} starts closed`);
+        assert.ok(f.question.length > 5 && f.answer > 40, `#${f.id} has its question and answer in the HTML`);
+        assert.equal(f.href, `#${f.id}`, `#${f.id} link mark points at its own answer`);
+        assert.equal(f.mark, '\u{1F517}', `#${f.id} link mark is the link emoji`);
+        assert.match(f.name, /Copy link to this answer/, `#${f.id} link mark is named`);
+        assert.equal(f.inSummary, false, `#${f.id} link mark is outside the summary, so it never toggles the answer`);
+        assert.ok(f.rowH >= 44, `#${f.id} question row is at least 44 px tall (${f.rowH})`);
+      }
+    });
+    await check('help: a link to an answer opens it, scrolls to it and highlights it', async () => {
+      const fresh = await helpContext.newPage();
+      await fresh.route('**/analytics.js*', route => route.abort());
+      await fresh.goto(`${helpUrl}#still-locked`, { waitUntil: 'networkidle' });
+      assert.deepEqual(await faqState(fresh), ['still-locked'], 'arriving on #still-locked opens only that answer');
+      const lit = () => fresh.evaluate(() => {
+        const hash = location.hash.slice(1);
+        // How an answer is painted: compared with another open answer that isn't the target.
+        const look = (id) => [document.getElementById(id), document.querySelector(`#${id} details`)].map(el => { const s = getComputedStyle(el); return [s.backgroundColor, s.borderTopColor, s.boxShadow].join(' '); }).join(' | ');
+        const target = document.getElementById(hash);
+        const answer = target.querySelector('.h-answer').getBoundingClientRect();
+        const other = document.querySelector('#one-time details');
+        other.open = true;
+        const lit = look(hash) !== look('one-time');
+        other.open = false;
+        return { top: target.getBoundingClientRect().top, lit, answer: answer.height, marked: [...document.querySelectorAll('.h-faq.is-target')].map(f => f.id) };
+      });
+      let got = await lit();
+      assert.ok(got.top >= 0 && got.top < 120, `the answer is at the top of the window (top ${Math.round(got.top)})`);
+      assert.ok(got.lit && got.answer > 40, 'it is highlighted and its answer shows');
+      // The address changes on a page that's already open.
+      await fresh.evaluate(() => { location.hash = '#family-sharing'; });
+      await fresh.waitForFunction(() => document.querySelector('#family-sharing details').open);
+      got = await lit();
+      assert.ok(got.top >= 0 && got.top < 120 && got.lit, `a changed address opens, scrolls to and highlights the new answer (top ${Math.round(got.top)})`);
+      assert.deepEqual(got.marked, ['family-sharing'], 'only the new answer is marked');
+      // A link inside one answer to another answer.
+      await fresh.locator('#family-sharing .h-answer a[href="#share-family"]').click();
+      await fresh.waitForFunction(() => document.querySelector('#share-family details').open);
+      got = await lit();
+      assert.ok(got.top >= 0 && got.top < 120 && got.lit, 'a link on the page to another answer opens it');
+      // Close it, then follow the same link again: the address doesn't change, and it still opens.
+      await fresh.locator('#share-family summary').click();
+      assert.equal(await fresh.evaluate(() => document.querySelector('#share-family details').open), false, 'a click on the question closes it');
+      await fresh.locator('#family-sharing .h-answer a[href="#share-family"]').click();
+      assert.equal(await fresh.evaluate(() => document.querySelector('#share-family details').open), true, 'the same link opens it again');
+      await fresh.close();
+    });
+    await check('help: questions open by click and by keyboard; the link mark copies without toggling; one button opens them all', async () => {
+      await helpContext.grantPermissions(['clipboard-read', 'clipboard-write']);
+      const fresh = await helpContext.newPage();
+      await fresh.route('**/analytics.js*', route => route.abort());
+      await fresh.goto(helpUrl, { waitUntil: 'networkidle' });
+      await fresh.locator('#metadata summary').click();
+      assert.deepEqual(await faqState(fresh), ['metadata'], 'a click opens the question');
+      await fresh.locator('#quality summary').focus();
+      await fresh.keyboard.press('Enter');
+      assert.deepEqual(await faqState(fresh), ['metadata', 'quality'], 'Enter on a focused question opens it, and the first stays open');
+      await fresh.keyboard.press('Space');
+      assert.deepEqual(await faqState(fresh), ['metadata'], 'Space closes it again');
+      // The link mark on a closed question and on an open one.
+      for (const id of ['one-time', 'metadata']) {
+        const before = await faqState(fresh);
+        await fresh.locator(`#${id} a.h-copy`).click();
+        assert.deepEqual(await faqState(fresh), before, `the link mark on #${id} leaves every answer as it was`);
+        assert.equal(await fresh.evaluate(() => navigator.clipboard.readText()), `${helpUrl}#${id}`, `#${id}: the answer's link is on the clipboard`);
+        assert.equal(await fresh.locator(`#${id} a.h-copy`).getAttribute('data-copied'), 'Link copied', 'it says the link was copied');
+        assert.equal(new URL(fresh.url()).hash, `#${id}`, 'the address shows the answer');
+      }
+      const button = fresh.locator('.h-openall');
+      assert.equal((await button.textContent()).trim(), 'Open all answers');
+      await button.click();
+      assert.equal((await faqState(fresh)).length, 30, 'Open all answers opens all thirty');
+      assert.equal((await button.textContent()).trim(), 'Close all answers');
+      await button.click();
+      assert.deepEqual(await faqState(fresh), [], 'Close all answers closes them');
+      await fresh.close();
+      await helpContext.close();
+    });
+    await check('help: the iPhone and Mac badges in headings are sized with the heading and keep its lines even', async () => {
+      for (const width of [1440, 320]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(helpUrl, { waitUntil: 'networkidle' });
+        const got = await page.evaluate(() => [...document.querySelectorAll('.h-sec h3')].filter(h => h.querySelector('.tag')).map(h => {
+          const style = getComputedStyle(h), box = h.getBoundingClientRect(), tag = h.querySelector('.tag'), t = tag.getBoundingClientRect();
+          return { text: h.textContent.trim().slice(0, 30), ratio: parseFloat(getComputedStyle(tag).fontSize) / parseFloat(style.fontSize), lines: box.height / parseFloat(style.lineHeight), inside: t.left >= box.left - 1 && t.right <= box.right + 1 && t.top >= box.top - 1 };
+        }));
+        assert.equal(got.length, 11, 'eleven headings carry a badge');
+        for (const h of got) {
+          assert.ok(h.ratio >= 0.8 && h.ratio <= 1, `${width}px "${h.text}": badge text is 80 to 100% of the heading's size (${h.ratio.toFixed(2)})`);
+          assert.ok(Math.abs(h.lines - Math.round(h.lines)) < 0.04, `${width}px "${h.text}": the badge doesn't stretch its line (${h.lines.toFixed(2)} lines)`);
+          assert.ok(h.inside, `${width}px "${h.text}": the badge stays inside the heading`);
+        }
+      }
+      await page.setViewportSize({ width: 1440, height: 900 });
+    });
+    await check('help without JavaScript: questions still open, and a link still lands on its answer', async () => {
+      const plain = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false, reducedMotion: 'reduce' });
+      const p = await plain.newPage();
+      await p.goto(`${helpUrl}#still-locked`, { waitUntil: 'load' });
+      // The page scrolls to the link by itself; give it a moment to settle.
+      let box = await p.locator('#still-locked').boundingBox();
+      for (let i = 0; i < 20 && !(box.y >= 0 && box.y < 120); i += 1) { await p.waitForTimeout(100); box = await p.locator('#still-locked').boundingBox(); }
+      assert.ok(box.y >= 0 && box.y < 120, `the link lands on the question (top ${Math.round(box.y)})`);
+      assert.equal(await p.locator('.h-tools').isVisible(), false, 'no dead Open all button');
+      await p.locator('#still-locked summary').click();
+      assert.ok(await p.locator('#still-locked .h-answer').isVisible(), 'a tap opens the answer');
+      await plain.close();
+    });
     await check('every Cloud Media Shrinker page is in the sitemap', async () => {
       const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
       const listed = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
