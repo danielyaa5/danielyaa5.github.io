@@ -182,7 +182,7 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
           rowH: details.querySelector('summary').getBoundingClientRect().height,
         };
       }));
-      assert.equal(got.length, 30, 'thirty answers');
+      assert.equal(got.length, 31, 'thirty-one answers');
       for (const f of got) {
         assert.equal(f.open, false, `#${f.id} starts closed`);
         assert.ok(f.question.length > 5 && f.answer > 40, `#${f.id} has its question and answer in the HTML`);
@@ -255,7 +255,7 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
       const button = fresh.locator('.h-openall');
       assert.equal((await button.textContent()).trim(), 'Open all answers');
       await button.click();
-      assert.equal((await faqState(fresh)).length, 30, 'Open all answers opens all thirty');
+      assert.equal((await faqState(fresh)).length, 31, 'Open all answers opens all thirty-one');
       assert.equal((await button.textContent()).trim(), 'Close all answers');
       await button.click();
       assert.deepEqual(await faqState(fresh), [], 'Close all answers closes them');
