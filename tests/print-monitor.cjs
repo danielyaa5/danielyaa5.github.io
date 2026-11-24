@@ -151,6 +151,30 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
       await page.close();
     }
 
+    // The privacy page's diagram: your device, your printers, support mail on a dashed branch, and what isn't used,
+    // all inside the panel at every width, with no sideways scroll.
+    for (const width of [1440, 1024, 768, 600, 390, 320, 260, 240]) {
+      const page = await browser.newPage({ viewport: { width, height: 900 } });
+      await page.goto(`${page3d}privacy/`, { waitUntil: 'networkidle' });
+      const flow = await page.evaluate(() => {
+        const panel = document.querySelector('.pm-flow-a'); const p = panel.getBoundingClientRect();
+        const inside = [...panel.querySelectorAll('.pm-node, .pm-tag, .pm-link-note')].every(el => { const r = el.getBoundingClientRect(); return !r.width || (r.left >= p.left - 0.5 && r.right <= p.right + 0.5); });
+        return {
+          nodes: [...panel.querySelectorAll('.pm-node > b')].map(b => b.textContent),
+          tags: [...panel.querySelectorAll('.pm-tag')].map(el => el.innerText.trim().toLowerCase()),
+          inside, sideways: document.documentElement.scrollWidth > innerWidth,
+          firstAfterIntro: panel.previousElementSibling?.textContent.startsWith('3D Print Monitor (previously Print Progress) connects directly'),
+        };
+      });
+      assert.deepEqual(flow.nodes, ['Your iPhone, iPad or Mac', 'Your printers', 'Support email', 'Not used'], `privacy diagram nodes at ${width}px`);
+      assert.deepEqual(flow.tags, ['your local network', width <= 700 ? 'from your device, when you tap send' : 'only when you tap send'], `privacy diagram tags at ${width}px`);
+      assert.ok(flow.inside, `privacy diagram stays in its panel at ${width}px`);
+      assert.equal(flow.sideways, false, `no sideways scroll on the privacy page at ${width}px`);
+      assert.ok(flow.firstAfterIntro, 'the diagram follows the policy\'s opening paragraph');
+      if (width === 1440 || width === 390) await page.locator('.pm-flow').screenshot({ path: `test-results/print-monitor-privacy-flow-${width}.png` });
+      await page.close();
+    }
+
     // Signing up, through the real function: the address lands on the 3D Print Monitor topic only, and this page
     // remembers it under its own key, so the home page's form still shows.
     for (const width of [390, 1280]) {

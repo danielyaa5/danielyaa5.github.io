@@ -63,6 +63,39 @@
         <p class="c-updated">Updated November 17, 2026.</p>
 
         <p>3D Print Monitor (previously Print Progress) connects directly to the printers and local servers you configure. Printer monitoring does not use a developer-operated server. The app has no account system, advertising, analytics SDK, or tracking. An optional support form uses a support relay only when you tap Send request.</p>
+        <figure class="pm-flow pm-flow-a" aria-labelledby="pm-flow-title">
+          <p class="pm-flow-title" id="pm-flow-title">Where your printer data goes</p>
+          <div class="pm-flow-map">
+            <div class="pm-node pm-node-device">
+              <span class="pm-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2" y="5" width="13" height="9" rx="1.5"/><path d="M1 17.5h15"/><rect x="17" y="8" width="6" height="11" rx="1.6"/><path d="M19.4 16.6h1.2"/></svg></span>
+              <b>Your iPhone, iPad or Mac</b>
+              <span class="pm-node-sub">3D Print Monitor and its widgets</span>
+              <span class="pm-chip"><span class="pm-icon pm-icon-small"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>Addresses, serial numbers and access codes stay in the Keychain</span>
+            </div>
+            <div class="pm-link pm-link-local">
+              <span class="pm-tag">Your local network</span>
+              <span class="pm-link-note">Read-only status. Pause, Resume and Stop only when you tap them.</span>
+            </div>
+            <div class="pm-node pm-node-printers">
+              <span class="pm-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="2.5" width="18" height="19" rx="2"/><path d="M3 7.5h18M12 7.5v3.2M10.2 10.7h3.6L12 12.6z"/><rect x="8.5" y="15" width="7" height="3" rx=".5"/><path d="M6 18.2h12"/></svg></span>
+              <b>Your printers</b>
+              <span class="pm-node-sub">Bambu Lab, Klipper, OctoPrint, PrusaLink, Duet, Creality K1, Elegoo</span>
+            </div>
+            <div class="pm-link pm-link-send">
+              <span class="pm-tag pm-tag-dashed"><span class="pm-wide">Only when you tap Send</span><span class="pm-narrow">From your device, when you tap Send</span></span>
+            </div>
+            <div class="pm-node pm-node-support">
+              <span class="pm-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span>
+              <b>Support email</b>
+              <span class="pm-node-sub">Your message, plus a diagnostics file you can preview or turn off, through a Cloudflare relay and Resend</span>
+            </div>
+            <div class="pm-node pm-never">
+              <span class="pm-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 18h10.5a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.6 9.2 4.5 4.5 0 0 0 7 18z"/><path d="M3 3l18 18"/></svg></span>
+              <b>Not used</b>
+              <span class="pm-not"><s>Accounts</s><s>Analytics or ads</s><s>Developer servers</s><s>Printer maker cloud logins</s></span>
+            </div>
+          </div>
+        </figure>
 
         <h2>Data on your device</h2>
         <p>Printer names, addresses, serial numbers, access codes, API keys, passwords, certificate fingerprints, and cached status readings are stored in the device's Keychain. The app and its widget share access through their signed Keychain group. These records do not sync through iCloud. Walkthrough completion and appearance preferences are stored locally using the operating system's preferences system.</p>
