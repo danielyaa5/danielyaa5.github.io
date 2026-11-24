@@ -78,11 +78,13 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
         const parts = [...signup.querySelectorAll('h2, p:not(:empty), .signup-email, .signup-button')].filter(el => el.getClientRects().length);
         return {
           sideways: document.documentElement.scrollWidth > innerWidth,
-          heroShown: hero.complete && hero.naturalWidth > 0 && box(hero).width > Math.min(200, innerWidth * 0.7) && box(hero).right <= innerWidth,
+          heroShown: hero.complete && hero.naturalWidth > 0 && box(hero).width > Math.min(200, innerWidth * 0.6) && box(hero).right <= innerWidth,
           heroSrc: hero.currentSrc.split('/').pop(),
           heroInWindow: !!hero.closest('.c-mac') && !!document.querySelector('.c-mac').getClientRects().length,
           heroNote: document.querySelector('.pm-hero-media figcaption')?.textContent,
-          homeShot: document.querySelector('.pm-phone img').getAttribute('src').split('/').pop(),
+          phone: (() => { const img = document.querySelector('.c-hero-media .c-phone img'); const r = box(img); return { src: img.getAttribute('src').split('/').pop(), shown: img.complete && img.naturalWidth > 0 && r.width > 40, inside: r.left >= 0 && r.right <= innerWidth, overMac: r.left < box(document.querySelector('.c-mac')).right }; })(),
+          widgetShot: document.querySelector('.pm-widget img').getAttribute('src').split('/').pop(),
+          menuShot: document.querySelector('.pm-menu img').getAttribute('src').split('/').pop(),
           buttonsFit: [...document.querySelectorAll('.c-hero .c-actions .button')].every(el => box(el).left >= 0 && box(el).right <= innerWidth),
           bar: [...document.querySelectorAll('.cms-nav-links a')].map(a => [a.textContent, a.getAttribute('aria-current')]),
           getInBar: !!document.querySelector('.cms-nav-get'),
@@ -108,7 +110,10 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
       assert.match(layout.heroSrc, /^hero-cameras-(900|1600)\.webp$/, `hero picture at ${width}px`);
       assert.ok(layout.heroInWindow, `the hero picture sits in the Mac window at ${width}px`);
       assert.equal(layout.heroNote, 'Sample readings over real camera snapshots.', 'the camera picture says its readings are samples');
-      assert.equal(layout.homeShot, 'home-screen-light-600.webp', 'the widgets feature shows the iPhone Home Screen with the camera widget');
+      // An iPhone with the camera widget sits over the Mac window's corner, as on the Cloud Media Shrinker page.
+      assert.deepEqual(layout.phone, { src: 'iphone-home-light-480.webp', shown: true, inside: true, overMac: true }, `hero iPhone at ${width}px`);
+      assert.equal(layout.widgetShot, 'widget-camera-large-light-720.webp', 'the widgets feature shows a camera widget');
+      assert.equal(layout.menuShot, 'menu-bar-scene-1100.webp', 'the menu bar feature shows the menu bar with the app open');
       assert.ok(layout.buttonsFit, `hero buttons fit the screen at ${width}px`);
       assert.deepEqual(layout.bar, [['Overview', 'page'], ['Support', null], ['Privacy', null]], 'product bar with Overview marked');
       assert.equal(layout.getInBar, false, 'no Get the app in the product page’s own bar');
@@ -216,14 +221,15 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
     assert.ok(await page.locator('#signup-failed').isVisible(), 'failure message shows without JavaScript');
     await context.close();
 
-    // Dark mode keeps the dark window and swaps in the dark Home Screen.
+    // Dark mode keeps the dark window and swaps in the dark iPhone Home Screen and widget.
     for (const [width, hero] of [[1280, /hero-cameras-(900|1600)\.webp$/], [390, /hero-cameras-(900|1600)\.webp$/]]) {
       const dark = await browser.newPage({ colorScheme: 'dark', viewport: { width, height: 900 } });
       await dark.goto(page3d, { waitUntil: 'networkidle' });
       assert.match(await dark.locator('.pm-hero-shot').evaluate(img => img.currentSrc), hero, `dark hero at ${width}px`);
-      await dark.locator('.pm-phone img').scrollIntoViewIfNeeded();
-      await dark.waitForFunction(() => document.querySelector('.pm-phone img').complete);
-      assert.match(await dark.locator('.pm-phone img').evaluate(img => img.currentSrc), /home-screen-dark-600\.webp$/);
+      assert.match(await dark.locator('.c-hero-media .c-phone img').evaluate(img => img.currentSrc), /iphone-home-dark-480\.webp$/);
+      await dark.locator('.pm-widget img').scrollIntoViewIfNeeded();
+      await dark.waitForFunction(() => document.querySelector('.pm-widget img').complete);
+      assert.match(await dark.locator('.pm-widget img').evaluate(img => img.currentSrc), /widget-camera-large-dark-720\.webp$/);
       await dark.screenshot({ path: `test-results/print-monitor-${width}-dark.png`, fullPage: true });
       await dark.close();
     }

@@ -5,12 +5,15 @@
 /* The app's icon is an iPhone icon, so it gets the rounded corners. */
 .pm-nav .cms-nav-home img { border-radius: 22.5%; }
 
-/* Hero: the Mac app with two printers' camera snapshots, in a dark window, at every width. Nothing in the hero may be
+/* Hero: the Mac app with two printers' camera snapshots in a dark window, and an iPhone with its widgets, at every width. Nothing in the hero may be
    wider than its column, so the picture, buttons and text all shrink with the screen. */
 .cms-a.pm .c-hero, .cms-a.pm .c-hero-copy, .cms-a.pm .c-hero-copy > * { min-width: 0; max-width: 100%; }
 .cms-a.pm .c-hero .c-actions .button { max-width: 100%; white-space: normal; }
-.cms-a.pm .pm-hero-media { display: block; min-width: 0; }
-.cms-a.pm .c-mac { width: 100%; border-color: #2c3530; background: #111714; }
+/* The iPhone sits over the window's lower right corner, below the K1 Max's progress, as on the Cloud Media Shrinker page. */
+.cms-a.pm .pm-hero-media { min-width: 0; }
+.cms-a.pm .c-mac { border-color: #2c3530; background: #111714; }
+.cms-a.pm .c-phone { margin-top: 45%; }
+.cms-a.pm .pm-hero-media .c-note { grid-row: 2; }
 .cms-a.pm .c-mac::before { border-bottom-color: #2a322d; background: radial-gradient(circle at 14px 11px, #ec6a5e 4.5px, transparent 5px), radial-gradient(circle at 30px 11px, #f4bf4f 4.5px, transparent 5px), radial-gradient(circle at 46px 11px, #61c554 4.5px, transparent 5px), #1f2723; }
 .pm-hero-shot { display: block; width: 100%; max-width: 100%; height: auto; }
 .pm-hero-media .c-note { margin-top: 10px; font-size: 13px; }
@@ -28,11 +31,11 @@
 
 /* Feature screenshots: the widget at about its real size, the menu bar window narrower than the column. */
 .pm-shot { display: block; min-width: 0; justify-self: center; width: 100%; }
-/* The Home Screen shot sits in a phone-like frame. */
-.pm-phone { max-width: 280px; }
-.pm-phone .c-shot { border: 6px solid #141a15; border-radius: 36px; background: #141a15; }
-.pm-menu { max-width: 320px; }
-.pm-menu .c-shot { border-radius: 12px; }
+/* The large widget, about the size it is on a Mac desktop. */
+.pm-widget { max-width: 400px; }
+.pm-widget .c-shot { border-radius: 22px; }
+.pm-menu { max-width: 560px; }
+.pm-menu .c-shot { border-radius: 10px; }
 
 /* The email sign-up, as on the home page but inside this page's column, with one topic and no boxes to tick. */
 .cms .pm-signup { margin: 36px 0 0; align-items: center; }
@@ -41,14 +44,15 @@
 #updates { scroll-margin-top: 24px; }
 
 @media (max-width: 620px) {
-  .cms-a.pm .c-mac { display: block; }
+  .cms-a.pm .c-mac, .cms-a.pm .c-phone { display: block; }
+  .cms-a.pm .c-phone { border-width: 3px; border-radius: 14px; }
+  .cms-a.pm .c-mac { width: calc(100% - 20px); }
   .cms-a.pm .c-hero .c-actions { margin-top: 20px; }
   .pm-printer-list li { grid-template-columns: 1fr; }
   .pm-what { grid-column: 1; grid-row: auto; margin-top: 4px; }
   .cms .pm-signup { margin-top: 30px; }
 }
 @media screen and (prefers-color-scheme: dark) {
-  .pm-phone .c-shot { border-color: #2b352e; }
 }
 
 /* Long unbroken text, such as the support email address, wraps instead of widening the page on very narrow
