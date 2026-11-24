@@ -55,6 +55,13 @@
 .h-shot.wide { flex: 1 1 360px; max-width: 580px; }
 .h-shot figcaption { margin-top: 8px; font-size: 13px; line-height: 1.45; color: var(--muted); }
 .h-video { width: 300px; max-width: 100%; margin: 18px 0 24px; }
+.h-video.mac { width: 640px; }
+/* Getting started for one platform at a time, once the switch is shown (it needs JavaScript). */
+.h-platform { display: inline-flex; gap: 4px; margin: 2px 0 6px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: var(--box); }
+.h-platform[hidden] { display: none; }
+.h-platform button { min-height: 44px; padding: 8px 20px; border: 0; border-radius: 999px; background: transparent; color: var(--ink); font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; }
+.h-platform button[aria-pressed="true"] { background: var(--green); color: #fff; }
+#start[data-show="iphone"] [data-platform="mac"], #start[data-show="mac"] [data-platform="iphone"] { display: none; }
 .h-video video { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 18px; background: #f5f5f2; }
 .h-video figcaption { margin-top: 8px; font-size: 13px; line-height: 1.45; color: var(--muted); }
 
@@ -135,5 +142,7 @@
 }
 @media screen and (prefers-color-scheme: dark) {
   .tag { border-color: var(--chip-line); background: var(--chip); }
+  .h-platform { border-color: var(--chip-line); background: var(--chip); }
+  .h-platform button[aria-pressed="true"] { background: var(--fill, #2f6b45); color: #fff; }
   .soon { background: #3a2f17; border-color: #6b5626; color: #f0d9a4; }
 }

@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="../../styles.css?v=mark-4">
   <link rel="stylesheet" href="../../cloud-media-shrinker/cms.css?v=2">
   <link rel="stylesheet" href="../cms-nav.css?v=3">
-  <link rel="stylesheet" href="help.css?v=8">
+  <link rel="stylesheet" href="help.css?v=10">
   <script src="/analytics.js?v=17" defer></script>
   <script type="application/ld+json">
   {
@@ -96,39 +96,56 @@
 
       <section class="h-sec" id="start" aria-labelledby="start-title">
         <h2 id="start-title"><span class="eyebrow">01</span>Getting started</h2>
-        <figure class="h-video">
-          <video src="../../assets/cloud-media-shrinker/help/howto-iphone-coach.mp4" poster="../../assets/cloud-media-shrinker/help/howto-iphone-coach-poster.webp" width="720" height="1560" controls muted loop playsinline preload="none" data-autoplay aria-label="The iPhone app from first launch: allow access to Photos, the scan, the list and its filters, swiping to keep or delete, compressing a video, confirming, the queue and Savings"></video>
-          <figcaption>Watch it on iPhone, from first launch to space saved: about a minute, no sound. The compressing is sped up, and the library is made up.</figcaption>
-        </figure>
+        <div class="h-platform" role="group" aria-label="Show Getting started for" hidden>
+          <button type="button" data-show="iphone" aria-pressed="false">iPhone and iPad</button>
+          <button type="button" data-show="mac" aria-pressed="false">Mac</button>
+        </div>
+        <div data-platform="iphone">
+          <figure class="h-video">
+            <video src="../../assets/cloud-media-shrinker/help/howto-iphone-coach-2.mp4" poster="../../assets/cloud-media-shrinker/help/howto-iphone-coach-poster.webp" width="720" height="1560" controls muted loop playsinline preload="none" data-autoplay aria-label="The iPhone app from first launch: allow access to Photos, the scan, the list and its filters, swiping to keep or delete, compressing a video, confirming, the queue and Savings"></video>
+            <figcaption>Watch it on iPhone, from first launch to space saved: about a minute, no sound. The compressing is sped up, and the library is made up.</figcaption>
+          </figure>
+        </div>
+        <div data-platform="mac">
+          <figure class="h-video mac">
+            <video src="../../assets/cloud-media-shrinker/help/howto-mac.mp4" poster="../../assets/cloud-media-shrinker/help/howto-mac-poster.webp" width="1280" height="1100" controls muted loop playsinline preload="none" data-autoplay aria-label="The Mac app: the sources in the sidebar, the free scan, the cards with Shrink &amp; free space, Keep and Delete, picks collecting in the bar at the bottom, the presets, the queue, and Savings and history, with answers to frequent questions along the way"></video>
+            <figcaption>Watch it on Mac, with answers to frequent questions along the way: a minute and a half, no sound. The compressing is sped up, and the videos are made up.</figcaption>
+          </figure>
+        </div>
         <h3>Install</h3>
-        <p>Get Cloud Media Shrinker from the App Store on iPhone or iPad (iOS 27 or later) and from the Mac App Store on a Mac (macOS 13 or later). The download is free. One purchase unlocks both, see <a href="#unlock">Unlocking</a>. On a Mac you can also use the free download from the <a href="../#get">Cloud Media Shrinker page</a>, which unlocks with its own license key.</p>
-        <h3><span class="tag">iPhone</span>Give it access to Photos</h3>
-        <ol>
-          <li>Open the app and go through the three intro pages.</li>
-          <li>Tap <span class="ui">Allow Access to Photos</span>, then choose <span class="ui">Allow Full Access</span> when iOS asks.</li>
-        </ol>
-        <p>If you only share some photos, the app asks for full access and offers <span class="ui">Open Settings</span>. It needs the whole library to find what takes the most space. Your library stays on your iPhone.</p>
-        <h3><span class="tag">Mac</span>Give it access to Photos</h3>
-        <ol>
-          <li>The first launch runs a short tour with sample files. You can skip it.</li>
-          <li>Choose <span class="ui">Apple Photos</span> in the sidebar and allow access when macOS asks.</li>
-          <li class="h-step" id="select-photos-library">On macOS 13 to 26 it also asks you to <span class="ui">Select Photos Library</span> once. That lets it read file sizes without downloading every original from iCloud. It only reads the library, and it doesn't switch libraries. In the window that opens:
-            <ol>
-              <li>Go to your Pictures folder. If the window opened in your home folder, double-click <span class="ui">Pictures</span>. Otherwise click Pictures in the window's sidebar if it's listed, or type ~/Pictures and press Return.</li>
-              <li>Click <span class="ui">Photos Library</span> once to select it. It may show as Photos Library.photoslibrary. Don't double-click it, because that opens it like a folder.</li>
-              <li>Click <span class="ui">Read Sizes</span>.</li>
-            </ol>
-            <p>Skip <span class="ui">Photos</span> under Media in the window's sidebar. It shows single photos, not the library, so <span class="ui">Read Sizes</span> stays grayed out. If Photos Library isn't in Pictures, open Photos, choose Photos &gt; Settings &gt; General and click <span class="ui">Show in Finder</span> next to the library's location. Then drag Photos Library from that Finder window onto the window that's asking. Since 1.2.2, on macOS 26 and older, the window opens in your Pictures folder and says what to select.</p>
-          </li>
-          <li>When your first queue starts, macOS asks whether the app can control Photos. Allow it. That's how titles, captions and keywords get copied. Without it the app keeps your originals.</li>
-        </ol>
-        <p>If you gave it access to only some photos, open System Settings &gt; Privacy &amp; Security &gt; Photos, give it full access, then quit and reopen the app.</p>
+        <p data-platform="iphone">Get Cloud Media Shrinker from the App Store on iPhone or iPad (iOS 27 or later). The download is free. One purchase unlocks it on your Mac too, see <a href="#unlock">Unlocking</a>.</p>
+        <p data-platform="mac">Get Cloud Media Shrinker from the Mac App Store on a Mac (macOS 13 or later). The download is free. One purchase unlocks it on your iPhone and iPad too, see <a href="#unlock">Unlocking</a>. You can also use the free download from the <a href="../#get">Cloud Media Shrinker page</a>, which unlocks with its own license key.</p>
+        <div data-platform="iphone">
+          <h3><span class="tag">iPhone</span>Give it access to Photos</h3>
+          <ol>
+            <li>Open the app and go through the three intro pages.</li>
+            <li>Tap <span class="ui">Allow Access to Photos</span>, then choose <span class="ui">Allow Full Access</span> when iOS asks.</li>
+          </ol>
+          <p>If you only share some photos, the app asks for full access and offers <span class="ui">Open Settings</span>. It needs the whole library to find what takes the most space. Your library stays on your iPhone.</p>
+        </div>
+        <div data-platform="mac">
+          <h3><span class="tag">Mac</span>Give it access to Photos</h3>
+          <ol>
+            <li>The first launch runs a short tour with sample files. You can skip it.</li>
+            <li>Choose <span class="ui">Apple Photos</span> in the sidebar and allow access when macOS asks.</li>
+            <li class="h-step" id="select-photos-library">On macOS 13 to 26 it also asks you to <span class="ui">Select Photos Library</span> once. That lets it read file sizes without downloading every original from iCloud. It only reads the library, and it doesn't switch libraries. In the window that opens:
+              <ol>
+                <li>Go to your Pictures folder. If the window opened in your home folder, double-click <span class="ui">Pictures</span>. Otherwise click Pictures in the window's sidebar if it's listed, or type ~/Pictures and press Return.</li>
+                <li>Click <span class="ui">Photos Library</span> once to select it. It may show as Photos Library.photoslibrary. Don't double-click it, because that opens it like a folder.</li>
+                <li>Click <span class="ui">Read Sizes</span>.</li>
+              </ol>
+              <p>Skip <span class="ui">Photos</span> under Media in the window's sidebar. It shows single photos, not the library, so <span class="ui">Read Sizes</span> stays grayed out. If Photos Library isn't in Pictures, open Photos, choose Photos &gt; Settings &gt; General and click <span class="ui">Show in Finder</span> next to the library's location. Then drag Photos Library from that Finder window onto the window that's asking. Since 1.2.2, on macOS 26 and older, the window opens in your Pictures folder and says what to select.</p>
+            </li>
+            <li>When your first queue starts, macOS asks whether the app can control Photos. Allow it. That's how titles, captions and keywords get copied. Without it the app keeps your originals.</li>
+          </ol>
+          <p>If you gave it access to only some photos, open System Settings &gt; Privacy &amp; Security &gt; Photos, give it full access, then quit and reopen the app.</p>
+        </div>
         <h3>The first scan</h3>
-        <p>The scan only measures. It doesn't change, move or upload anything. On iPhone you get an <span class="ui">Estimated savings</span> ring with videos, regular photos and Live Photos broken out. On the Mac you get a <span class="ui">Free scan</span> card that says how much you could free, with <span class="ui">See the full report</span> for the before and after.</p>
+        <p>The scan only measures. It doesn't change, move or upload anything. <span data-platform="iphone">On iPhone you get an <span class="ui">Estimated savings</span> ring with videos, regular photos and Live Photos broken out.</span> <span data-platform="mac">On the Mac you get a <span class="ui">Free scan</span> card that says how much you could free, with <span class="ui">See the full report</span> for the before and after.</span></p>
         <p>The number depends on the preset you pick, and it's an estimate: every file compresses differently. Live Photo savings are optional. They count on keeping only the still photo.</p>
         <div class="h-shots">
-          <figure class="h-shot phone"><img src="../../assets/cloud-media-shrinker/help/iphone-scan.webp" width="600" height="1304" alt="The iPhone Photos tab after a scan: estimated savings 1.24 TB from 35,196 items" loading="lazy"><figcaption>iPhone: the scan result.</figcaption></figure>
-          <figure class="h-shot wide"><img src="../../assets/cloud-media-shrinker/help/mac-scan.webp" width="1240" height="446" alt="The Mac free scan card: You could free about 1.24 TB" loading="lazy"><figcaption>Mac: the free scan card. All screenshots use a made-up library.</figcaption></figure>
+          <figure class="h-shot phone" data-platform="iphone"><img src="../../assets/cloud-media-shrinker/help/iphone-scan.webp" width="600" height="1304" alt="The iPhone Photos tab after a scan: estimated savings 1.24 TB from 35,196 items" loading="lazy"><figcaption>iPhone: the scan result. All screenshots use a made-up library.</figcaption></figure>
+          <figure class="h-shot wide" data-platform="mac"><img src="../../assets/cloud-media-shrinker/help/mac-scan.webp" width="1240" height="446" alt="The Mac free scan card: You could free about 1.24 TB" loading="lazy"><figcaption>Mac: the free scan card. All screenshots use a made-up library.</figcaption></figure>
         </div>
       </section>
 
@@ -617,6 +634,44 @@
               if (entry.isIntersecting) video.play().catch(() => {});
               else video.pause();
             }, { threshold: 0.35 }).observe(video);
+          });
+        })();
+      </script>
+      <script>
+        // Getting started for one platform at a time. Without JavaScript both show, and the switch stays hidden.
+        // A link to something in the other platform's steps switches to it. The choice is remembered on this device.
+        (() => {
+          const section = document.getElementById('start'), bar = section && section.querySelector('.h-platform');
+          if (!bar) return;
+          const key = 'cms-help-platform', buttons = [...bar.querySelectorAll('button')];
+          const show = (which, remember) => {
+            section.dataset.show = which;
+            buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.show === which)));
+            section.querySelectorAll('[data-platform] video').forEach((v) => { if (!v.closest(`[data-platform="${which}"]`)) v.pause(); });
+            if (remember) { try { localStorage.setItem(key, which); } catch {} }
+          };
+          const target = () => {
+            try { return location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null; } catch { return null; }
+          };
+          const linked = () => {
+            const box = target()?.closest('[data-platform]');
+            return box && section.contains(box) ? box.dataset.platform : null;
+          };
+          // The browser looks for the target before it's shown, so land on it once it is.
+          const land = () => requestAnimationFrame(() => target()?.scrollIntoView());
+          let saved = null;
+          try { saved = localStorage.getItem(key); } catch {}
+          const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+          const guess = ios ? 'iphone' : /Macintosh/.test(navigator.userAgent) ? 'mac' : 'iphone';
+          show(linked() || (saved === 'iphone' || saved === 'mac' ? saved : guess), false);
+          if (linked()) land();
+          bar.hidden = false;
+          buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.show, true)));
+          addEventListener('hashchange', () => {
+            const which = linked();
+            if (!which || which === section.dataset.show) return;
+            show(which, false);
+            land();
           });
         })();
       </script>
