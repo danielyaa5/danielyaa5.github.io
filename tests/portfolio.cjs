@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['3D Print Monitor','AI Usage','Beckon','Netflix PiP Fixer','Gate Opener Widget','Price Watch','QuickDesk','orchestrate-agents','simulate-user','H2D Custom Dashboard','TagTracker','qtfaststart2','bambu-headless'];
+const expected = ['Buy or Rent','AI Usage','Beckon','Netflix PiP Fixer','Gate Opener Widget','Price Watch','QuickDesk','orchestrate-agents','simulate-user','H2D Custom Dashboard','TagTracker','qtfaststart2','bambu-headless'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -38,7 +38,7 @@ const expected = ['3D Print Monitor','AI Usage','Beckon','Netflix PiP Fixer','Ga
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
     assert.equal(await page.locator('.project-link').count(),13);
     assert.equal(await page.locator('.featured-pick').count(),3);
-    assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','Buy or Rent']);
+    assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','3D Print Monitor']);
     assert.equal(await page.locator('.featured-lead h3').innerText(), 'Cloud Media Shrinker');
     assert.equal(await page.locator('#other-projects-title').innerText(), 'Other projects');
     assert.equal(await page.locator('.filter-count').innerText(), '13 projects');
@@ -54,18 +54,18 @@ const expected = ['3D Print Monitor','AI Usage','Beckon','Netflix PiP Fixer','Ga
     assert.equal(await page.locator('.writing-card').count(),3);
     assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
     const groups = {
-      mac: ['Cloud Media Shrinker','Buy or Rent','3D Print Monitor','AI Usage','Beckon','Gate Opener Widget','QuickDesk','TagTracker'],
-      ios: ['Cloud Media Shrinker','Buy or Rent','3D Print Monitor','Gate Opener Widget'],
+      mac: ['Cloud Media Shrinker','3D Print Monitor','Buy or Rent','AI Usage','Beckon','Gate Opener Widget','QuickDesk','TagTracker'],
+      ios: ['Cloud Media Shrinker','3D Print Monitor','Buy or Rent','Gate Opener Widget'],
       web: ['Buy or Rent','Netflix PiP Fixer','H2D Custom Dashboard'],
       developer: ['puml-for-markdown','AI Usage','Price Watch','orchestrate-agents','simulate-user','qtfaststart2','bambu-headless'],
       printing: ['3D Print Monitor','H2D Custom Dashboard','bambu-headless']
     };
     const featuredByFilter = {
-      mac: ['Cloud Media Shrinker','Buy or Rent'],
-      ios: ['Cloud Media Shrinker','Buy or Rent'],
-      web: ['Buy or Rent'],
+      mac: ['Cloud Media Shrinker','3D Print Monitor'],
+      ios: ['Cloud Media Shrinker','3D Print Monitor'],
+      web: [],
       developer: ['puml-for-markdown'],
-      printing: []
+      printing: ['3D Print Monitor']
     };
     for (const width of [1440,320]) {
       await page.setViewportSize({width,height:1000});
@@ -75,8 +75,8 @@ const expected = ['3D Print Monitor','AI Usage','Beckon','Netflix PiP Fixer','Ga
         await filterBtn.click();
         assert.deepEqual(await page.locator('.project:visible h2').allTextContents(),names);
         assert.deepEqual(await page.locator('.project[data-featured-mirror="true"]:visible h2').allTextContents(), featuredByFilter[category]);
-        // Featured art drawn on white (Buy or Rent) keeps its blend mode in the filtered copy, so it doesn't show as a white box.
-        assert.ok(await page.locator('.project[data-featured-mirror="true"]:visible').evaluateAll(cards => cards.every(card => card.querySelector('h2').textContent !== 'Buy or Rent' || card.querySelector('.project-illustration').classList.contains('art-on-white'))), `Buy or Rent copy keeps art-on-white in ${category}`);
+        // Art drawn on white (Buy or Rent) keeps its blend mode, so it doesn't show as a white box.
+        assert.ok(await page.locator('.project:visible').evaluateAll(cards => cards.every(card => card.querySelector('h2').textContent !== 'Buy or Rent' || card.querySelector('.project-illustration').classList.contains('art-on-white'))), `Buy or Rent keeps art-on-white in ${category}`);
         assert.equal(await page.locator('#other-projects-title').innerText(), filterLabel);
         assert.equal(await page.locator('[aria-pressed="true"]').count(),1);
         assert.match(await page.locator('.filter-count').innerText(),new RegExp(`^${names.length} ${names.length === 1 ? 'project' : 'projects'}`));

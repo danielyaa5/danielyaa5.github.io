@@ -316,10 +316,10 @@ const events = request => {
       await tiles.locator('.featured-lead .featured-link').click();
       await tiles.locator('.featured-pick').nth(1).locator('.project-name').click({ button: 'middle' });
       // A click on the tile's description lands on the title link's stretched layer and counts as `tile`.
-      const buyOrRentP = tiles.locator('.featured-pick').nth(2).locator('.featured-copy > p');
-      await buyOrRentP.evaluate(node => node.scrollIntoView({ block: 'center', behavior: 'instant' }));
-      const buyOrRentBox = await buyOrRentP.boundingBox();
-      await tiles.mouse.click(buyOrRentBox.x + buyOrRentBox.width / 2, buyOrRentBox.y + buyOrRentBox.height / 2);
+      const thirdPickP = tiles.locator('.featured-pick').nth(2).locator('.featured-copy > p');
+      await thirdPickP.evaluate(node => node.scrollIntoView({ block: 'center', behavior: 'instant' }));
+      const thirdPickBox = await thirdPickP.boundingBox();
+      await tiles.mouse.click(thirdPickBox.x + thirdPickBox.width / 2, thirdPickBox.y + thirdPickBox.height / 2);
       await tiles.locator('[data-filter="web"]').click();
       await tiles.locator('#project-list .project', { hasText: 'Netflix PiP Fixer' }).locator('.project-link').click();
       await tiles.locator('#project-list .project', { hasText: 'H2D Custom Dashboard' }).locator('.project-benefit').click({ force: true, button: 'middle' });
@@ -332,9 +332,9 @@ const events = request => {
       assert.deepEqual(clicks.map(pick), [
         { project: 'Cloud Media Shrinker', link: 'button', link_text: 'View on the App Store →', destination: 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=8', section: 'featured', position: 1, filter: undefined },
         { project: 'puml-for-markdown', link: 'title', link_text: 'puml-for-markdown', destination: 'https://danielyakobian.com/puml-for-markdown/', section: 'featured', position: 2, filter: undefined },
-        { project: 'Buy or Rent', link: 'tile', link_text: 'Buy or Rent', destination: 'https://thebuyorrentcalculator.com/', section: 'featured', position: 3, filter: undefined },
-        { project: 'Netflix PiP Fixer', link: 'button', link_text: 'Get it on the Chrome Web Store →', destination: 'https://chromewebstore.google.com/detail/netflix-pip-fixer/ceiiadpnmbplofcefdafhfidmocjgikp', section: 'other', position: 5, filter: 'web' },
-        { project: 'H2D Custom Dashboard', link: 'tile', link_text: 'H2D Custom Dashboard', destination: 'https://danielyakobian.com/blog/h2d-exhaust-fan.html', section: 'other', position: 11, filter: 'web' },
+        { project: '3D Print Monitor', link: 'tile', link_text: '3D Print Monitor', destination: 'https://danielyakobian.com/3d-print-monitor/', section: 'featured', position: 3, filter: undefined },
+        { project: 'Netflix PiP Fixer', link: 'button', link_text: 'Get it on the Chrome Web Store →', destination: 'https://chromewebstore.google.com/detail/netflix-pip-fixer/ceiiadpnmbplofcefdafhfidmocjgikp', section: 'other', position: 4, filter: 'web' },
+        { project: 'H2D Custom Dashboard', link: 'tile', link_text: 'H2D Custom Dashboard', destination: 'https://danielyakobian.com/blog/h2d-exhaust-fan.html', section: 'other', position: 10, filter: 'web' },
         { project: 'Cloud Media Shrinker', link: 'tile', link_text: 'Cloud Media Shrinker', destination: 'https://danielyakobian.com/cloud-media-shrinker/', section: 'other', position: 1, filter: 'ios' },
       ], `project clicks at ${width}px; links outside the tiles send none`);
       assert.ok(clicks.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/`), `cookieless project clicks at ${width}px`);
