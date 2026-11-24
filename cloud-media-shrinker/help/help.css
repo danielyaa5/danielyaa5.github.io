@@ -88,6 +88,13 @@
 .h-faq details[open] > summary::after { content: "\2212"; }
 .h-answer { padding: 0 14px 6px; }
 .h-answer p { margin: 0 0 10px; }
+/* Pictures inside an answer, each at its own size: a phone crop and a Mac crop side by side when there's room. They sit
+   in the closed answer and load only once it opens. A caption is never wider than its picture. */
+.h-pics { display: flex; flex-wrap: wrap; gap: 14px 18px; align-items: flex-start; margin: 4px 0 16px; }
+.h-pic { min-width: 0; max-width: 100%; margin: 0; }
+/* The border sits outside the picture, so it shows at exactly its listed size, from a file twice that. */
+.h-pic img { display: block; box-sizing: content-box; max-width: calc(100% - 2px); height: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--tile); }
+.h-pic figcaption { width: 0; min-width: 100%; margin-top: 6px; font-size: 13px; line-height: 1.45; color: var(--muted); }
 /* The link mark: a 44 px square on the question's first line, outside the summary so it never opens or closes the answer. */
 .h-faq > .h-copy { position: absolute; top: 6px; right: 44px; width: 44px; height: 44px; margin: 0; font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 17px; }
 .h-copy::before { inset: 0; }

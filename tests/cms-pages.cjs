@@ -279,6 +279,53 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
       }
       await page.setViewportSize({ width: 1440, height: 900 });
     });
+    await check('help: answer pictures load only once their answer opens, and a link still lands on its answer', async () => {
+      const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+      const asked = [];
+      ctx.on('request', (r) => { if (/\/help\/faq-[^/]+\.(webp|avif)/.test(r.url())) asked.push(r.url().split('/').pop()); });
+      await ctx.route('**/analytics.js*', (route) => route.abort());
+      const p = await ctx.newPage();
+      await p.goto(helpUrl, { waitUntil: 'networkidle' });
+      const pics = await p.evaluate(() => [...document.querySelectorAll('.h-pic img')].map((i) => ({
+        src: i.getAttribute('src'), w: +i.getAttribute('width'), h: +i.getAttribute('height'), alt: i.alt, lazy: i.loading,
+        answer: i.closest('.h-faq')?.id, inAnswer: !!i.closest('.h-faq > details > .h-answer'), caption: i.closest('figure')?.querySelector('figcaption')?.textContent || '',
+      })));
+      assert.equal(pics.length, 12, 'twelve pictures');
+      for (const pic of pics) {
+        assert.ok(pic.inAnswer && pic.lazy === 'lazy' && pic.w > 0 && pic.h > 0, `${pic.src}: inside its answer, lazy, with a size`);
+        assert.ok(pic.alt.length > 30 && pic.caption.length > 5, `${pic.src}: alt text and a caption`);
+        assert.ok(fs.existsSync(path.join(__dirname, '..', 'cloud-media-shrinker', 'help', pic.src)), `${pic.src} exists`);
+      }
+      assert.deepEqual(asked, [], 'no answer picture loads while every answer is closed');
+      await p.close();
+      // A link to an answer with pictures, the way a support reply sends people.
+      const q = await ctx.newPage();
+      await q.goto(`${helpUrl}#still-locked`, { waitUntil: 'networkidle' });
+      await q.waitForFunction(() => [...document.querySelectorAll('#still-locked .h-pic img')].every((i) => i.complete && i.naturalWidth > 0));
+      const got = await q.evaluate(() => ({ top: document.getElementById('still-locked').getBoundingClientRect().top, marked: document.getElementById('still-locked').classList.contains('is-target') }));
+      assert.ok(got.marked && got.top >= 0 && got.top < 120, `#still-locked is still at the top once its pictures load (${Math.round(got.top)})`);
+      assert.ok(asked.every((name) => /faq-(iphone|mac)-restore\./.test(name)) && asked.length === 2, `only that answer's pictures loaded (${asked})`);
+      await ctx.close();
+    });
+    await check('help: with every answer open, the pictures fit at every width', async () => {
+      for (const width of [1440, 768, 390, 320]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(helpUrl, { waitUntil: 'networkidle' });
+        await page.locator('.h-openall').click();
+        await page.evaluate(async () => { for (const i of document.querySelectorAll('.h-pic img')) { i.loading = 'eager'; } });
+        await page.waitForFunction(() => [...document.querySelectorAll('.h-pic img')].every((i) => i.complete && i.naturalWidth > 0), null, { timeout: 15000 });
+        const bad = await page.evaluate(() => [...document.querySelectorAll('.h-pic')].filter((f) => {
+          const a = f.closest('.h-answer').getBoundingClientRect(), r = f.getBoundingClientRect(), c = f.querySelector('figcaption').getBoundingClientRect(), i = f.querySelector('img').getBoundingClientRect();
+          const img = f.querySelector('img');
+          // The file is the picture at twice its listed size, so it's sharp and never stretched.
+          const sharp = img.width === +img.getAttribute('width') && img.naturalWidth === 2 * img.width && Math.abs(img.naturalHeight - 2 * +img.getAttribute('height')) <= 1;
+          return r.right > a.right + 1 || c.width > i.width + 1 || i.width < 40 || (window.innerWidth >= 1200 && !sharp);
+        }).map((f) => f.querySelector('img').getAttribute('src').split('/').pop()));
+        assert.deepEqual(bad, [], `${width}px: every picture and caption fits its answer`);
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `${width}px: no sideways scroll`);
+      }
+      await page.setViewportSize({ width: 1440, height: 900 });
+    });
     await check('help without JavaScript: questions still open, and a link still lands on its answer', async () => {
       const plain = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false, reducedMotion: 'reduce' });
       const p = await plain.newPage();
