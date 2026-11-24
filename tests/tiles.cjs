@@ -21,7 +21,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
         await page.route(url => !url.href.startsWith(base), route => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>stub</title>' }));
         await page.goto(`${base}/`, { waitUntil: 'networkidle' });
         const count = await page.locator(TILES).count();
-        assert.equal(count, 19, `3 featured, 13 other and 3 writing tiles at ${label}`);
+        assert.equal(count, 20, `3 featured, 14 other and 3 writing tiles at ${label}`);
 
         // Hit-test each tile: its corners, art, description and chips open the title link;
         // each other link in the tile is on top at its own center.
@@ -119,7 +119,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
             assert.equal(focus.own, 'solid', `"${focus.text}" rings itself at ${label}`);
           }
         }
-        assert.equal(seen.filter(item => item.main).length, 19, `every tile title is reachable by Tab at ${label}`);
+        assert.equal(seen.filter(item => item.main).length, 20, `every tile title is reachable by Tab at ${label}`);
 
         // Real clicks: a tile's description opens the title's address; its button keeps its own.
         const open = async (locator, expected) => {

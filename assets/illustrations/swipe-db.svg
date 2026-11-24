@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 160 160" fill="none" stroke="#1e2f20" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Card underneath, waiting its turn -->
+  <g transform="rotate(-9 70 86)">
+    <rect x="30" y="34" width="78" height="104" rx="10" fill="#cbd6b8" />
+    <rect x="38" y="42" width="62" height="50" rx="6" fill="#a8b58e" stroke="none" />
+  </g>
+
+  <!-- Top card, swiped right: poster with a star, title and a row of rating dots -->
+  <g transform="rotate(11 88 78)">
+    <rect x="49" y="26" width="78" height="104" rx="10" fill="#f7f5e8" />
+    <rect x="57" y="34" width="62" height="52" rx="6" fill="#a8b58e" stroke="none" />
+    <path d="m88 44 4.4 9 9.9 1.4-7.2 7 1.7 9.8L88 66.6l-8.8 4.6 1.7-9.8-7.2-7 9.9-1.4Z" fill="#f7f5e8" stroke-width="3.4" />
+    <path d="M59 98h40" />
+    <path d="M59 108h26" stroke-width="3.4" />
+    <g fill="#1e2f20" stroke="none">
+      <circle cx="61" cy="119" r="2.6" />
+      <circle cx="70" cy="119" r="2.6" />
+      <circle cx="79" cy="119" r="2.6" />
+      <circle cx="88" cy="119" r="2.6" />
+    </g>
+    <circle cx="97" cy="119" r="2.6" fill="#f7f5e8" stroke-width="2.2" />
+  </g>
+
+  <!-- "Liked" badge -->
+  <circle cx="128" cy="34" r="15" fill="#f7f5e8" />
+  <path d="M128 44.5c-6.6-4.6-10-8.4-10-12.6 0-3 2.3-5.4 5.2-5.4 2 0 3.7 1.1 4.8 2.8 1.1-1.7 2.8-2.8 4.8-2.8 2.9 0 5.2 2.4 5.2 5.4 0 4.2-3.4 8-10 12.6Z" fill="#a8b58e" stroke-width="3.2" />
+
+  <!-- Swipe motion -->
+  <path d="M139 78h13M143 92h9M139 106h11" stroke-width="3.6" />
+</svg>

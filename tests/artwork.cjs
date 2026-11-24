@@ -42,12 +42,12 @@ const base = process.argv[2] || 'http://127.0.0.1:4173';
         };
       });
       assert.ok(result.fits, `No horizontal overflow at ${width}px`);
-      assert.equal(result.images.length, 14);
+      assert.equal(result.images.length, 15);
       for (const image of result.images) {
         assert.ok(image.loaded, `Artwork loads: ${image.source}`);
         assert.ok(image.pixels >= image.requiredPixels, `Artwork supports 2x displays: ${image.source}`);
       }
-      assert.equal(result.links.length, 16);
+      assert.equal(result.links.length, 17);
       // Store labels use a small optical adjustment for Arial's visible letterforms.
       assert.ok(result.links.every(link => link.vector && link.loaded && link.centerDelta < (link.store ? 1.5 : 0.5) && link.gap >= 5), `Link icons are crisp, aligned, and spaced at ${width}px`);
       await fs.mkdir('test-results', { recursive: true });

@@ -63,7 +63,7 @@ const jsonLd = html => [...html.matchAll(/<script type="application\/ld\+json">(
   assert.deepEqual(person.sameAs, ['https://github.com/danielyaa5', 'https://www.linkedin.com/in/danielyakobian/']);
   const listed = graph.find(node => node['@type'] === 'ItemList').itemListElement.map(entry => entry.item);
   const cards = [...home.matchAll(/<a class="project-name" href="([^"]+)">([^<]+)<\/a>/g)].map(m => ({ url: m[1], name: m[2] }));
-  assert.equal(cards.length, 16);
+  assert.equal(cards.length, 17);
   assert.deepEqual(listed.map(item => ({ url: item.url, name: item.name })), cards, 'structured data matches the project cards');
   // A project page on this site is in the sitemap; GitHub Pages project sites now only forward here.
   for (const card of cards.filter(card => card.url.startsWith(`${site}/`))) {
