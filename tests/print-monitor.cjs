@@ -13,7 +13,6 @@ const page3d = `${base}/3d-print-monitor/`;
 // 260 and 240 are an iPhone with Safari's page zoom at 150% and 175%.
 const widths = [1920, 1440, 1280, 1024, 900, 768, 600, 414, 390, 375, 320, 260, 240];
 const endpoint = 'https://danielyakobian.com/api/subscribe/';
-const storeLink = 'https://apps.apple.com/app/id6824940843';
 const handler = require(path.join(__dirname, '..', 'api', 'subscribe.js'));
 
 // A fake Resend: topics and contacts in memory.
@@ -96,9 +95,12 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
           returnField: signup.querySelector('input[name="return"]')?.value,
           resultsHidden: [...signup.querySelectorAll('.signup-result')].every(el => !el.getClientRects().length),
           emailFont: parseFloat(getComputedStyle(signup.querySelector('.signup-email')).fontSize),
-          storeLinks: [...document.querySelectorAll('a[data-store="app_store"]')].map(a => a.href),
-          deadLinks: [...document.querySelectorAll('a')].filter(a => /id6824942458/.test(a.href)).length,
-          getBox: !!document.getElementById('get'),
+          heroButtons: [...document.querySelectorAll('.c-hero .c-actions a')].map(a => [a.textContent.trim(), a.getAttribute('href')]),
+          storeButtons: document.querySelectorAll('a[data-store]').length,
+          deadLinks: [...document.querySelectorAll('a')].filter(a => /id6824942458|id6824940843/.test(a.href)).length,
+          // Other apps in More apps keep their own App Store labels.
+          storeWords: [...document.querySelector('main').children].filter(el => !el.matches('.c-more')).some(el => /App Store/.test(el.innerText)),
+          updates: !!document.getElementById('updates'),
           report: !!document.getElementById('report'),
         };
       });
@@ -113,7 +115,7 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
       // An iPhone with the camera widget sits over the Mac window's corner, as on the Cloud Media Shrinker page.
       assert.deepEqual(layout.phone, { src: 'iphone-home-light-480.webp', shown: true, inside: true, overMac: true }, `hero iPhone at ${width}px`);
       assert.equal(layout.widgetShot, 'widget-camera-large-light-720.webp', 'the widgets feature shows a camera widget');
-      assert.equal(layout.menuShot, 'menu-bar-scene-1100.webp', 'the menu bar feature shows the menu bar with the app open');
+      assert.equal(layout.menuShot, 'menu-bar-window-1050.webp', 'the menu bar feature shows the menu bar with the app open');
       assert.ok(layout.buttonsFit, `hero buttons fit the screen at ${width}px`);
       assert.deepEqual(layout.bar, [['Overview', 'page'], ['Support', null], ['Privacy', null]], 'product bar with Overview marked');
       assert.equal(layout.getInBar, false, 'no Get the app in the product page’s own bar');
@@ -126,9 +128,12 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
       assert.equal(layout.returnField, '/3d-print-monitor/');
       assert.ok(layout.resultsHidden, 'no-JavaScript result messages stay hidden');
       assert.ok(layout.emailFont >= 16, 'email field is 16px so iOS does not zoom');
-      assert.ok(layout.storeLinks.length >= 2 && layout.storeLinks.every(href => href === storeLink), 'App Store buttons go to the 3D Print Monitor listing');
-      assert.equal(layout.deadLinks, 0, 'no links to the removed 3D Print Progress listing');
-      assert.ok(layout.getBox && layout.report, 'the #get box and the #report anchor exist');
+      // The app is off the App Store during the beta, so the page's button leads to the email sign-up instead.
+      assert.deepEqual(layout.heroButtons, [['Get notified', '#updates']], 'the hero button goes to the sign-up');
+      assert.equal(layout.storeButtons, 0, 'no store download buttons');
+      assert.equal(layout.deadLinks, 0, 'no links to the removed 3D Print Progress listing or the off-sale 3D Print Monitor listing');
+      assert.equal(layout.storeWords, false, 'no App Store wording on the page');
+      assert.ok(layout.updates && layout.report, 'the #updates sign-up and the #report anchor exist');
       await page.close();
     }
 
@@ -142,7 +147,7 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
         get: document.querySelector('.cms-nav-get')?.getAttribute('href'),
         sideways: document.documentElement.scrollWidth > innerWidth,
       }));
-      assert.deepEqual(bar, { current, home: '../', get: '../#get', sideways: false }, `${sub} product bar`);
+      assert.deepEqual(bar, { current, home: '../', get: '../#updates', sideways: false }, `${sub} product bar`);
       await page.close();
     }
 
@@ -175,7 +180,7 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
       const address = `maker-${width}@example.com`;
       await form.locator('.signup-email').fill(address);
       await form.locator('.signup-button').click();
-      await page.waitForFunction(() => document.querySelector('.signup-done-message').textContent === 'You’re on the list for new versions.');
+      await page.waitForFunction(() => document.querySelector('.signup-done-message').textContent === 'You’re on the list. I’ll email you.');
       assert.equal(await form.isVisible(), false, 'the form hides after signing up');
       assert.ok(await page.evaluate(() => document.activeElement?.matches('.signup-edit')), 'focus moves to Edit email');
       const sent = new URLSearchParams(posts.at(-1));

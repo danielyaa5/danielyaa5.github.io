@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="See print progress, time left, temperatures and camera snapshots from your 3D printers on iPhone, iPad and Mac, with widgets and a Mac menu bar. Free on the App Store, no account.">
+  <meta name="description" content="See print progress, time left, temperatures and camera snapshots from your 3D printers on iPhone, iPad and Mac, with widgets and a Mac menu bar. In a small beta for now; get notified by email.">
   <meta name="author" content="Daniel Yakobian">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
   <meta property="og:site_name" content="Daniel Yakobian">
   <meta property="og:title" content="3D Print Monitor: Your 3D prints, at a glance | Daniel Yakobian">
-  <meta property="og:description" content="See print progress, time left and temperatures from your 3D printers on iPhone, iPad and Mac. Free on the App Store.">
+  <meta property="og:description" content="See print progress, time left and temperatures from your 3D printers on iPhone, iPad and Mac. In a small beta for now; get notified by email.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://danielyakobian.com/3d-print-monitor/">
   <meta property="og:image" content="https://danielyakobian.com/assets/3d-print-monitor/social-card.jpg">
@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="../cloud-media-shrinker/cms.css?v=2">
   <link rel="stylesheet" href="../cloud-media-shrinker/cms-nav.css?v=2">
   <link rel="stylesheet" href="../assets/apps/app-page.css?v=1">
-  <link rel="stylesheet" href="pm.css?v=5">
+  <link rel="stylesheet" href="pm.css?v=6">
   <script src="/analytics.js?v=16" defer></script>
   <script type="application/ld+json">
   {
@@ -40,10 +40,8 @@
     "operatingSystem": "iOS 17 or later, iPadOS 17 or later, macOS 14 or later",
     "image": "https://danielyakobian.com/assets/3d-print-monitor/icon.webp",
     "screenshot": "https://danielyakobian.com/assets/3d-print-monitor/hero-desktop-1500.webp",
-    "isAccessibleForFree": true,
-    "sameAs": ["https://apps.apple.com/app/id6824940843", "https://github.com/danielyaa5/3d-print-monitor"],
-    "author": { "@id": "https://danielyakobian.com/#person" },
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "url": "https://apps.apple.com/app/id6824940843" }
+    "sameAs": ["https://github.com/danielyaa5/3d-print-monitor"],
+    "author": { "@id": "https://danielyakobian.com/#person" }
   }
   </script>
 </head>
@@ -71,10 +69,9 @@
           <p class="lede">See progress, time left, temperatures and a camera snapshot from your printers on iPhone, iPad and Mac. Add a widget, keep a print in your Mac menu bar, and pause or stop a job without walking over to the printer.</p>
           <p class="c-sub">For Bambu Lab, Klipper, Creality K1, OctoPrint, PrusaLink, Duet and Elegoo (SDCP) printers on your own network.</p>
           <div class="c-actions">
-            <a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/id6824940843">Download on the App Store</a>
-            <a class="button button-outline" href="#updates">Email me new versions</a>
+            <a class="button" href="#updates">Get notified</a>
           </div>
-          <p class="fine-print">Free, with no account, ads or subscription. One download covers iPhone and iPad (iOS 17 or later) and Mac (macOS 14 or later).</p>
+          <p class="fine-print">3D Print Monitor is in a small beta right now. Leave your email and I’ll write when you can download it. For iPhone and iPad (iOS 17 or later) and Mac (macOS 14 or later), with no account, ads or subscription.</p>
           <p class="c-jump"><a href="#printers">Printers</a><a href="#features">Features</a><a href="#good-to-know">Good to know</a><a href="#support">Support</a></p>
         </div>
         <figure class="c-hero-media pm-hero-media">
@@ -104,8 +101,8 @@
           <picture class="pm-shot pm-widget"><source srcset="../assets/3d-print-monitor/widget-camera-large-dark-720.webp" media="(prefers-color-scheme: dark)" width="720" height="720"><img class="c-shot" src="../assets/3d-print-monitor/widget-camera-large-light-720.webp" width="720" height="720" alt="A large 3D Print Monitor widget on a Mac: a camera snapshot of an H2D printing a planter at 66%, with time left, temperatures, and Pause and Stop buttons, with sample readings" loading="lazy"></picture>
         </article>
         <article class="c-feature">
-          <div class="c-feature-copy"><p class="eyebrow">02</p><h3>A print in your Mac menu bar</h3><p>Show a ring, a percentage or the time left in the menu bar. Click it to see every printer, then pause, resume or stop a job. Stop always asks first. Close the app’s window and the menu bar keeps watching.</p></div>
-          <picture class="pm-shot pm-menu"><img class="c-shot" src="../assets/3d-print-monitor/menu-bar-scene-1100.webp" srcset="../assets/3d-print-monitor/menu-bar-scene-560.webp 560w, ../assets/3d-print-monitor/menu-bar-scene-1100.webp 1100w" sizes="(max-width: 620px) calc(100vw - 34px), (max-width: 850px) calc(100vw - 126px), 560px" width="1100" height="840" alt="The Mac menu bar with 3D Print Monitor's ring showing 64%, open to its window: a paused printer with its progress, temperatures, and Resume and Stop buttons, with sample readings" loading="lazy"></picture>
+          <div class="c-feature-copy"><p class="eyebrow">02</p><h3>A print in your Mac menu bar</h3><p>Show a ring, a percentage or the time left in the menu bar. Click it for each printer’s progress, temperatures and camera, then pause, resume or stop a job. Stop always asks first. Close the app’s window and the menu bar keeps watching.</p></div>
+          <picture class="pm-shot pm-menu"><img class="c-shot" src="../assets/3d-print-monitor/menu-bar-window-1050.webp" srcset="../assets/3d-print-monitor/menu-bar-window-560.webp 560w, ../assets/3d-print-monitor/menu-bar-window-1050.webp 1050w" sizes="(max-width: 620px) calc(100vw - 34px), 420px" width="1050" height="1380" alt="The Mac menu bar with 3D Print Monitor open below its ring: a Bambu Lab H2D printing at 72% with temperatures, camera switches and a camera snapshot of the print, with sample readings" loading="lazy"></picture>
         </article>
       </section>
       <section class="c-know" id="good-to-know" aria-labelledby="know-title">
@@ -120,34 +117,25 @@
       </section>
       <section class="c-steps" aria-labelledby="steps-title">
         <h2 id="steps-title">Get started</h2>
-        <div><b>1. Download</b><p>Get 3D Print Monitor from the App Store on your iPhone, iPad or Mac.</p></div>
+        <div><b>1. Get notified</b><p>Leave your email below. I’ll write when you can download it for iPhone, iPad and Mac.</p></div>
         <div><b>2. Add a printer</b><p>The walkthrough helps you pick the connection and find the address and codes it needs.</p></div>
         <div><b>3. Allow access</b><p>Allow Local Network access when asked, so the app can reach your printer.</p></div>
         <div><b>4. Make it yours</b><p>Add a widget or pick a menu bar style. Or look around the built-in demo first.</p></div>
       </section>
-      <aside class="c-cta" id="get" aria-labelledby="cta-title">
-        <div class="c-cta-copy">
-          <h2 id="cta-title">Get 3D Print Monitor</h2>
-          <p>Free on the App Store for iPhone, iPad and Mac, with no account, ads or subscription.</p>
-        </div>
-        <div class="c-actions">
-          <a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/id6824940843">Download on the App Store</a>
-        </div>
-      </aside>
       <section class="signup pm-signup" id="updates" aria-labelledby="updates-title">
         <div class="signup-intro">
-          <h2 id="updates-title">Get an email when a new version ships</h2>
-          <p>One short email when a new version of 3D Print Monitor is out, with what changed. Every email has an unsubscribe link.</p>
+          <h2 id="updates-title">Get notified</h2>
+          <p>3D Print Monitor is in a small beta right now. Leave your email and I’ll write when you can download it, and when new versions ship. Every email has an unsubscribe link.</p>
           <p class="signup-privacy">Your address is kept with my email provider, Resend, and used only for these emails. It’s never shared or sold.</p>
         </div>
-        <form class="signup-form" action="https://danielyakobian.com/api/subscribe/" method="post" data-remember="signup-done-3d-print-monitor" data-done="You’re on the list for new versions.">
+        <form class="signup-form" action="https://danielyakobian.com/api/subscribe/" method="post" data-remember="signup-done-3d-print-monitor" data-done="You’re on the list. I’ll email you.">
           <input type="hidden" name="topic" value="print_monitor">
           <input type="hidden" name="return" value="/3d-print-monitor/">
           <div class="signup-trap" aria-hidden="true"><label>Company <input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
           <div class="signup-row">
             <label class="signup-email-label" for="signup-email">Email address</label>
             <input class="signup-email" id="signup-email" type="email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com" maxlength="254" required>
-            <button class="button signup-button" type="submit">Email me</button>
+            <button class="button signup-button" type="submit">Notify me</button>
           </div>
           <p class="signup-status" role="status" aria-live="polite"></p>
           <p class="signup-result" id="signup-thanks">You’re on the list. Thanks!</p>

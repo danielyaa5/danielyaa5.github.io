@@ -412,7 +412,7 @@ const events = request => {
       await app.locator('.c-jump a', { hasText: 'Features' }).click();
       await app.locator('.c-cta [data-store="direct"]').click();
       await app.locator('.c-cta [data-store="polar"]').click();
-      await app.locator('.c-app').first().click();
+      await app.locator('.c-app[href*="ct=cms_more_apps"]').first().click();
       const autoMoreApps = () => captured.slice(start).filter(e => e.event === '$autocapture' && /ct=cms_more_apps/.test(e.properties.$elements_chain || ''));
       for (let i = 0; i < 40 && !autoMoreApps().length; i += 1) await app.waitForTimeout(200);
       await app.waitForTimeout(500);
