@@ -35,7 +35,7 @@
 /* The large widget, about the size it is on a Mac desktop. */
 .pm-widget { max-width: 400px; }
 .pm-widget .c-shot { border-radius: 22px; }
-.pm-menu { max-width: 420px; }
+.pm-menu { max-width: 400px; }
 .pm-menu .c-shot { border-radius: 10px; }
 
 /* The email sign-up, as on the home page but inside this page's column, with one topic and no boxes to tick. */

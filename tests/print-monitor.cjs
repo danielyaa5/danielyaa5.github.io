@@ -115,7 +115,7 @@ const topicNamed = name => resend.topics.find(topic => topic.name === name);
       // An iPhone with the camera widget sits over the Mac window's corner, as on the Cloud Media Shrinker page.
       assert.deepEqual(layout.phone, { src: 'iphone-home-light-480.webp', shown: true, inside: true, overMac: true }, `hero iPhone at ${width}px`);
       assert.equal(layout.widgetShot, 'widget-camera-large-light-720.webp', 'the widgets feature shows a camera widget');
-      assert.equal(layout.menuShot, 'menu-bar-window-1050.webp', 'the menu bar feature shows the menu bar with the app open');
+      assert.equal(layout.menuShot, 'menu-bar-window-852.webp', 'the menu bar feature shows the menu bar with the app open');
       assert.ok(layout.buttonsFit, `hero buttons fit the screen at ${width}px`);
       assert.deepEqual(layout.bar, [['Overview', 'page'], ['Support', null], ['Privacy', null]], 'product bar with Overview marked');
       assert.equal(layout.getInBar, false, 'no Get the app in the product page’s own bar');
