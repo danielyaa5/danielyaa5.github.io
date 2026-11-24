@@ -113,6 +113,18 @@
       "destination": "https://danielyakobian.com/:path",
       "permanent": true
     },
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "cloudmediashrinker.com" }],
+      "destination": "https://danielyakobian.com/cloud-media-shrinker/:path",
+      "permanent": true
+    },
+    {
+      "source": "/:path(.*)",
+      "has": [{ "type": "host", "value": "www.cloudmediashrinker.com" }],
+      "destination": "https://danielyakobian.com/cloud-media-shrinker/:path",
+      "permanent": true
+    },
     { "source": "/beckon/privacy.html", "destination": "/beckon/privacy/", "permanent": true },
     { "source": "/beckon/terms.html", "destination": "/beckon/terms/", "permanent": true },
     { "source": "/cloud-media-shrinker/privacy.html", "destination": "/cloud-media-shrinker/privacy/", "permanent": true },
