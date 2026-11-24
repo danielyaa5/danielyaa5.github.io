@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="../../styles.css?v=mark-4">
   <link rel="stylesheet" href="../../cloud-media-shrinker/cms.css?v=2">
   <link rel="stylesheet" href="../cms-nav.css?v=3">
-  <link rel="stylesheet" href="help.css?v=7">
+  <link rel="stylesheet" href="help.css?v=8">
   <script src="/analytics.js?v=17" defer></script>
   <script type="application/ld+json">
   {
@@ -96,6 +96,10 @@
 
       <section class="h-sec" id="start" aria-labelledby="start-title">
         <h2 id="start-title"><span class="eyebrow">01</span>Getting started</h2>
+        <figure class="h-video">
+          <video src="../../assets/cloud-media-shrinker/help/howto-iphone.mp4" poster="../../assets/cloud-media-shrinker/help/howto-iphone-poster.webp" width="720" height="1560" controls muted loop playsinline preload="none" data-autoplay aria-label="The iPhone app from first launch: allow access to Photos, the scan, the list and its filters, swiping to keep or delete, compressing a video, confirming, the queue and Savings"></video>
+          <figcaption>Watch it on iPhone, from first launch to space saved: about a minute, no sound. The compressing is sped up, and the library is made up.</figcaption>
+        </figure>
         <h3>Install</h3>
         <p>Get Cloud Media Shrinker from the App Store on iPhone or iPad (iOS 27 or later) and from the Mac App Store on a Mac (macOS 13 or later). The download is free. One purchase unlocks both, see <a href="#unlock">Unlocking</a>. On a Mac you can also use the free download from the <a href="../#get">Cloud Media Shrinker page</a>, which unlocks with its own license key.</p>
         <h3><span class="tag">iPhone</span>Give it access to Photos</h3>
@@ -604,6 +608,18 @@
         </div>
       </div>
 
+      <script>
+        // The how-to video plays, muted, while it's on screen. With reduced motion it waits for a tap on play.
+        (() => {
+          if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          document.querySelectorAll('video[data-autoplay]').forEach((video) => {
+            new IntersectionObserver(([entry]) => {
+              if (entry.isIntersecting) video.play().catch(() => {});
+              else video.pause();
+            }, { threshold: 0.35 }).observe(video);
+          });
+        })();
+      </script>
       <script>
         // Frequent questions start closed. Without JavaScript each one still opens with a tap, and its link still jumps to it.
         (() => {

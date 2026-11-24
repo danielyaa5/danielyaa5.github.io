@@ -54,6 +54,9 @@
 .h-shot.phone img { border-radius: 22px; }
 .h-shot.wide { flex: 1 1 360px; max-width: 580px; }
 .h-shot figcaption { margin-top: 8px; font-size: 13px; line-height: 1.45; color: var(--muted); }
+.h-video { width: 300px; max-width: 100%; margin: 18px 0 24px; }
+.h-video video { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 18px; background: #f5f5f2; }
+.h-video figcaption { margin-top: 8px; font-size: 13px; line-height: 1.45; color: var(--muted); }
 
 .h-help { margin-top: 28px; }
 .h-help .c-actions { margin-top: 14px; }
