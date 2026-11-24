@@ -56,7 +56,13 @@
 .h-help { margin-top: 28px; }
 .h-help .c-actions { margin-top: 14px; }
 
-/* Frequent issues: a problem, then what to do. Each answer has a stable anchor and a # that copies a link to it. */
+/* Frequent questions: a question or problem, then the answer. Each answer has a stable anchor and a # that copies a link to it.
+   The answers come in groups, with a row of links to the groups at the top. */
+.h-sec .h-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 6px; padding: 0; list-style: none; }
+.h-sec .h-chips li { margin: 0; }
+.cms .h-chips a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--box); font-size: 14px; line-height: 1.2; font-weight: 700; text-decoration: none; color: var(--ink); }
+.cms .h-chips a:hover, .cms .h-chips a:focus-visible { border-color: var(--green); color: var(--green); }
+.h-sec p.h-group { margin: 30px 0 0; font-family: var(--mono); font-size: 12px; line-height: 1.4; letter-spacing: .14em; text-transform: uppercase; color: var(--green); scroll-margin-top: 20px; }
 .h-faqs { margin-top: 8px; border-top: 1px solid var(--soft-line); }
 .h-faq { margin: 0 -12px; padding: 14px 12px 4px; border-bottom: 1px solid var(--soft-line); border-radius: 6px; scroll-margin-top: 20px; }
 .h-faq:target, .h-faq.is-target { background: var(--box); }
@@ -84,6 +90,7 @@
   .h-main > .h-sec:first-of-type { border-top: 1px solid var(--line); padding-top: 28px; }
 }
 @media (max-width: 620px) {
+  .cms .h-chips a { min-height: 44px; }
   .h-sec { padding-top: 28px; }
   .h-sec > h2 { font-size: 23px; }
   .h-shots { gap: 12px; }
