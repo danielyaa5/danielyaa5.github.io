@@ -69,23 +69,27 @@ if (filters) {
     copy.append(h2, benefit, badge);
     main.append(artWrap, copy);
 
-    const footer = document.createElement('div');
-    footer.className = 'project-footer';
-    const footerLink = document.createElement('a');
-    footerLink.className = 'project-link';
-    footerLink.href = actionLink.getAttribute('href');
-    const icon = document.createElement('img');
-    icon.className = storeIcon ? 'link-icon store-icon' : 'link-icon';
-    icon.src = storeIcon ? storeIcon.getAttribute('src') : 'assets/illustrations/link.svg';
-    icon.width = storeIcon ? 25 : 14;
-    icon.height = storeIcon ? 25 : 14;
-    icon.alt = '';
-    const label = document.createElement('span');
-    label.textContent = actionLink.textContent.trim();
-    footerLink.append(icon, label);
-    footer.append(footerLink);
-
-    article.append(main, footer);
+    article.append(main);
+    // A featured tile without its own button (Cloud Media Shrinker sends people to its page for the downloads)
+    // gets no footer; the title link already covers the whole tile.
+    if (actionLink) {
+      const footer = document.createElement('div');
+      footer.className = 'project-footer';
+      const footerLink = document.createElement('a');
+      footerLink.className = 'project-link';
+      footerLink.href = actionLink.getAttribute('href');
+      const icon = document.createElement('img');
+      icon.className = storeIcon ? 'link-icon store-icon' : 'link-icon';
+      icon.src = storeIcon ? storeIcon.getAttribute('src') : 'assets/illustrations/link.svg';
+      icon.width = storeIcon ? 25 : 14;
+      icon.height = storeIcon ? 25 : 14;
+      icon.alt = '';
+      const label = document.createElement('span');
+      label.textContent = actionLink.textContent.trim();
+      footerLink.append(icon, label);
+      footer.append(footerLink);
+      article.append(footer);
+    }
     return article;
   });
 

@@ -437,3 +437,8 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
   .site-header nav a:focus-visible { outline-color: var(--green); }
   .site-header nav a[aria-current="page"] { background: var(--fill); color: var(--on-fill); }
 }
+
+/* Cloud Media Shrinker download count on its featured tile, in the same chip style as the GitHub star badge. The number comes from cloud-media-shrinker/downloads.json (cloud-media-shrinker/downloads-count.js). */
+.download-count { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border: 1px solid #b7c3a5; border-radius: 4px; background: #e9eedf; color: var(--green); font-size: 12px; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.download-count svg { flex: none; width: 12px; height: 12px; }
+@media screen and (prefers-color-scheme: dark) { .download-count { border-color: var(--chip-line); background: var(--chip); } }

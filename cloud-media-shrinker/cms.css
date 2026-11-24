@@ -136,3 +136,9 @@
   .cms { --muted: var(--soft); --box: #1a281f; --tile: var(--card); --line: var(--rule); --soft-line: var(--card-line); }
   .c-checks li { border-color: var(--card-line); }
 }
+
+/* Download count under the hero's download buttons (cloud-media-shrinker/downloads-count.js keeps it current). */
+.c-downloads { display: flex; align-items: center; gap: 8px; margin: 14px 0 0; font-size: 15px; line-height: 1.4; color: var(--muted); }
+.c-downloads strong { color: var(--ink); }
+.c-downloads svg { flex: none; width: 16px; height: 16px; color: var(--green); }
+@media (max-width: 900px) { .cms-a .c-hero .c-downloads { order: 4; } }

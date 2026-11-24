@@ -133,11 +133,15 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
         await open(beckon().locator('.project-illustration'), 'https://danielyakobian.com/beckon/');
         await open(beckon().locator('.project-link'), 'https://github.com/danielyaa5/beckon');
         await open(page.locator('.featured-lead .featured-copy > p'), 'https://danielyakobian.com/cloud-media-shrinker/');
-        await open(page.locator('.featured-lead .featured-link'), 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=8');
+        // Cloud Media Shrinker sends people to its own page for the downloads: no App Store link on its tile.
+        await open(page.locator('.featured-lead .download-count'), 'https://danielyakobian.com/cloud-media-shrinker/');
+        await open(page.locator('.featured-lead .featured-link'), 'https://danielyakobian.com/cloud-media-shrinker/');
+        assert.equal(await page.locator('.featured-lead a[href*="apps.apple.com"]').count(), 0, 'no App Store link on the Cloud Media Shrinker tile');
         await page.locator('[data-filter="ios"]').click();
         await open(page.locator('#project-list .project', { hasText: 'Cloud Media Shrinker' }).locator('.project-benefit'), 'https://danielyakobian.com/cloud-media-shrinker/');
         await page.locator('[data-filter="ios"]').click();
-        await open(page.locator('#project-list .project', { hasText: 'Cloud Media Shrinker' }).locator('.project-link'), 'https://apps.apple.com/app/cloud-media-shrinker/id6824383256?pt=125201749&ct=portfolio_featured&mt=8');
+        assert.equal(await page.locator('#project-list .project', { hasText: 'Cloud Media Shrinker' }).locator('a[href*="apps.apple.com"]').count(), 0, 'no App Store link on the filtered Cloud Media Shrinker tile');
+        await open(page.locator('#project-list .project', { hasText: 'Cloud Media Shrinker' }).locator('.project-link'), 'https://danielyakobian.com/cloud-media-shrinker/');
         await open(page.locator('.star-count'), 'https://github.com/danielyaa5/puml-for-markdown/stargazers');
         await open(page.locator('.writing-card').first().locator(':scope > p'), `${base}/blog/predictive-agent-qa.html`);
         runs.push(label);
