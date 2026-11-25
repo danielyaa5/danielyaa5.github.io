@@ -55,8 +55,16 @@
   const pendingErrors = [];
   let errorsSent = 0;
   const sendError = ([error, properties]) => window.posthog?.captureException?.(error, properties);
+  // An error whose stack or file points at this site (its pages and scripts, PostHog's included, which load through
+  // /dy-relay/ or PostHog's asset host) is marked error_from_site: true. One with no trace back to the site, such as a
+  // content blocker or extension throwing in its own context, is still sent but marked false, and the Needs a look
+  // alert leaves those out. A rejection or error event wrapped in a new Error below is judged by its file, never by
+  // the wrapper's own stack, which would always point here.
+  const OWN_SOURCES = [location.origin, 'https://us-assets.i.posthog.com'];
+  const fromSite = text => OWN_SOURCES.some(origin => String(text || '').includes(origin));
   const reportError = (error, properties) => {
     if (errorsSent >= 10 || /extension:\/\//.test(`${properties.error_file || ''} ${error?.stack || ''}`)) return;
+    if (properties.error_from_site === undefined) properties.error_from_site = fromSite(`${error?.stack || ''} ${properties.error_file || ''}`);
     if (/\bethereum\b/i.test(`${error?.message || ''} ${error?.stack || ''}`)) return;
     errorsSent += 1;
     if (ready) sendError([error, properties]);
@@ -64,7 +72,8 @@
   };
   addEventListener('error', event => {
     if (!event.error && (!event.filename || event.message === 'Script error.')) return;
-    reportError(event.error instanceof Error ? event.error : new Error(String(event.message || 'Unknown error')), { error_source: 'uncaught', error_file: event.filename || undefined });
+    if (event.error instanceof Error) reportError(event.error, { error_source: 'uncaught', error_file: event.filename || undefined });
+    else reportError(new Error(String(event.message || 'Unknown error')), { error_source: 'uncaught', error_file: event.filename || undefined, error_from_site: fromSite(event.filename) });
   });
   // Rage clicks: 3 or more clicks within 1 s inside a 30 px circle, on any element. PostHog's own rage click detection only
   // counts links, buttons and other clickable-looking elements, which misses the case that matters most here: something that
@@ -134,7 +143,7 @@
     if (reason instanceof Error) return reportError(reason, { error_source: 'unhandled_rejection' });
     const { text, file } = describeReason(reason);
     const error = new Error(`Unhandled promise rejection: ${text}`.slice(0, 300));
-    reportError(error, { error_source: 'unhandled_rejection', error_file: file });
+    reportError(error, { error_source: 'unhandled_rejection', error_file: file, error_from_site: fromSite(file) });
   });
   const tileClick = event => {
     if (event.type === 'auxclick' && event.button !== 1) return;
