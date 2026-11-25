@@ -63,7 +63,8 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
           if (i < 16) assert.ok(result.others.length >= 1, `${result.name} keeps its own button link`);
         }
 
-        // Hover: the tile body underlines the title and darkens the border; the tile's other links don't.
+        // Hover: the tile body darkens the border and underlines the title, except on featured cards, which never
+        // underline (title or button); the tile's other links leave the tile alone.
         for (const selector of ['.featured-pick', '#project-list .project', '.writing-card']) {
           const tile = page.locator(selector).first();
           await tile.evaluate(node => node.scrollIntoView({ block: 'center', behavior: 'instant' }));
@@ -74,13 +75,15 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
           const bodyBox = await body.boundingBox();
           await page.mouse.move(bodyBox.x + bodyBox.width / 2, bodyBox.y + bodyBox.height / 2);
           await page.waitForFunction(([node, color]) => getComputedStyle(node).borderTopColor === color, [await tile.elementHandle(), HOVER_BORDER[colorScheme]], { timeout: 2000 });
-          assert.match(await tile.locator('.project-name, h3 a').first().evaluate(link => getComputedStyle(link).textDecorationLine), /underline/, `${selector} title underlines on tile hover at ${label}`);
+          const underlines = selector !== '.featured-pick';
+          assert.equal(/underline/.test(await tile.locator('.project-name, h3 a').first().evaluate(link => getComputedStyle(link).textDecorationLine)), underlines, `${selector} title ${underlines ? 'underlines' : 'stays plain'} on tile hover at ${label}`);
           await tile.screenshot({ path: `test-results/tiles-hover-${selector.replace(/\W+/g, '')}-${colorScheme}-${width}.png` });
           const button = tile.locator('.featured-link, .project-link, .writing-link').first();
           const buttonBox = await button.boundingBox();
           await page.mouse.move(buttonBox.x + buttonBox.width / 2, buttonBox.y + buttonBox.height / 2);
           await page.waitForTimeout(250);
           assert.doesNotMatch(await tile.locator('.project-name, h3 a').first().evaluate(link => getComputedStyle(link).textDecorationLine), /underline/, `${selector} title stays plain while its button is hovered at ${label}`);
+          if (!underlines) assert.doesNotMatch(await button.evaluate(link => getComputedStyle(link).textDecorationLine), /underline/, `${selector} button stays plain on hover at ${label}`);
           assert.notEqual(await tile.evaluate(node => getComputedStyle(node).borderTopColor), HOVER_BORDER[colorScheme], `${selector} border stays put while its button is hovered at ${label}`);
         }
         await page.mouse.move(1, 1);

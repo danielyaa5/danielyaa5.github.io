@@ -226,10 +226,8 @@ body:not(.blog-page) .project-grid, body:not(.blog-page) .writing, body:not(.blo
 .featured-copy { grid-column: 1; grid-row: 1; min-width: 0; display: flex; flex-direction: column; align-self: stretch; }
 .featured-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 12px; }
 .featured-pick h3 { font-size: 18px; line-height: 1.25; margin: 0; overflow-wrap: anywhere; }
-.featured-pick h3 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .featured-pick p { margin: 0 0 18px; font-size: 16px; line-height: 1.4; }
 .featured-link { display: inline-flex; align-items: center; align-self: flex-start; gap: 6px; min-height: 44px; margin-top: auto; font-size: 14px; font-weight: 700; color: var(--green); }
-.featured-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .featured-lead { grid-row: span 2; display: flex; flex-direction: column; align-items: stretch; gap: 18px; }
 .featured-lead > img { align-self: center; width: min(100%, 330px); height: 310px; }
 .featured-lead .featured-copy { flex: 1; }
