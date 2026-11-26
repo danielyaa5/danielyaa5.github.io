@@ -3,6 +3,14 @@
   "trailingSlash": true,
   "headers": [
     {
+      "source": "/cloud-media-shrinker/demo",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
+      "source": "/cloud-media-shrinker/demo/",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
       "source": "/cloud-media-shrinker/demo/:path*",
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     },
