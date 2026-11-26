@@ -3,6 +3,14 @@
   "trailingSlash": true,
   "headers": [
     {
+      "source": "/cloud-media-shrinker/demo/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
+      "source": "/assets/cloud-media-shrinker/demo-v3/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
       "source": "/assets/:path(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
@@ -101,6 +109,8 @@
     { "source": "/dy-relay/:path(.*)", "destination": "https://us.i.posthog.com/:path" }
   ],
   "redirects": [
+    { "source": "/cloud-media-storage/demo", "destination": "/cloud-media-shrinker/demo/", "permanent": false },
+    { "source": "/cloud-media-storage/demo/", "destination": "/cloud-media-shrinker/demo/", "permanent": false },
     {
       "source": "/:path(.*)",
       "has": [{ "type": "host", "value": "www.danielyakobian.com" }],
