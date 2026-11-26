@@ -1,0 +1,41 @@
+/* AI Usage uses the shared app-page frame, with its Mac screenshots framed here. */
+.ai-skip { position: absolute; top: -100px; left: 16px; z-index: 10; padding: 12px 18px; background: var(--paper); color: var(--ink); }
+.ai-skip:focus { top: 10px; }
+body[data-app="ai-usage"] .cms-nav-links a { min-height: 44px; }
+.ai-caption { margin: 10px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.ai-crop { position: relative; overflow: hidden; width: 100%; border: 1px solid var(--line); border-radius: 6px; background: #e0ece3; }
+.ai-crop img { position: absolute; display: block; max-width: none; height: auto; }
+.ai-crop-menu { aspect-ratio: 620 / 750; }
+.ai-crop-menu img { width: 232.2581%; left: -119.0323%; top: -6.6667%; }
+.ai-crop-widgets { aspect-ratio: 630 / 625; background: #deeeea; }
+.ai-crop-widgets img { width: 228.5714%; left: -107.9365%; top: -22.4%; }
+.ai-crop-limits { aspect-ratio: 620 / 625; background: #17232a; }
+.ai-crop-limits img { width: 232.2581%; left: -109.6774%; top: -21.6%; }
+.c-hero-media .ai-crop-menu { max-width: 385px; justify-self: end; }
+.c-hero-media .ai-caption { max-width: 385px; justify-self: end; }
+.ai-feature-figure { margin: 0; width: 100%; max-width: 500px; }
+.ai-feature-figure:has(.ai-crop-menu) { max-width: 345px; justify-self: center; }
+body[data-app="ai-usage"] .c-feature { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
+.ai-support-links { display: flex; flex-wrap: wrap; gap: 0 24px; }
+.ai-support-links a { display: inline-flex; align-items: center; min-height: 44px; }
+body[data-app="ai-usage"] .c-cta .c-actions { flex: 0 1 auto; }
+body[data-app="ai-usage"] .c-legal li { font-size: 16px; line-height: 1.6; margin: 10px 0; }
+.ai-contact { border: 1px solid var(--line); background: var(--tile); border-radius: 6px; padding: 18px 22px; margin: 24px 0; }
+.ai-contact h2 { margin-top: 0; }
+.ai-help .lede { color: var(--muted); font-size: 19px; }
+@media (max-width: 900px) {
+  .c-hero-media .ai-crop-menu, .c-hero-media .ai-caption { max-width: 360px; justify-self: start; }
+}
+@media (max-width: 850px) {
+  body[data-app="ai-usage"] .c-feature { grid-template-columns: 1fr; }
+  .ai-feature-figure:has(.ai-crop-menu) { justify-self: start; }
+}
+@media (max-width: 620px) {
+  body[data-app="ai-usage"] { padding-bottom: 0; }
+  body[data-app="ai-usage"] .page-frame .site-header nav { display: none; }
+  .c-hero-media .ai-crop-menu, .c-hero-media .ai-caption { max-width: 100%; }
+  body[data-app="ai-usage"] .cms-nav-links { gap: 0 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body[data-app="ai-usage"] *, body[data-app="ai-usage"] *::before, body[data-app="ai-usage"] *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}

@@ -1,11 +1,157 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><link rel="canonical" href="https://danielyakobian.com/ai-usage/"><meta property="og:site_name" content="Daniel Yakobian"><meta property="og:type" content="website"><meta property="og:title" content="AI Usage for Mac support"><meta property="og:description" content="Connect local history and remaining plan limits to AI Usage for Mac, add a desktop widget, or contact support."><meta property="og:url" content="https://danielyakobian.com/ai-usage/"><meta property="og:image" content="https://danielyakobian.com/assets/illustrations/ai-usage.webp"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "url": "https://danielyakobian.com/ai-usage/", "author": {"@type": "Person", "@id": "https://danielyakobian.com/#person", "name": "Daniel Yakobian", "url": "https://danielyakobian.com/"}, "name": "AI Usage", "description": "Track Claude Code, Codex and Antigravity plan limits and usage by job and model on your Mac.", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS", "isAccessibleForFree": true, "sameAs": ["https://github.com/danielyaa5/ai-usage"]}</script><title>AI Usage for Mac support | Daniel Yakobian</title><meta name="description" content="Connect local history and remaining plan limits to AI Usage for Mac, add a desktop widget, or contact support."><link rel="stylesheet" href="./support.css?v=1"></head>
-<body><nav aria-label="Site navigation"><a class="brand" href="./"><img src="/assets/illustrations/ai-usage.webp" alt="">AI Usage</a><a href="./privacy/">Privacy</a></nav>
-<main><h1>AI Usage support</h1><p class="lead">Track what you used and how much of your plan is left, right on your Mac desktop.</p>
-<section class="contact"><h2>Get help</h2><p>In AI Usage, open <strong>Settings → Contact support</strong> to report a bug or send feedback. You can preview or exclude app diagnostics and attach screenshots. For help by email, write to <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p></section>
-<h2>Set up your first widget</h2><ol><li>Open AI Usage and choose the tools you use. To explore with sample numbers, choose <strong>Preview with sample data</strong>.</li><li>Connect a history folder to count requests and tokens, or connect a plan to see the quota it reports. Either choice works on its own. A dashboard is optional.</li><li>Control-click the desktop, choose <strong>Edit Widgets</strong>, and search for <strong>AI Usage</strong>. Add <strong>AI plan limits</strong> for quota or <strong>AI usage totals</strong> for recorded activity.</li></ol>
-<h2>Where the numbers come from</h2>
-<p><strong>Claude.</strong> Choose your Claude Code history folder for local activity. For remaining quota, choose <strong>Connect Claude Desktop</strong> and approve the suggested folder. The widget shows the last reading the desktop app saved, with its observation time. An interactive Claude Code terminal can also share the limits it reports.</p>
-<p><strong>ChatGPT and Codex.</strong> Choose the Codex history folder for local activity and any recent limit readings recorded in a session. You can also sign in with OpenAI from AI Usage to request your account limits.</p>
-<p><strong>Google and Gemini.</strong> Choose the Google Antigravity history folder for recorded model usage. For remaining quota, open and sign in to the Antigravity desktop app on this Mac, then choose <strong>Connect Google quota</strong> in AI Usage. Approve the folder if macOS asks. AI Usage reads the model groups and reset times Antigravity provides. Terminal can stay closed.</p>
-<h2>If a widget is waiting for data</h2><p>Open AI Usage and check the connection for that tool. A new history folder may have no recorded activity yet. A plan may have no current quota reading. For Google quota, keep Antigravity running. The Widgets section in Settings shows the readings available to your widgets.</p>
-</main><footer><a href="./privacy/">Privacy policy</a><a href="mailto:support@danielyakobian.com">Email support</a></footer></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="See remaining AI plan limits in your Mac menu bar. Add desktop widgets for recorded requests, tokens and estimated API value.">
+  <meta name="author" content="Daniel Yakobian">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fdfaf3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
+  <meta property="og:site_name" content="Daniel Yakobian">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI Usage for Mac: your AI limits, a glance away">
+  <meta property="og:description" content="See remaining AI plan limits in your Mac menu bar. Add desktop widgets for recorded requests, tokens and estimated API value.">
+  <meta property="og:url" content="https://danielyakobian.com/ai-usage/">
+  <meta property="og:image" content="https://danielyakobian.com/assets/ai-usage/social-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="AI Usage for Mac: your AI limits, a glance away. Menu bar quota panel with sample readings.">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>AI Usage for Mac: your AI limits, a glance away | Daniel Yakobian</title>
+  <link rel="canonical" href="https://danielyakobian.com/ai-usage/">
+  <link rel="icon" type="image/png" href="/assets/ai-usage/icon.png">
+  <link rel="stylesheet" href="/styles.css?v=mark-4">
+  <link rel="stylesheet" href="/cloud-media-shrinker/cms.css?v=3">
+  <link rel="stylesheet" href="/cloud-media-shrinker/cms-nav.css?v=3">
+  <link rel="stylesheet" href="/cloud-media-shrinker/shots.css?v=1">
+  <link rel="stylesheet" href="/ai-usage/ai-usage.css?v=1">
+  <script src="/analytics.js?v=18" defer></script>
+  <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "@id": "https://danielyakobian.com/ai-usage/#app",
+    "name": "AI Usage Monitor Widget",
+    "alternateName": "AI Usage",
+    "url": "https://danielyakobian.com/ai-usage/",
+    "description": "See remaining AI plan limits in your Mac menu bar. Add desktop widgets for recorded requests, tokens and estimated API value.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "macOS 14 or later",
+    "processorRequirements": "Apple silicon",
+    "image": "https://danielyakobian.com/assets/ai-usage/social-card.jpg",
+    "screenshot": "https://danielyakobian.com/assets/ai-usage/menu.webp",
+    "sameAs": [
+        "https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898",
+        "https://github.com/danielyaa5/ai-usage"
+    ],
+    "author": {
+        "@id": "https://danielyakobian.com/#person"
+    }
+}
+  </script>
+</head>
+<body id="top" class="cms-page" data-app="ai-usage">
+  <a class="ai-skip" href="#main">Skip to content</a>
+  <div class="page-frame">
+    <header class="site-header">
+      <a class="identity" href="/" aria-label="Daniel, home">Daniel</a>
+      <nav aria-label="Main navigation">
+        <a href="/#work" data-icon="work" aria-current="page">Work</a>
+        <a href="/blog/" data-icon="blog">Blog</a>
+        <a href="/resume/" data-icon="resume">Resume</a>
+        <a href="https://www.etsy.com/shop/JustFitsStudio" data-icon="shop" aria-label="3D Print Shop"><span><span class="nav-extra">3D Print </span>Shop</span></a>
+        <a href="/motorcycle-rentals/" data-icon="moto" aria-label="Motorcycle Rentals"><span><span class="nav-extra">Motorcycle </span>Rentals</span></a>
+      </nav>
+    </header>
+    <a class="site-mark" href="https://www.goodreads.com/book/show/629.Zen_and_the_Art_of_Motorcycle_Maintenance" aria-label="Zen and the Art of Motorcycle Maintenance on Goodreads" title="Zen and the Art of Motorcycle Maintenance"><svg viewBox="0 0 192 192" aria-hidden="true" focusable="false"><path class="mark-leaf mark-back mark-r" d="M98.8 168.4C99.8 166.1 102.8 159 104.7 154.4C106.7 149.9 108.6 145.4 110.4 140.9C112.2 136.4 114 131.9 115.7 127.4C117.4 122.9 119 118.4 120.6 113.7C122.2 109.1 123.7 104.5 125 99.6C126.3 94.6 127.7 86.6 128.2 84C126.2 85.8 119.5 90.5 115.9 94.4C112.3 98.2 109.3 102.6 106.5 107.1C103.8 111.6 101.5 116.4 99.6 121.2C97.7 126.1 96.2 131.2 95.2 136.3C94.1 141.4 93.4 146.7 93.1 151.9C92.8 157.1 93.4 165 93.5 167.6Z"/><path class="mark-trace" d="M98.8 168.4C99.8 166.1 102.8 159 104.7 154.4C106.7 149.9 108.6 145.4 110.4 140.9C112.2 136.4 114 131.9 115.7 127.4C117.4 122.9 119 118.4 120.6 113.7C122.2 109.1 123.7 104.5 125 99.6C126.3 94.6 127.7 86.6 128.2 84C126.2 85.8 119.5 90.5 115.9 94.4C112.3 98.2 109.3 102.6 106.5 107.1C103.8 111.6 101.5 116.4 99.6 121.2C97.7 126.1 96.2 131.2 95.2 136.3C94.1 141.4 93.4 146.7 93.1 151.9C92.8 157.1 93.4 165 93.5 167.6Z" stroke-dasharray="192 192" stroke-dashoffset="192"/><path class="mark-leaf mark-back mark-l" d="M93.2 168.4C92.2 166.1 89.2 159 87.3 154.4C85.3 149.9 83.4 145.4 81.6 140.9C79.8 136.4 78 131.9 76.3 127.4C74.6 122.9 73 118.4 71.4 113.7C69.8 109.1 68.3 104.5 67 99.6C65.7 94.6 64.3 86.6 63.8 84C65.8 85.8 72.5 90.5 76.1 94.4C79.7 98.2 82.7 102.6 85.5 107.1C88.2 111.6 90.5 116.4 92.4 121.2C94.3 126.1 95.8 131.2 96.8 136.3C97.9 141.4 98.6 146.7 98.9 151.9C99.2 157.1 98.6 165 98.5 167.6Z"/><path class="mark-trace" d="M93.2 168.4C92.2 166.1 89.2 159 87.3 154.4C85.3 149.9 83.4 145.4 81.6 140.9C79.8 136.4 78 131.9 76.3 127.4C74.6 122.9 73 118.4 71.4 113.7C69.8 109.1 68.3 104.5 67 99.6C65.7 94.6 64.3 86.6 63.8 84C65.8 85.8 72.5 90.5 76.1 94.4C79.7 98.2 82.7 102.6 85.5 107.1C88.2 111.6 90.5 116.4 92.4 121.2C94.3 126.1 95.8 131.2 96.8 136.3C97.9 141.4 98.6 146.7 98.9 151.9C99.2 157.1 98.6 165 98.5 167.6Z" stroke-dasharray="192 192" stroke-dashoffset="192"/><g class="mark-wrench"><path class="mark-steel" d="M87.2 155L87.2 86.5Q87.2 75.1 82.1 71.9A27.5 27.5 0 0 1 93 20.8L85.5 43.9A11.3 11.3 0 0 0 107 50.9L114.5 27.8A27.5 27.5 0 0 1 109.9 71.9Q104.8 75.1 104.8 86.5L104.8 155A8.8 8.8 0 0 1 87.2 155Z"/><path class="mark-trace" d="M87.2 155L87.2 86.5Q87.2 75.1 82.1 71.9A27.5 27.5 0 0 1 93 20.8L85.5 43.9A11.3 11.3 0 0 0 107 50.9L114.5 27.8A27.5 27.5 0 0 1 109.9 71.9Q104.8 75.1 104.8 86.5L104.8 155A8.8 8.8 0 0 1 87.2 155Z" stroke-dasharray="404 404" stroke-dashoffset="404"/><path class="mark-groove" d="M96 83.2V155"/><path class="mark-trace" d="M96 83.2V155" stroke-dasharray="74 74" stroke-dashoffset="74"/></g><path class="mark-leaf mark-mid mark-r" d="M98.6 169.8C100.4 168.5 106 164.6 109.6 162.3C113.1 160 116.7 158 120.2 155.9C123.7 153.9 127.1 152.1 130.6 150.2C134.1 148.3 137.5 146.5 141.1 144.5C144.7 142.6 148.3 140.9 152.3 138.7C156.2 136.5 162.6 132.7 164.7 131.5C162.3 130.7 155.2 127.5 150.3 126.9C145.5 126.3 140.3 126.8 135.5 127.8C130.6 128.8 125.8 130.6 121.4 132.9C117 135.2 112.8 138.2 109.2 141.6C105.6 144.9 102.3 148.9 99.7 153C97.1 157.2 94.6 164.1 93.6 166.4Z"/><path class="mark-trace" d="M98.6 169.8C100.4 168.5 106 164.6 109.6 162.3C113.1 160 116.7 158 120.2 155.9C123.7 153.9 127.1 152.1 130.6 150.2C134.1 148.3 137.5 146.5 141.1 144.5C144.7 142.6 148.3 140.9 152.3 138.7C156.2 136.5 162.6 132.7 164.7 131.5C162.3 130.7 155.2 127.5 150.3 126.9C145.5 126.3 140.3 126.8 135.5 127.8C130.6 128.8 125.8 130.6 121.4 132.9C117 135.2 112.8 138.2 109.2 141.6C105.6 144.9 102.3 148.9 99.7 153C97.1 157.2 94.6 164.1 93.6 166.4Z" stroke-dasharray="175 175" stroke-dashoffset="175"/><path class="mark-leaf mark-mid mark-l" d="M93.4 169.8C91.6 168.5 86 164.6 82.4 162.3C78.9 160 75.3 158 71.8 155.9C68.3 153.9 64.9 152.1 61.4 150.2C57.9 148.3 54.5 146.5 50.9 144.5C47.3 142.6 43.7 140.9 39.7 138.7C35.8 136.5 29.4 132.7 27.3 131.5C29.7 130.7 36.8 127.5 41.7 126.9C46.5 126.3 51.7 126.8 56.5 127.8C61.4 128.8 66.2 130.6 70.6 132.9C75 135.2 79.2 138.2 82.8 141.6C86.4 144.9 89.7 148.9 92.3 153C94.9 157.2 97.4 164.1 98.4 166.4Z"/><path class="mark-trace" d="M93.4 169.8C91.6 168.5 86 164.6 82.4 162.3C78.9 160 75.3 158 71.8 155.9C68.3 153.9 64.9 152.1 61.4 150.2C57.9 148.3 54.5 146.5 50.9 144.5C47.3 142.6 43.7 140.9 39.7 138.7C35.8 136.5 29.4 132.7 27.3 131.5C29.7 130.7 36.8 127.5 41.7 126.9C46.5 126.3 51.7 126.8 56.5 127.8C61.4 128.8 66.2 130.6 70.6 132.9C75 135.2 79.2 138.2 82.8 141.6C86.4 144.9 89.7 148.9 92.3 153C94.9 157.2 97.4 164.1 98.4 166.4Z" stroke-dasharray="175 175" stroke-dashoffset="175"/><path class="mark-leaf mark-front mark-l" d="M93.4 168.6C92.5 167.4 89.6 163.6 87.8 161.1C86.1 158.6 84.4 156.2 82.9 153.8C81.3 151.3 79.9 148.9 78.6 146.4C77.3 143.8 76.1 141.3 75 138.6C73.9 135.9 72.9 133.2 72.1 130.1C71.3 127 70.7 121.6 70.4 119.8C72 120.5 77.2 122.2 80.1 124C82.9 125.8 85.3 128.2 87.5 130.6C89.7 133 91.6 135.8 93.1 138.7C94.7 141.5 95.9 144.6 96.8 147.7C97.7 150.9 98.3 154.2 98.6 157.5C98.8 160.7 98.4 165.7 98.4 167.4Z"/><path class="mark-trace" d="M93.4 168.6C92.5 167.4 89.6 163.6 87.8 161.1C86.1 158.6 84.4 156.2 82.9 153.8C81.3 151.3 79.9 148.9 78.6 146.4C77.3 143.8 76.1 141.3 75 138.6C73.9 135.9 72.9 133.2 72.1 130.1C71.3 127 70.7 121.6 70.4 119.8C72 120.5 77.2 122.2 80.1 124C82.9 125.8 85.3 128.2 87.5 130.6C89.7 133 91.6 135.8 93.1 138.7C94.7 141.5 95.9 144.6 96.8 147.7C97.7 150.9 98.3 154.2 98.6 157.5C98.8 160.7 98.4 165.7 98.4 167.4Z" stroke-dasharray="122 122" stroke-dashoffset="122"/><path class="mark-leaf mark-front mark-r" d="M98.4 168.7C99.3 167.6 102.2 164.3 103.9 162.1C105.6 159.9 107.3 157.8 108.8 155.7C110.3 153.6 111.7 151.5 113 149.2C114.3 147 115.5 144.8 116.6 142.4C117.7 140 118.7 137.6 119.6 134.8C120.4 131.9 121.2 127 121.6 125.4C120 126 115.1 127.1 112.4 128.5C109.6 130 107.3 132 105.1 134.1C103 136.2 101.1 138.6 99.6 141.2C98 143.7 96.7 146.5 95.8 149.4C94.8 152.2 94.1 155.2 93.8 158.2C93.5 161.2 93.8 165.8 93.8 167.4Z"/><path class="mark-trace" d="M98.4 168.7C99.3 167.6 102.2 164.3 103.9 162.1C105.6 159.9 107.3 157.8 108.8 155.7C110.3 153.6 111.7 151.5 113 149.2C114.3 147 115.5 144.8 116.6 142.4C117.7 140 118.7 137.6 119.6 134.8C120.4 131.9 121.2 127 121.6 125.4C120 126 115.1 127.1 112.4 128.5C109.6 130 107.3 132 105.1 134.1C103 136.2 101.1 138.6 99.6 141.2C98 143.7 96.7 146.5 95.8 149.4C94.8 152.2 94.1 155.2 93.8 158.2C93.5 161.2 93.8 165.8 93.8 167.4Z" stroke-dasharray="112 112" stroke-dashoffset="112"/></svg></a>
+    <nav class="cms-nav cms-nav-on-home" aria-label="AI Usage">
+      <a class="cms-nav-home" href="/ai-usage/"><img src="/assets/ai-usage/icon-84.webp" width="28" height="28" alt=""><span>AI Usage</span></a>
+      <ul class="cms-nav-links"><li><a href="/ai-usage/" aria-current="page" data-label="Overview">Overview</a></li><li><a href="/ai-usage/help/" data-label="Help">Help</a></li><li><a href="/ai-usage/#support" data-label="Support">Support</a></li><li><a href="/ai-usage/privacy/" data-label="Privacy">Privacy</a></li></ul>
+    </nav>
+    <main class="cms cms-a" id="main">
+      <header class="c-hero">
+        <div class="c-hero-copy">
+          <h1>Your AI limits, a glance away.</h1>
+          <p class="lede">See remaining quota and reset times when your connected providers report them, right in your Mac menu bar.</p>
+          <p class="c-sub">Keep desktop widgets nearby for recorded usage, tokens and estimated API value.</p>
+          <div class="c-actions"><a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898">Download on the App Store</a><a class="button button-outline" href="https://github.com/danielyaa5/ai-usage">View source</a></div>
+          <p class="fine-print">For Apple silicon Macs with macOS 14 or later. The App Store lists the price for your region.</p>
+          <p class="c-jump"><a href="#features">See how it works</a><a href="help/">Provider setup</a><a href="#support">Support</a></p>
+        </div>
+        <figure class="c-hero-media">
+          <div class="ai-crop ai-crop-menu"><picture><source type="image/avif" srcset="/assets/ai-usage/menu.avif"><img src="/assets/ai-usage/menu.webp" alt="AI Usage menu bar meters and quota panel showing sample remaining percentages, reset times and usage totals." width="1440" height="900" fetchpriority="high"></picture></div>
+          <figcaption class="ai-caption">Sample readings. Availability and freshness depend on the provider.</figcaption>
+        </figure>
+      </header>
+      <section class="c-features" id="features" aria-label="Features">
+        <article class="c-feature">
+          <div class="c-feature-copy"><p class="eyebrow">01</p><h2>See what’s left, and when it resets.</h2><p>Keep provider-reported percentages and reset times together in a desktop widget. Claude, ChatGPT and Google Antigravity connect differently; a missing reading does not mean unlimited quota.</p></div>
+          <figure class="ai-feature-figure">
+            <a class="c-zoom" href="/assets/ai-usage/limits.webp" aria-label="View full screenshot: See what’s left, and when it resets."><div class="ai-crop ai-crop-limits c-shot"><img src="/assets/ai-usage/limits.webp" alt="The AI plan limits widget in dark mode, with fictional Claude, ChatGPT and Antigravity percentages and reset times." width="1440" height="900" loading="lazy" decoding="async"></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
+            <figcaption class="ai-caption">Fictional sample data.</figcaption>
+          </figure>
+        </article>
+        <article class="c-feature">
+          <div class="c-feature-copy"><p class="eyebrow">02</p><h2>Your AI usage, on this Mac.</h2><p>See recorded requests and tokens for today, the last 7 days or the last 30 days. Estimated API value uses published rates. It is an estimate of equivalent API usage, not a bill or money saved.</p></div>
+          <figure class="ai-feature-figure">
+            <a class="c-zoom" href="/assets/ai-usage/widgets.webp" aria-label="View full screenshot: Your AI usage, on this Mac."><div class="ai-crop ai-crop-widgets c-shot"><img src="/assets/ai-usage/widgets.webp" alt="Two AI Usage desktop widgets showing fictional usage totals and remaining plan limits." width="1440" height="900" loading="lazy" decoding="async"></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
+            <figcaption class="ai-caption">Fictional sample data.</figcaption>
+          </figure>
+        </article>
+        <article class="c-feature">
+          <div class="c-feature-copy"><p class="eyebrow">03</p><h2>A quick check while you work.</h2><p>Click a menu bar meter to see the quota panel, with percentages, reported reset times and a summary of recent recorded activity. Keep the numbers close without leaving them open all day.</p></div>
+          <figure class="ai-feature-figure">
+            <a class="c-zoom" href="/assets/ai-usage/menu.webp" aria-label="View full screenshot: A quick check while you work."><div class="ai-crop ai-crop-menu c-shot"><picture><source type="image/avif" srcset="/assets/ai-usage/menu.avif"><img src="/assets/ai-usage/menu.webp" alt="AI Usage menu bar meters and quota panel with fictional readings and the app’s existing controls." width="1440" height="900" loading="lazy" decoding="async"></picture></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
+            <figcaption class="ai-caption">Fictional sample data.</figcaption>
+          </figure>
+        </article>
+      </section>
+      <section class="c-know" aria-labelledby="know-title">
+        <h2 class="section-title" id="know-title">Good to know</h2>
+        <ul class="c-checks">
+          <li>Start with one provider. Claude, ChatGPT / Codex and Google Antigravity have different <a href="help/">connection requirements</a>.</li>
+          <li>Quota readings can be unavailable or out of date. Check the observation time; reset times appear only when the provider reports them.</li>
+          <li>Local history is read through folders you choose. Usage summaries omit prompts and responses.</li>
+          <li>The menu bar and widgets work without a required dashboard or server.</li>
+          <li>Built for Apple silicon Macs with macOS 14 or later.</li>
+        </ul>
+      </section>
+      <section class="c-steps" id="setup" aria-labelledby="steps-title">
+        <h2 id="steps-title">Get started</h2>
+        <div><b>1. Download</b><p>Get AI Usage from the Mac App Store.</p></div>
+        <div><b>2. Choose a provider</b><p>Open the app and choose the tools you use, or choose Preview with sample data.</p></div>
+        <div><b>3. Connect a source</b><p>Connect a plan for quota, a history folder for recorded activity, or both. See <a href="help/">Help</a> for each provider.</p></div>
+        <div><b>4. Add a widget</b><p>Control-click the desktop, choose Edit Widgets and search for AI Usage. The menu bar is there for a quick check too.</p></div>
+      </section>
+      <aside class="c-cta" id="get" aria-labelledby="cta-title">
+        <div class="c-cta-copy"><h2 id="cta-title">Get AI Usage</h2><p>Your plan limits and recorded activity, close at hand on your Mac.</p></div>
+        <div class="c-actions"><a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898">Download on the App Store</a><a class="button button-outline" href="https://github.com/danielyaa5/ai-usage">View source</a></div>
+      </aside>
+      <aside class="c-more" aria-labelledby="more-title">
+        <h2 id="more-title">More apps by Daniel</h2>
+        <ul class="c-apps">
+          <li><a class="c-app" data-app="Cloud Media Shrinker" href="/cloud-media-shrinker/"><img class="c-app-icon" src="/assets/cloud-media-shrinker/icon.svg" width="56" height="56" alt="" loading="lazy"><span class="c-app-copy"><b>Cloud Media Shrinker</b><small>iPhone, iPad and Mac</small><span class="c-app-line">Find large photos and videos, then compress the ones you want to keep.</span></span></a></li>
+          <li><a class="c-app" data-app="Beckon" href="/beckon/"><img class="c-app-icon" src="/assets/beckon/icon.png" width="56" height="56" alt="" loading="lazy"><span class="c-app-copy"><b>Beckon</b><small>Mac</small><span class="c-app-line">Ring your iPhone, iPad and AirPods from your Mac.</span></span></a></li>
+          <li><a class="c-app" data-app="3D Print Monitor" href="/3d-print-monitor/"><img class="c-app-icon ios" src="/assets/apps/3d-print-monitor.webp" width="56" height="56" alt="" loading="lazy"><span class="c-app-copy"><b>3D Print Monitor</b><small>iPhone, iPad and Mac · Beta</small><span class="c-app-line">Keep an eye on your prints from the app or widgets.</span></span></a></li>
+        </ul>
+        <p class="c-more-all"><a href="/#work">All my projects</a></p>
+      </aside>
+      <section class="c-support" id="support" aria-labelledby="support-title">
+        <h2 class="section-title" id="support-title">Support</h2>
+        <p>In AI Usage, open <strong>Settings → Contact support</strong> to report a bug or send feedback. You can preview or exclude app diagnostics and attach screenshots.</p>
+        <p>For help by email, write to <a href="mailto:support@danielyakobian.com">support@danielyakobian.com</a>.</p>
+        <p class="ai-support-links"><a href="help/">Setup and troubleshooting</a><a href="privacy/">Privacy policy</a><a href="https://github.com/danielyaa5/ai-usage/issues">GitHub issues</a></p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p><a href="#top" aria-label="Daniel, back to top">Daniel</a> / AI Usage</p>
+      <div class="profile-links">
+        <a class="profile-link" href="/"><img class="link-icon" src="/assets/illustrations/link.svg" width="14" height="14" alt=""><span>danielyakobian.com</span></a>
+        <a class="profile-link" href="mailto:support@danielyakobian.com"><img class="link-icon" src="/assets/illustrations/link.svg" width="14" height="14" alt=""><span>support@danielyakobian.com</span></a>
+      </div>
+    </footer>
+  </div>
+  <script src="/cloud-media-shrinker/shots.js?v=1" defer></script>
+</body>
+</html>
