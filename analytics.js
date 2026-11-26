@@ -2,6 +2,7 @@
    without cookies or browser storage. It runs only on the published hosts for non-automated browsers, so local previews, bots and headless checks send nothing,
    and the guest gate page never loads it. */
 (() => {
+  const ANALYTICS_VERSION = '19';
   const TOKEN = 'phc_phFn2Yijfyw4fMQxXDN878EUWihevmGmEWrUK27bUX4J';
   const HOSTS = ['danielyakobian.com', 'www.danielyakobian.com', 'danielyaa5.github.io'];
   const BOT_UA = /HeadlessChrome|PhantomJS|Playwright|Puppeteer|SlimerJS|bot|crawler|spider|crawling|Lighthouse|PTST|PageSpeed/i;
@@ -30,6 +31,7 @@
     return clean(value);
   };
   const scrub = event => {
+    if (event) event.properties = { ...event.properties, analytics_version: ANALYTICS_VERSION };
     for (const bag of [event?.properties, event?.$set, event?.$set_once]) {
       if (bag) cleanAll(bag);
     }
@@ -46,34 +48,76 @@
     else pending.push([event, properties]);
   };
 
-  // Uncaught errors and unhandled promise rejections become PostHog `$exception` events for Error tracking.
-  // These listeners start with this script, so errors raised before PostHog loads (it waits for the load event)
-  // wait in `pendingErrors`. PostHog's own exception autocapture stays off, so nothing is reported twice.
-  // Errors from browser extensions, crypto wallets that browsers add to every page (Brave's sets
-  // `window.ethereum` and throws on some phones) and cross-origin "Script error." reports (no details) are skipped,
-  // and one page sends at most 10, so a loop can't flood the project.
+  // Keep the original evidence, including errors from another frame. Missing evidence is
+  // unknown, not proof that an error came from outside the site.
   const pendingErrors = [];
   let errorsSent = 0;
-  const sendError = ([error, properties]) => window.posthog?.captureException?.(error, properties);
-  // An error whose stack or file points at this site (its pages and scripts, PostHog's included, which load through
-  // /dy-relay/ or PostHog's asset host) is marked error_from_site: true. One with no trace back to the site, such as a
-  // content blocker or extension throwing in its own context, is still sent but marked false, and the Needs a look
-  // alert leaves those out. A rejection or error event wrapped in a new Error below is judged by its file, never by
-  // the wrapper's own stack, which would always point here.
-  const OWN_SOURCES = [location.origin, 'https://us-assets.i.posthog.com'];
-  const fromSite = text => OWN_SOURCES.some(origin => String(text || '').includes(origin));
-  const reportError = (error, properties) => {
-    if (errorsSent >= 10 || /extension:\/\//.test(`${properties.error_file || ''} ${error?.stack || ''}`)) return;
-    if (properties.error_from_site === undefined) properties.error_from_site = fromSite(`${error?.stack || ''} ${properties.error_file || ''}`);
-    if (/\bethereum\b/i.test(`${error?.message || ''} ${error?.stack || ''}`)) return;
+  const read = (value, key) => { try { return value?.[key]; } catch { return undefined; } };
+  const errorURL = value => {
+    try {
+      const url = new URL(value);
+      url.username = ''; url.password = ''; url.search = ''; url.hash = '';
+      return url.href;
+    } catch { return undefined; }
+  };
+  const errorText = (value, limit) => typeof value === 'string'
+    ? value.slice(0, limit).replace(/(?:https?|[a-z-]*extension):\/\/[^\s<>"')]+/gi, url => {
+      const position = url.match(/:\d+(?::\d+)?$/)?.[0] || '';
+      return (errorURL(position ? url.slice(0, -position.length) : url) || '[invalid URL]') + position;
+    }) : '';
+  const ownOrigins = new Set([location.origin, 'https://us-assets.i.posthog.com', ...HOSTS.map(host => `https://${host}`)]);
+  const frameLines = error => error.stack.split('\n').filter(line =>
+    !line.startsWith(`${error.name}:`) && /^\s*at\s+.+|^[^@\s]*@\S+/.test(line));
+  const sourceOf = (error, file) => {
+    const sources = file ? [file] : [];
+    // Only frame lines are source evidence. A URL in an error message is not a frame.
+    for (const line of frameLines(error)) {
+      for (const url of line.match(/https?:\/\/[^\s)]+/g) || []) sources.push(url.replace(/:\d+(?::\d+)?$/, ''));
+    }
+    const origins = sources.map(value => { try { return new URL(value).origin; } catch { return null; } });
+    if (origins.some(origin => ownOrigins.has(origin))) return 'site';
+    if (origins.length && origins.every(origin => origin && origin !== 'null')) return 'external';
+    return 'unknown';
+  };
+  const normalizeError = (reason, fallback, file) => {
+    const message = read(reason, 'message');
+    const originalStack = read(reason, 'stack');
+    const originalName = read(reason, 'name');
+    const errorLike = typeof message === 'string' && (typeof originalStack === 'string' || typeof originalName === 'string');
+    const error = new Error(errorText(errorLike ? message : fallback, 300) || 'Unknown error');
+    error.name = errorText(errorLike ? originalName : 'Error', 80) || 'Error';
+    // Never leave the stack constructed above: that points at this collector, not the failure.
+    error.stack = errorText(originalStack, 8000).split('\n').slice(0, 31).join('\n');
+    const source = errorURL(file || read(reason, 'sourceURL') || read(reason, 'fileName'));
+    const stackAvailable = frameLines(error).length > 0;
+    return { error, file: source, stackAvailable };
+  };
+  const sendError = ([error, properties]) => {
+    if (properties.error_stack_available) window.posthog?.captureException?.(error, properties);
+    else {
+      // captureException synthesizes a caller stack for a stackless error. The documented
+      // manual exception format leaves it absent, so grouping uses the original type/message.
+      track('$exception', { ...properties, $exception_list: [{ type: error.name, value: error.message,
+        mechanism: { type: properties.error_source, handled: false, synthetic: false } }] });
+    }
+  };
+  const reportError = (reason, fallback, properties) => {
+    const normalized = normalizeError(reason, fallback, properties.error_file);
+    const { error, file, stackAvailable } = normalized;
+    if (errorsSent >= 10 || /extension:\/\//.test(`${file || ''} ${frameLines(error).join('\n')}`)) return;
+    if (/\bethereum\b/i.test(`${error.message} ${error.stack}`)) return;
+    const origin = sourceOf(error, file);
+    const details = { ...properties, error_file: file, error_origin: origin,
+      error_from_site: origin === 'unknown' ? null : origin === 'site', error_stack_available: stackAvailable };
     errorsSent += 1;
-    if (ready) sendError([error, properties]);
-    else pendingErrors.push([error, properties]);
+    if (ready) sendError([error, details]);
+    else pendingErrors.push([error, details]);
   };
   addEventListener('error', event => {
     if (!event.error && (!event.filename || event.message === 'Script error.')) return;
-    if (event.error instanceof Error) reportError(event.error, { error_source: 'uncaught', error_file: event.filename || undefined });
-    else reportError(new Error(String(event.message || 'Unknown error')), { error_source: 'uncaught', error_file: event.filename || undefined, error_from_site: fromSite(event.filename) });
+    reportError(event.error, String(event.message || 'Unknown error'), {
+      error_source: 'uncaught', error_file: event.filename || undefined,
+    });
   });
   // Rage clicks: 3 or more clicks within 1 s inside a 30 px circle, on any element. PostHog's own rage click detection only
   // counts links, buttons and other clickable-looking elements, which misses the case that matters most here: something that
@@ -84,66 +128,87 @@
   let clickBurst = [];
   let ragesSent = 0;
   let heldRage = null;
+  let burstSent = false;
+  let burstClicks = 0;
+  let lastPointer = 'unknown';
   const describe = element => {
     if (!element) return undefined;
     const classes = [...element.classList].slice(0, 3).map(name => `.${name}`).join('');
     return `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}${classes}`;
   };
-  const sendRage = element => {
+  const sendRage = (element, details) => {
+    if (burstSent || ragesSent >= 10) return;
+    burstSent = true;
     ragesSent += 1;
     track('$rageclick', {
+      ...details,
       element: describe(element),
       element_parent: describe(element?.parentElement),
       element_text: (element?.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 80) || undefined,
       link: element?.closest('a[href]')?.href,
     });
   };
+  document.addEventListener('pointerdown', event => {
+    lastPointer = ['mouse', 'touch', 'pen'].includes(event.pointerType) ? event.pointerType : 'unknown';
+  }, true);
   document.addEventListener('click', event => {
     if (!event.detail) return; // keyboard activations have no position
     const element = event.target instanceof Element ? event.target : event.target?.parentElement;
     if (element?.closest('pre, code')) return;
     const now = event.timeStamp;
     clickBurst = clickBurst.filter(click => now - click.time < 1000 && Math.hypot(click.x - event.clientX, click.y - event.clientY) < 30);
+    if (!clickBurst.length) {
+      burstSent = false;
+      burstClicks = 0;
+      if (heldRage) clearTimeout(heldRage.timer);
+      heldRage = null;
+    }
     clickBurst.push({ time: now, x: event.clientX, y: event.clientY });
-    if (heldRage && clickBurst.length > 3) {
+    burstClicks = Math.min(burstClicks + 1, 100);
+    const selection = getSelection();
+    const details = { click_count: burstClicks, click_detail: Math.min(event.detail, 100),
+      pointer_type: lastPointer, text_selected: Boolean(selection && !selection.isCollapsed),
+      target_interactive: Boolean(element?.closest('a, button, input, select, textarea, summary, [role="button"], [role="slider"]')),
+      viewport_width: Math.min(innerWidth, 10000) };
+    if (heldRage) {
       clearTimeout(heldRage.timer);
-      sendRage(heldRage.element);
+      sendRage(heldRage.element, details);
       heldRage = null;
       return;
     }
-    if (clickBurst.length !== 3 || ragesSent >= 10) return;
-    const selection = getSelection();
+    if (clickBurst.length !== 3 || ragesSent >= 10 || burstSent) return;
     if (event.detail >= 3 && selection && !selection.isCollapsed && element && selection.containsNode(element, true)) {
       const held = { element, timer: setTimeout(() => { if (heldRage === held) heldRage = null; }, 600) };
       heldRage = held;
       return;
     }
-    sendRage(element);
+    sendRage(element, details);
   }, true);
-  // A promise rejected with something other than an Error has no stack, so the report says what it was: an event's type
-  // and element (a script or image that failed to load, say), or an object's class and message or keys. One rejected with
-  // nothing at all (undefined or null) can't be traced, so like "Script error." it is skipped.
+  // Describe non-Error rejections without invoking arbitrary getters or throwing in the reporter.
   const describeReason = reason => {
     if (typeof reason === 'string') return { text: reason };
-    if (reason instanceof Event) {
-      const target = reason.target instanceof Element ? reason.target : null;
-      const url = target?.src || target?.href;
-      return { text: `${reason.type} event${target ? ` on ${describe(target)}` : ''}`, file: url ? String(url).split(/[?#]/)[0] : undefined };
+    const target = read(reason, 'target');
+    const type = read(reason, 'type');
+    if (typeof type === 'string' && read(target, 'nodeType') === 1) {
+      const file = read(target, 'src') || read(target, 'href');
+      const tag = read(target, 'tagName');
+      return { text: `${type} event on ${typeof tag === 'string' ? tag.toLowerCase() : 'element'}`, file };
     }
     if (typeof reason === 'object') {
-      const detail = reason.message ?? reason.reason ?? reason.error;
-      const name = reason.constructor?.name || 'Object';
-      return { text: detail != null ? `${name}: ${String(detail)}` : `${name} {${Object.keys(reason).slice(0, 6).join(', ')}}` };
+      const detail = read(reason, 'message') ?? read(reason, 'reason') ?? read(reason, 'error');
+      const constructorName = read(read(reason, 'constructor'), 'name');
+      const name = typeof constructorName === 'string' ? constructorName.slice(0, 80) : 'Object';
+      if (['string', 'number', 'boolean'].includes(typeof detail)) return { text: `${name}: ${detail}` };
+      try { return { text: `${name} {${Object.keys(reason).slice(0, 6).join(', ')}}` }; }
+      catch { return { text: 'Uninspectable object' }; }
     }
-    return { text: `${typeof reason} ${String(reason)}` };
+    return { text: typeof reason === 'function' ? 'function' : `${typeof reason} ${String(reason)}` };
   };
   addEventListener('unhandledrejection', event => {
     const reason = event.reason;
     if (reason == null) return;
-    if (reason instanceof Error) return reportError(reason, { error_source: 'unhandled_rejection' });
     const { text, file } = describeReason(reason);
-    const error = new Error(`Unhandled promise rejection: ${text}`.slice(0, 300));
-    reportError(error, { error_source: 'unhandled_rejection', error_file: file, error_from_site: fromSite(file) });
+    reportError(reason, `Unhandled promise rejection: ${text}`, { error_source: 'unhandled_rejection', error_file: file });
   });
   const tileClick = event => {
     if (event.type === 'auxclick' && event.button !== 1) return;

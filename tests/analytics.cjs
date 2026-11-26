@@ -29,7 +29,7 @@ const events = request => {
 (async () => {
   for (const file of tracked) {
     const html = fs.readFileSync(path.join(root, file), 'utf8');
-    assert.equal(html.match(/<script src="\/analytics\.js\?v=18" defer><\/script>/g)?.length, 1, `${file} loads analytics v=18 once`);
+    assert.equal(html.match(/<script src="\/analytics\.js\?v=19" defer><\/script>/g)?.length, 1, `${file} loads analytics v=19 once`);
   }
   // vercel.json sends /dy-relay/ to PostHog. The site-wide trailing slash turns /array/<token>/config into .../config/,
   // which PostHog answers with a 404, so a rule ahead of the general one strips that slash again.
@@ -45,6 +45,7 @@ const events = request => {
   // Unresolvable hosts make those fail instead of landing in the real PostHog project.
   const browser = await chromium.launch({
     headless: true,
+    proxy: { server: 'http://127.0.0.1:9', bypass: 'localhost,127.0.0.1' },
     args: ['--host-resolver-rules=MAP danielyakobian.com ~NOTFOUND, MAP *.danielyakobian.com ~NOTFOUND, MAP *.posthog.com ~NOTFOUND'],
     ...(process.env.PLAYWRIGHT_CHANNEL ? { channel: process.env.PLAYWRIGHT_CHANNEL } : {}),
   });
@@ -143,11 +144,9 @@ const events = request => {
         const response = await fetch(`https://us-assets.i.posthog.com${url.pathname.slice('/dy-relay'.length)}`);
         return route.fulfill({ status: response.status, contentType: 'application/javascript', body: Buffer.from(await response.arrayBuffer()) });
       }
-      // The project's remote settings (public, keyed by the token) come from PostHog too, as on the live site:
-      // PostHog starts click autocapture only once they say autocapture is allowed.
+      // A local config fixture enables autocapture without reading live project settings.
       if (/^\/dy-relay\/array\/[^/]+\/config\/?$/.test(url.pathname)) {
-        const response = await fetch(`https://us-assets.i.posthog.com${url.pathname.replace(/\/$/, '').slice('/dy-relay'.length)}`);
-        return route.fulfill({ status: response.status, contentType: 'application/json', body: Buffer.from(await response.arrayBuffer()) });
+        return route.fulfill({ json: { autocapture_opt_out: false, sessionRecording: false, capturePerformance: true } });
       }
       if (route.request().method() === 'POST' && /\/e\/|\/i\/v0\/e\//.test(url.pathname)) captured.push(...events(route.request()));
       await route.fulfill({ status: 200, contentType: 'application/json', body: '{"status":1}' });
@@ -232,13 +231,12 @@ const events = request => {
     assert.deepEqual(exceptions.map(e => e.properties.error_source).sort(), ['uncaught', 'uncaught', 'uncaught', 'unhandled_rejection', 'unhandled_rejection', 'unhandled_rejection'], 'error source is recorded');
     const imageRejection = exceptions.find(e => /error event on img/.test(e.properties.$exception_list?.[0]?.value || ''));
     assert.match(imageRejection.properties.error_file || '', /\/analytics-test-missing\.png$/, 'the failed image is named without its query');
-    // Errors that trace back to the site count for the Needs a look alert; ones that don't (here, scripts injected by the
-    // test, which stand in for an extension or content blocker) are still sent but marked as not from the site.
+    // A reported site location is evidence; no usable location remains unknown. Neither proves authorship.
     const byValue = value => exceptions.find(x => x.properties.$exception_list?.[0]?.value === value);
     assert.equal(byValue('analytics-test site error').properties.error_from_site, true, 'an error from a page script is from the site');
     assert.equal(imageRejection.properties.error_from_site, true, 'a failed image on the site is from the site');
-    assert.equal(byValue('Unhandled promise rejection: Object: analytics-test object').properties.error_from_site, false, 'a rejection with no trace is not');
-    assert.equal(byValue('analytics-test late error').properties.error_from_site, false, 'an error from an injected script is not');
+    assert.equal(byValue('Unhandled promise rejection: Object: analytics-test object').properties.error_from_site, null, 'a rejection with no trace is unknown');
+    assert.equal(byValue('analytics-test late error').properties.error_from_site, null, 'an error without a URL frame is unknown');
     assert.ok(exceptions.every(e => e.properties.$current_url === `${site}/blog/` && e.properties.$cookieless_mode === true), 'cookieless errors with a clean address');
     assert.ok(!/utm_source=|private-fragment/.test(JSON.stringify(exceptions)), 'no query or fragment inside errors');
     await errorPage.close();
