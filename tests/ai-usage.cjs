@@ -82,8 +82,8 @@ const store = 'https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898';
     await page.waitForFunction(() => !history.state?.cViewer);
     await page.locator('.cms-nav a', { hasText: 'Help' }).click();
     await page.waitForURL(base + '/ai-usage/help/');
-    assert.match(await page.locator('main').innerText(), /Connect Claude Desktop/);
-    assert.match(await page.locator('main').innerText(), /interactive Claude Code terminal/);
+    assert.match(await page.locator('main').innerText(), /Connect Claude/);
+    assert.match(await page.locator('main').innerText(), /Version 1.0 uses saved Claude Desktop readings/);
     assert.match(await page.locator('main').innerText(), /Preview with sample data/);
     for (const id of ['claude', 'chatgpt', 'google', 'first-widget', 'waiting-for-data']) {
       await page.goto(base + '/ai-usage/help/#' + id);
@@ -92,7 +92,8 @@ const store = 'https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898';
     }
     await page.locator('.cms-nav a', { hasText: 'Privacy' }).click();
     await page.waitForURL(base + '/ai-usage/privacy/');
-    assert.match(await page.locator('main').innerText(), /If you paste the optional setup request/);
+    assert.match(await page.locator('main').innerText(), /The check sends no model prompt/);
+    assert.match(await page.locator('main').innerText(), /Existing Claude Terminal connections/);
     assert.match(await page.locator('main').innerText(), /does not read your existing Codex credentials/);
     await page.locator('.cms-nav a', { hasText: 'Support' }).click();
     await page.waitForURL(base + '/ai-usage/#support');
