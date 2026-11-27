@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['Buy or Rent','Swipe DB','AI Usage','Beckon','Netflix PiP Fixer','Gate Opener Widget','Price Watch','QuickDesk','orchestrate-agents','simulate-user','H2D Custom Dashboard','TagTracker','qtfaststart2','bambu-headless'];
+const expected = ['Buy or Rent','Swipe DB','3D Print Monitor','Beckon','Netflix PiP Fixer','Gate Opener Widget','Price Watch','QuickDesk','TagTracker','qtfaststart2','bambu-headless'];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -34,14 +34,14 @@ const expected = ['Buy or Rent','Swipe DB','AI Usage','Beckon','Netflix PiP Fixe
 
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
-    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===14 && images.every(img=>img.complete && img.naturalWidth>0)));
+    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===11 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
-    assert.equal(await page.locator('.project-link').count(),14);
+    assert.equal(await page.locator('.project-link').count(),11);
     assert.equal(await page.locator('.featured-pick').count(),3);
-    assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','3D Print Monitor']);
+    assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','AI Usage']);
     assert.equal(await page.locator('.featured-lead h3').innerText(), 'Cloud Media Shrinker');
     assert.equal(await page.locator('#other-projects-title').innerText(), 'Other projects');
-    assert.equal(await page.locator('.filter-count').innerText(), '14 projects');
+    assert.equal(await page.locator('.filter-count').innerText(), '11 projects');
     assert.equal(await page.locator('.featured-link').count(), 3);
     assert.equal(await page.locator('.featured-pick a a').count(), 0);
     assert.ok(await page.locator('.star-count').evaluate(badge=>{
@@ -51,21 +51,21 @@ const expected = ['Buy or Rent','Swipe DB','AI Usage','Beckon','Netflix PiP Fixe
     }), 'Desktop star badge stays beside the PUML title');
     assert.ok(await page.locator('.featured-pick > img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth >= Math.min(image.clientWidth, image.clientHeight * image.naturalWidth / image.naturalHeight) * 2)));
 
-    assert.equal(await page.locator('.writing-card').count(),3);
+    assert.equal(await page.locator('.writing-card').count(),4);
     assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
     const groups = {
-      mac: ['Cloud Media Shrinker','3D Print Monitor','Buy or Rent','AI Usage','Beckon','Gate Opener Widget','QuickDesk','TagTracker'],
-      ios: ['Cloud Media Shrinker','3D Print Monitor','Buy or Rent','Gate Opener Widget'],
-      web: ['Buy or Rent','Swipe DB','Netflix PiP Fixer','H2D Custom Dashboard'],
-      developer: ['puml-for-markdown','AI Usage','Price Watch','orchestrate-agents','simulate-user','qtfaststart2','bambu-headless'],
-      printing: ['3D Print Monitor','H2D Custom Dashboard','bambu-headless']
+      mac: ['Cloud Media Shrinker','AI Usage','Buy or Rent','3D Print Monitor','Beckon','Gate Opener Widget','QuickDesk','TagTracker'],
+      ios: ['Cloud Media Shrinker','Buy or Rent','3D Print Monitor','Gate Opener Widget'],
+      web: ['Buy or Rent','Swipe DB','Netflix PiP Fixer'],
+      developer: ['puml-for-markdown','AI Usage','Price Watch','qtfaststart2','bambu-headless'],
+      printing: ['3D Print Monitor','bambu-headless']
     };
     const featuredByFilter = {
-      mac: ['Cloud Media Shrinker','3D Print Monitor'],
-      ios: ['Cloud Media Shrinker','3D Print Monitor'],
+      mac: ['Cloud Media Shrinker','AI Usage'],
+      ios: ['Cloud Media Shrinker'],
       web: [],
-      developer: ['puml-for-markdown'],
-      printing: ['3D Print Monitor']
+      developer: ['puml-for-markdown','AI Usage'],
+      printing: []
     };
     for (const width of [1440,320]) {
       await page.setViewportSize({width,height:1000});

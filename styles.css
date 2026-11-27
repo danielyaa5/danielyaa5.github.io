@@ -79,6 +79,7 @@ h1 { font-size: 64px; line-height: 1.12; letter-spacing: -2.3px; margin: 0 0 27p
 .project:nth-child(even) .project-main { grid-template-columns: 156px minmax(0,1fr); }
 .project-art { display: flex; align-items: flex-start; justify-content: flex-start; padding-top: 1px; }
 .project-illustration { display: block; max-width: 100%; width: var(--art-width); height: auto; object-fit: contain; }
+.featured-pick > img[src$="ai-usage-widget-600.webp"], .project-illustration[src$="ai-usage-widget-600.webp"] { filter: none; }
 /* Art drawn on a white square rather than transparency; multiply lets the card show through. */
 .art-on-white { mix-blend-mode: multiply; }
 .project-copy { min-width: 0; }

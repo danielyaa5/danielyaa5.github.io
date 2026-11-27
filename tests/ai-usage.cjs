@@ -33,11 +33,11 @@ const store = 'https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898';
     await instrument(context);
     const page = await context.newPage();
     await page.goto(base + '/', { waitUntil: 'networkidle' });
-    const tile = page.locator('article.project').filter({ has: page.getByRole('link', { name: 'AI Usage', exact: true }) });
-    assert.equal(await tile.locator('.project-name').getAttribute('href'), 'ai-usage/');
-    assert.equal(await tile.locator('.project-link').first().getAttribute('href'), 'ai-usage/');
-    assert.match(await tile.innerText(), /Mac App Store/);
+    const tile = page.locator('article.featured-pick').filter({ has: page.getByRole('link', { name: 'AI Usage', exact: true }) });
+    assert.equal(await tile.locator('.project-name').getAttribute('href'), 'https://danielyakobian.com/ai-usage/');
+    assert.equal(await tile.locator('.featured-link').getAttribute('href'), 'https://danielyakobian.com/ai-usage/');
     assert.doesNotMatch(await tile.innerText(), /in review/);
+    await tile.locator('.project-name').evaluate(a => a.href = '/ai-usage/');
     await tile.locator('.project-name').click();
     await page.waitForURL(base + '/ai-usage/');
     assert.equal(await page.locator('h1').innerText(), 'One place to check your AI usage.');
@@ -149,9 +149,9 @@ const store = 'https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898';
       for (const width of [1440, 768, 375]) {
         await page.setViewportSize({ width, height: 1000 });
         await page.goto(base + '/', { waitUntil: 'networkidle' });
-        const homeTile = page.locator('article.project').filter({ has: page.getByRole('link', { name: 'AI Usage', exact: true }) });
-        assert.match(await homeTile.locator('.project-benefit').textContent(), /menu bar.*desktop widgets/);
-        assert.equal(await homeTile.locator('.project-link').nth(1).getAttribute('href'), 'https://github.com/danielyaa5/ai-usage');
+        const homeTile = page.locator('article.featured-pick').filter({ has: page.getByRole('link', { name: 'AI Usage', exact: true }) });
+        assert.match(await homeTile.locator('.featured-copy > p').textContent(), /menu bar.*desktop widgets/);
+        assert.equal(await homeTile.locator('.featured-link').getAttribute('href'), 'https://danielyakobian.com/ai-usage/');
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, 'home does not overflow');
         await homeTile.screenshot({ path: path.join(out, `home-tile-${width}-${colorScheme}.png`) });
       }
