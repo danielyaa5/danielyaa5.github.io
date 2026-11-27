@@ -40,7 +40,7 @@ const store = 'https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898';
     assert.doesNotMatch(await tile.innerText(), /in review/);
     await tile.locator('.project-name').click();
     await page.waitForURL(base + '/ai-usage/');
-    assert.equal(await page.locator('h1').innerText(), 'Your AI limits, a glance away.');
+    assert.equal(await page.locator('h1').innerText(), 'One place to check your AI usage.');
     assert.equal(await page.locator('.c-hero [data-store]').getAttribute('href'), store);
     assert.equal(await page.locator('a[data-store]').count(), 2);
     assert.equal(await page.locator('.c-actions a:not([data-store])').first().getAttribute('href'), 'https://github.com/danielyaa5/ai-usage');
@@ -117,7 +117,24 @@ const store = 'https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898';
           assert.deepEqual(state.anchors, [], 'local anchors resolve');
           assert.equal(state.canonical, 'https://danielyakobian.com' + route);
           if (route === '/ai-usage/') {
-            assert.equal(await page.locator('.c-hero img').evaluate(img => img.currentSrc), await page.locator('.c-feature').nth(2).locator('img').evaluate(img => img.currentSrc), 'menu hero and feature reuse the same format');
+            assert.equal(await page.locator('.ai-desktop-widget img').evaluate(img => img.naturalWidth), 1032, 'hero uses the sharp native widget capture');
+            const scene = await page.locator('.ai-desktop').evaluate(el => {
+              const box = node => { const b = node.getBoundingClientRect(); return { left: b.left, right: b.right, top: b.top, bottom: b.bottom, width: b.width, height: b.height }; };
+              return { desktop: box(el), bar: box(el.querySelector('.ai-menubar')), meters: box(el.querySelector('.ai-desktop-meters')), wifi: box(el.querySelector('.ai-wifi')), clock: box(el.querySelector('.ai-clock')), widget: box(el.querySelector('.ai-desktop-widget')), panel: box(el.querySelector('.ai-desktop-panel')), panelHidden: getComputedStyle(el.querySelector('.ai-desktop-panel')).display === 'none' };
+            });
+            assert.ok(scene.widget.top > scene.bar.bottom, 'limits widget stays beneath the menu bar');
+            assert.ok(scene.meters.right < scene.clock.left, 'provider menu meters do not overlap the clock');
+            if (scene.wifi.width) assert.ok(scene.meters.right < scene.wifi.left, 'provider menu meters do not overlap Wi-Fi');
+            assert.ok(scene.widget.left > scene.desktop.left && scene.widget.right < scene.desktop.right && scene.widget.bottom < scene.desktop.bottom, 'limits widget fits inside desktop');
+            if (width <= 620) {
+              assert.equal(scene.panelHidden, true, 'M3 mobile shows just the centered limits widget');
+              assert.ok(Math.abs((scene.widget.left + scene.widget.right) / 2 - (scene.desktop.left + scene.desktop.right) / 2) < 2, 'mobile widget centered horizontally');
+              assert.ok(Math.abs((scene.widget.top + scene.widget.bottom) / 2 - (scene.bar.bottom + scene.desktop.bottom) / 2) < scene.desktop.height * .025, 'mobile widget centered below menu bar');
+            } else {
+              assert.equal(scene.panelHidden, false, 'desktop includes the open menu panel');
+              assert.ok(scene.widget.right < scene.panel.left, 'widget and menu panel do not overlap');
+              assert.ok(scene.panel.top > scene.bar.bottom && scene.panel.bottom < scene.desktop.bottom, 'open panel fits below menu bar');
+            }
           }
           const slug = route.split('/').filter(Boolean).slice(1).join('-') || 'overview';
           if (route === routes[0] || [1440,768,375].includes(width)) {
@@ -158,8 +175,8 @@ const store = 'https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898';
     const phoneShot = tab.locator('.c-feature a.c-zoom').first();
     await phoneShot.scrollIntoViewIfNeeded();
     assert.equal(await phoneShot.locator('.for-touch').isVisible(), true);
-    await Promise.all([tab.waitForURL(base + '/assets/ai-usage/limits.webp'), phoneShot.tap()]);
-    assert.equal(await tab.locator('body > img').evaluate(img => img.naturalWidth), 1440, 'phone opens the original full screenshot');
+    await Promise.all([tab.waitForURL(base + '/assets/ai-usage/limits.webp?v=2'), phoneShot.tap()]);
+    assert.equal(await tab.locator('body > img').evaluate(img => img.naturalWidth), 2880, 'phone opens the original full screenshot');
     await phone.close();
     assert.deepEqual(errors, [], 'no browser errors in any context');
     assert.deepEqual(badResponses, [], 'no failed same-origin requests');

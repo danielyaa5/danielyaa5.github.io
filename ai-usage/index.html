@@ -10,22 +10,22 @@
   <meta name="theme-color" content="#0e1511" media="(prefers-color-scheme: dark)">
   <meta property="og:site_name" content="Daniel Yakobian">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="AI Usage for Mac: your AI limits, a glance away">
+  <meta property="og:title" content="AI Usage for Mac: one place to check your AI usage">
   <meta property="og:description" content="See remaining AI plan limits in your Mac menu bar. Add desktop widgets for recorded requests, tokens and estimated API value.">
   <meta property="og:url" content="https://danielyakobian.com/ai-usage/">
-  <meta property="og:image" content="https://danielyakobian.com/assets/ai-usage/social-card.jpg">
+  <meta property="og:image" content="https://danielyakobian.com/assets/ai-usage/social-card.jpg?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="AI Usage for Mac: your AI limits, a glance away. Menu bar quota panel with sample readings.">
+  <meta property="og:image:alt" content="AI Usage for Mac: one place to check your AI usage. Desktop widget and menu bar panel with sample readings.">
   <meta name="twitter:card" content="summary_large_image">
-  <title>AI Usage for Mac: your AI limits, a glance away | Daniel Yakobian</title>
+  <title>AI Usage for Mac: one place to check your AI usage | Daniel Yakobian</title>
   <link rel="canonical" href="https://danielyakobian.com/ai-usage/">
   <link rel="icon" type="image/png" href="/assets/ai-usage/icon.png">
   <link rel="stylesheet" href="/styles.css?v=mark-4">
   <link rel="stylesheet" href="/cloud-media-shrinker/cms.css?v=3">
   <link rel="stylesheet" href="/cloud-media-shrinker/cms-nav.css?v=3">
   <link rel="stylesheet" href="/cloud-media-shrinker/shots.css?v=1">
-  <link rel="stylesheet" href="/ai-usage/ai-usage.css?v=1">
+  <link rel="stylesheet" href="/ai-usage/ai-usage.css?v=2">
   <script src="/analytics.js?v=19" defer></script>
   <script type="application/ld+json">
 {
@@ -39,8 +39,8 @@
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "macOS 14 or later",
     "processorRequirements": "Apple silicon",
-    "image": "https://danielyakobian.com/assets/ai-usage/social-card.jpg",
-    "screenshot": "https://danielyakobian.com/assets/ai-usage/menu.webp",
+    "image": "https://danielyakobian.com/assets/ai-usage/social-card.jpg?v=2",
+    "screenshot": "https://danielyakobian.com/assets/ai-usage/menu.webp?v=2",
     "sameAs": [
         "https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898",
         "https://github.com/danielyaa5/ai-usage"
@@ -69,40 +69,44 @@
       <a class="cms-nav-home" href="/ai-usage/"><img src="/assets/ai-usage/icon-84.webp" width="28" height="28" alt=""><span>AI Usage</span></a>
       <ul class="cms-nav-links"><li><a href="/ai-usage/" aria-current="page" data-label="Overview">Overview</a></li><li><a href="/ai-usage/help/" data-label="Help">Help</a></li><li><a href="/ai-usage/#support" data-label="Support">Support</a></li><li><a href="/ai-usage/privacy/" data-label="Privacy">Privacy</a></li></ul>
     </nav>
-    <main class="cms cms-a" id="main">
+    <main class="cms cms-a ai-overview" id="main">
       <header class="c-hero">
         <div class="c-hero-copy">
-          <h1>Your AI limits, a glance away.</h1>
-          <p class="lede">See remaining quota and reset times when your connected providers report them, right in your Mac menu bar.</p>
-          <p class="c-sub">Keep desktop widgets nearby for recorded usage, tokens and estimated API value.</p>
+          <h1>One place to check your AI usage.</h1>
+          <p class="lede">Plan limits in your menu bar and on your desktop. Keep your connected providers in view while you work.</p>
           <div class="c-actions"><a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/ai-usage-monitor-widget/id6832427898">Download on the App Store</a><a class="button button-outline" href="https://github.com/danielyaa5/ai-usage">View source</a></div>
           <p class="fine-print">For Apple silicon Macs with macOS 14 or later. The App Store lists the price for your region.</p>
           <p class="c-jump"><a href="#features">See how it works</a><a href="help/">Provider setup</a><a href="#support">Support</a></p>
         </div>
         <figure class="c-hero-media">
-          <div class="ai-crop ai-crop-menu"><picture><source type="image/avif" srcset="/assets/ai-usage/menu.avif"><img src="/assets/ai-usage/menu.webp" alt="AI Usage menu bar meters and quota panel showing sample remaining percentages, reset times and usage totals." width="1440" height="900" fetchpriority="high"></picture></div>
-          <figcaption class="ai-caption">Sample readings. Availability and freshness depend on the provider.</figcaption>
+          <div class="ai-desktop" role="group" aria-label="Mac desktop illustration with AI Usage app captures">
+            <div class="ai-menubar" aria-hidden="true"><span class="ai-apple">&#63743;</span><strong>Finder</strong><span class="ai-menu-item">File</span><span class="ai-menu-item">Edit</span><span class="ai-menu-item">View</span><span class="ai-menu-item">Go</span><span class="ai-menu-item">Window</span><span class="ai-menu-item">Help</span><span class="ai-bar-space"></span><span class="ai-wifi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9a14 14 0 0 1 18 0M6 13a9 9 0 0 1 12 0M9 17a4 4 0 0 1 6 0"/><circle cx="12" cy="20" r="1"/></svg></span><span class="ai-clock">Thu 8:00 PM</span></div>
+            <div class="ai-desktop-meters"><div class="ai-native-crop ai-native-meters"><picture><source type="image/avif" srcset="/assets/ai-usage/hero-meters.avif"><img src="/assets/ai-usage/hero-meters.webp" width="408" height="78" alt="Claude, GPT and Google menu bar meters" decoding="async"></picture></div></div>
+            <div class="ai-desktop-widget"><div class="ai-native-crop ai-native-widget"><picture><source type="image/avif" srcset="/assets/ai-usage/hero-widget.avif"><img src="/assets/ai-usage/hero-widget.webp" width="1032" height="492" alt="Claude, ChatGPT and Antigravity plan limits widget with sample readings" fetchpriority="high"></picture></div></div>
+            <div class="ai-desktop-panel"><div class="ai-native-crop ai-native-panel"><picture><source media="(max-width: 620px)" srcset="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="><source type="image/avif" srcset="/assets/ai-usage/hero-panel.avif"><img src="/assets/ai-usage/hero-panel.webp" width="1092" height="1281" alt="Open AI Usage menu panel with sample plan limits, reset times and usage totals" decoding="async"></picture></div></div>
+          </div>
+          <figcaption class="ai-caption">Mac desktop illustration with sample app readings. Availability and freshness depend on the provider.</figcaption>
         </figure>
       </header>
       <section class="c-features" id="features" aria-label="Features">
         <article class="c-feature">
           <div class="c-feature-copy"><p class="eyebrow">01</p><h2>See what’s left, and when it resets.</h2><p>Keep provider-reported percentages and reset times together in a desktop widget. Claude, ChatGPT and Google Antigravity connect differently; a missing reading does not mean unlimited quota.</p></div>
           <figure class="ai-feature-figure">
-            <a class="c-zoom" href="/assets/ai-usage/limits.webp" aria-label="View full screenshot: See what’s left, and when it resets."><div class="ai-crop ai-crop-limits c-shot"><img src="/assets/ai-usage/limits.webp" alt="The AI plan limits widget in dark mode, with fictional Claude, ChatGPT and Antigravity percentages and reset times." width="1440" height="900" loading="lazy" decoding="async"></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
+            <a class="c-zoom" href="/assets/ai-usage/limits.webp?v=2" aria-label="View full screenshot: See what’s left, and when it resets."><div class="ai-crop ai-crop-limits c-shot"><img src="/assets/ai-usage/limits.webp?v=2" alt="The AI plan limits widget in dark mode, with fictional Claude, ChatGPT and Antigravity percentages and reset times." width="2880" height="1800" loading="lazy" decoding="async"></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
             <figcaption class="ai-caption">Fictional sample data.</figcaption>
           </figure>
         </article>
         <article class="c-feature">
           <div class="c-feature-copy"><p class="eyebrow">02</p><h2>Your AI usage, on this Mac.</h2><p>See recorded requests and tokens for today, the last 7 days or the last 30 days. Estimated API value uses published rates. It is an estimate of equivalent API usage, not a bill or money saved.</p></div>
           <figure class="ai-feature-figure">
-            <a class="c-zoom" href="/assets/ai-usage/widgets.webp" aria-label="View full screenshot: Your AI usage, on this Mac."><div class="ai-crop ai-crop-widgets c-shot"><img src="/assets/ai-usage/widgets.webp" alt="Two AI Usage desktop widgets showing fictional usage totals and remaining plan limits." width="1440" height="900" loading="lazy" decoding="async"></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
+            <a class="c-zoom" href="/assets/ai-usage/widgets.webp?v=2" aria-label="View full screenshot: Your AI usage, on this Mac."><div class="ai-crop ai-crop-widgets c-shot"><img src="/assets/ai-usage/widgets.webp?v=2" alt="Two AI Usage desktop widgets showing fictional usage totals and remaining plan limits." width="2880" height="1800" loading="lazy" decoding="async"></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
             <figcaption class="ai-caption">Fictional sample data.</figcaption>
           </figure>
         </article>
         <article class="c-feature">
           <div class="c-feature-copy"><p class="eyebrow">03</p><h2>A quick check while you work.</h2><p>Click a menu bar meter to see the quota panel, with percentages, reported reset times and a summary of recent recorded activity. Keep the numbers close without leaving them open all day.</p></div>
           <figure class="ai-feature-figure">
-            <a class="c-zoom" href="/assets/ai-usage/menu.webp" aria-label="View full screenshot: A quick check while you work."><div class="ai-crop ai-crop-menu c-shot"><picture><source type="image/avif" srcset="/assets/ai-usage/menu.avif"><img src="/assets/ai-usage/menu.webp" alt="AI Usage menu bar meters and quota panel with fictional readings and the app’s existing controls." width="1440" height="900" loading="lazy" decoding="async"></picture></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
+            <a class="c-zoom" href="/assets/ai-usage/menu.webp?v=2" aria-label="View full screenshot: A quick check while you work."><div class="ai-crop ai-crop-menu c-shot"><picture><source type="image/avif" srcset="/assets/ai-usage/menu.avif?v=2"><img src="/assets/ai-usage/menu.webp?v=2" alt="AI Usage menu bar meters and quota panel with fictional readings and the app’s existing controls." width="2880" height="1800" loading="lazy" decoding="async"></picture></div><span class="c-zoom-badge" aria-hidden="true"><span class="for-mouse">View full screenshot</span><span class="for-touch">View full screenshot</span></span></a>
             <figcaption class="ai-caption">Fictional sample data.</figcaption>
           </figure>
         </article>
