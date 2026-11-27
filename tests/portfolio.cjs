@@ -2,7 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const { chromium } = require('playwright');
 const base = process.argv[2] || 'http://localhost:4173';
-const expected = ['Buy or Rent','Swipe DB','3D Print Monitor','Beckon','Netflix PiP Fixer','Gate Opener Widget','Price Watch','QuickDesk','TagTracker','qtfaststart2','bambu-headless'];
+const expected = ["Buy or Rent","Beckon","3D Print Monitor","bambu-headless","Netflix PiP Fixer","QuickDesk","TagTracker","qtfaststart2"];
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
   const report = {url:base, checks:[]};
@@ -34,37 +34,38 @@ const expected = ['Buy or Rent','Swipe DB','3D Print Monitor','Beckon','Netflix 
 
     assert.equal((await page.locator('h1').innerText()).replace(/\s+/g,' '), 'Small frustrations. Useful software.');
     assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).colorScheme),'light');
-    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===11 && images.every(img=>img.complete && img.naturalWidth>0)));
+    assert.ok(await page.locator('.project-illustration').evaluateAll(images=>images.length===8 && images.every(img=>img.complete && img.naturalWidth>0)));
     assert.ok(await page.locator('.hero-illustration').evaluate(img=>img.complete && img.naturalWidth>0));
-    assert.equal(await page.locator('.project-link').count(),11);
+    assert.equal(await page.locator('.project-link').count(),8);
     assert.equal(await page.locator('.featured-pick').count(),3);
-    assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','puml-for-markdown','AI Usage']);
+    assert.deepEqual(await page.locator('.featured-pick h3').allTextContents(), ['Cloud Media Shrinker','AI Usage','puml-for-markdown']);
     assert.equal(await page.locator('.featured-lead h3').innerText(), 'Cloud Media Shrinker');
     assert.equal(await page.locator('#other-projects-title').innerText(), 'Other projects');
-    assert.equal(await page.locator('.filter-count').innerText(), '11 projects');
+    assert.equal(await page.locator('.filter-count').innerText(), '8 projects');
     assert.equal(await page.locator('.featured-link').count(), 3);
     assert.equal(await page.locator('.featured-pick a a').count(), 0);
     assert.ok(await page.locator('.star-count').evaluate(badge=>{
       const title=badge.closest('.featured-heading').querySelector('h3').getBoundingClientRect();
+      const tag=badge.closest('.featured-heading').querySelector('.open-source-tag').getBoundingClientRect();
       const target=badge.getBoundingClientRect();
-      return Math.abs(title.top+title.height/2-target.top-target.height/2)<1;
-    }), 'Desktop star badge stays beside the PUML title');
+      return title.bottom <= target.top && tag.left >= target.right && Math.abs(tag.top+tag.height/2-target.top-target.height/2)<1;
+    }), 'The open-source tag stays beside the stars below the PUML title');
     assert.ok(await page.locator('.featured-pick > img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth >= Math.min(image.clientWidth, image.clientHeight * image.naturalWidth / image.naturalHeight) * 2)));
 
     assert.equal(await page.locator('.writing-card').count(),4);
     assert.equal(await page.locator('.all-writing').getAttribute('href'),'blog/');
     const groups = {
-      mac: ['Cloud Media Shrinker','AI Usage','Buy or Rent','3D Print Monitor','Beckon','Gate Opener Widget','QuickDesk','TagTracker'],
-      ios: ['Cloud Media Shrinker','Buy or Rent','3D Print Monitor','Gate Opener Widget'],
-      web: ['Buy or Rent','Swipe DB','Netflix PiP Fixer'],
-      developer: ['puml-for-markdown','AI Usage','Price Watch','qtfaststart2','bambu-headless'],
+      mac: ['Cloud Media Shrinker','AI Usage','Buy or Rent','Beckon','3D Print Monitor','QuickDesk','TagTracker'],
+      ios: ['Cloud Media Shrinker','Buy or Rent','3D Print Monitor'],
+      web: ['Buy or Rent','Netflix PiP Fixer'],
+      developer: ['AI Usage','puml-for-markdown','bambu-headless','qtfaststart2'],
       printing: ['3D Print Monitor','bambu-headless']
     };
     const featuredByFilter = {
       mac: ['Cloud Media Shrinker','AI Usage'],
       ios: ['Cloud Media Shrinker'],
       web: [],
-      developer: ['puml-for-markdown','AI Usage'],
+      developer: ['AI Usage','puml-for-markdown'],
       printing: []
     };
     for (const width of [1440,320]) {

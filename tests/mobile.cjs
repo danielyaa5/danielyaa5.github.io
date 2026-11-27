@@ -87,7 +87,7 @@ async function layout(page) {
       });
       await check('workNavigation',async()=>{await page.locator('nav a[href="#work"]').tap();assert.equal(new URL(page.url()).hash,'#work');});
       await check('touchFilters',async()=>{
-        for(const [filter,count] of [['printing',2],['mac',8],['ios',4],['web',3],['developer',5],['all',11]]) {
+        for(const [filter,count] of [['printing',2],['mac',7],['ios',3],['web',2],['developer',4],['all',8]]) {
           await page.locator(`[data-filter="${filter}"]`).tap();
           assert.equal(await page.locator('.project:visible').count(),count);
           assert.equal(await page.locator('[data-filter][aria-pressed="true"]').count(),1);

@@ -21,7 +21,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
         await page.route(url => !url.href.startsWith(base), route => route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html><title>stub</title>' }));
         await page.goto(`${base}/`, { waitUntil: 'networkidle' });
         const count = await page.locator(TILES).count();
-        assert.equal(count, 18, `3 featured, 11 other and 4 writing tiles at ${label}`);
+        assert.equal(count, 15, `3 featured, 8 other and 4 writing tiles at ${label}`);
 
         // Hit-test each tile: its corners, art, description and chips open the title link;
         // each other link in the tile is on top at its own center.
@@ -60,7 +60,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
           });
           assert.deepEqual(result.misses, [], `${result.name}: every part of the tile opens the title link at ${label}`);
           for (const other of result.others) assert.ok(other.onTop, `${result.name}: "${other.text}" stays clickable at ${label}`);
-          if (i < 14) assert.ok(result.others.length >= 1, `${result.name} keeps its own button link`);
+          if (i < 11) assert.ok(result.others.length >= 1, `${result.name} keeps its own button link`);
         }
 
         // Hover: the tile body darkens the border and underlines the title, except on featured cards, which never
@@ -122,7 +122,7 @@ const HOVER_BORDER = { light: 'rgb(120, 145, 130)', dark: 'rgb(95, 138, 108)' };
             assert.equal(focus.own, 'solid', `"${focus.text}" rings itself at ${label}`);
           }
         }
-        assert.equal(seen.filter(item => item.main).length, 18, `every tile title is reachable by Tab at ${label}`);
+        assert.equal(seen.filter(item => item.main).length, 15, `every tile title is reachable by Tab at ${label}`);
 
         // Real clicks: a tile's description opens the title's address; its button keeps its own.
         const open = async (locator, expected) => {
