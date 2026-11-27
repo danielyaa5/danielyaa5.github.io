@@ -8,8 +8,13 @@
 .c-hero h1 { margin: 0 0 18px; font-size: clamp(36px, 4.3vw, 50px); line-height: 1.1; letter-spacing: -1.4px; text-wrap: balance; }
 .lede { margin: 0; font-size: 19px; line-height: 1.5; }
 .c-sub { margin: 14px 0 0; font-size: 16px; line-height: 1.5; color: var(--muted); }
+.drive-icon { display: inline-block; vertical-align: -0.25em; }
 .c-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
 .c-actions .button { min-height: 50px; padding: 11px 20px; font-size: 16px; text-align: center; }
+.mobile-client .c-actions [data-store="direct"] { display: none; }
+@media (scripting: none) and (hover: none) and (pointer: coarse) {
+  .c-actions [data-store="direct"] { display: none; }
+}
 .fine-print { margin: 14px 0 0; max-width: 560px; font-size: 13px; line-height: 1.5; color: var(--muted); }
 .fine-print + .fine-print { margin-top: 6px; }
 .c-media { overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--tile); }

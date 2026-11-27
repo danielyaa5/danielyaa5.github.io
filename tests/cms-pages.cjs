@@ -1,7 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { chromium } = require('playwright');
+const { chromium, devices } = require('playwright');
 
 // Run: node tests/cms-pages.cjs http://localhost:4173
 // Cloud Media Shrinker's product, help, What's new and What's coming pages: What's new lists every version newest first,
@@ -36,6 +36,29 @@ const widths = [1440, 1024, 900, 768, 660, 414, 375, 320];
   };
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, reducedMotion: 'reduce' });
+
+    await check('both download sections show the Mac download only on desktop clients', async () => {
+      const narrow = { width: 390, height: 844 };
+      const desktopSafari = devices['Desktop Safari'].userAgent;
+      for (const [name, options, directCount] of [
+        ['narrow desktop', { viewport: narrow }, 2],
+        ['iPhone', { ...devices['iPhone 13'], viewport: narrow }, 0],
+        ['Android', devices['Pixel 7'], 0],
+        ['desktop-mode iPad', { ...devices['iPad Pro 11'], userAgent: desktopSafari }, 0],
+      ]) {
+        const client = await browser.newPage(options);
+        try {
+          if (name === 'desktop-mode iPad') {
+            await client.addInitScript(() => Object.defineProperty(navigator, 'maxTouchPoints', { value: 5 }));
+          }
+          await client.goto(`${base}/cloud-media-shrinker/`);
+          assert.equal(await client.getByRole('link', { name: 'Try free on App Store', exact: true }).count(), 2, name);
+          assert.equal(await client.getByRole('link', { name: 'Download Direct', exact: true }).count(), directCount, name);
+        } finally {
+          await client.close();
+        }
+      }
+    });
 
     await check('What\'s new lists every version, newest first, with an anchor and where it came out', async () => {
       await page.goto(`${base}/cloud-media-shrinker/whats-new/`, { waitUntil: 'domcontentloaded' });

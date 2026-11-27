@@ -22,10 +22,17 @@
   <link rel="canonical" href="https://danielyakobian.com/cloud-media-shrinker/">
   <link rel="icon" type="image/svg+xml" href="../assets/cloud-media-shrinker/icon.svg">
   <link rel="stylesheet" href="../styles.css?v=mark-4">
-  <link rel="stylesheet" href="../cloud-media-shrinker/cms.css?v=3">
+  <link rel="stylesheet" href="../cloud-media-shrinker/cms.css?v=4">
   <link rel="stylesheet" href="cms-nav.css?v=3">
   <link rel="stylesheet" href="shots.css?v=1">
   <link rel="stylesheet" href="compare.css?v=6">
+  <script>
+    // iPadOS can request the desktop site and identify itself as a Mac.
+    const desktopModeIPad = /Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1;
+    if (navigator.userAgentData?.mobile || /Android|Mobile|iPhone|iPad|iPod|Tablet|Silk\//i.test(navigator.userAgent) || desktopModeIPad) {
+      document.documentElement.classList.add('mobile-client');
+    }
+  </script>
   <script src="/analytics.js?v=19" defer></script>
   <script src="/cloud-media-shrinker/downloads-count.js?v=1" defer></script>
   <script type="application/ld+json">
@@ -67,15 +74,13 @@
       <header class="c-hero">
         <div class="c-hero-copy">
           <h1>Massively cut down on your cloud storage without losing a thing.</h1>
-          <p class="lede">Sort your photos and videos by size to find what’s taking up the most space. Compress the files you want to keep, or delete the ones you no longer need.</p>
-          <p class="c-sub">Review your Apple Photos library and folders on iPhone, iPad, and Mac. On Mac, you can also review folders from Google Drive for desktop.</p>
+          <p class="lede">Sort your photos and videos by size to find what’s taking up the most space. Compress the files you want to keep, or delete the ones you no longer need. <strong>Free to try, $9.99 for full lifetime access.</strong></p>
+          <p class="c-sub">Also works on Google Drive&nbsp;<img class="drive-icon" src="../assets/cloud-media-shrinker/google-drive.png" width="20" height="20" alt=""> on Mac App.</p>
           <div class="c-actions">
-            <a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/cloud-media-shrinker/id6824383256">Download on the App Store</a>
-            <a class="button button-outline ph-no-capture" data-store="direct" href="https://github.com/danielyaa5/cloud-media-shrinker/releases/download/v1.2.3/Cloud-Media-Shrinker-1.2.3.zip">Download free for Mac</a>
+            <a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/cloud-media-shrinker/id6824383256">Try free on App Store</a>
+            <a class="button button-outline ph-no-capture" data-store="direct" href="https://github.com/danielyaa5/cloud-media-shrinker/releases/download/v1.2.3/Cloud-Media-Shrinker-1.2.3.zip">Download Direct</a>
           </div>
           <p class="c-downloads" data-cms-downloads="1100" title="App Store and website downloads, rounded down to the hundred"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.5v8.2m0 0-3.2-3.2M8 9.7l3.2-3.2M2.5 11.5v1.2c0 .9.7 1.6 1.6 1.6h7.8c.9 0 1.6-.7 1.6-1.6v-1.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span><strong data-downloads-number>1,100+</strong> downloads so far</span></p>
-          <p class="fine-print">Requires macOS 13 or later, iOS 27 or later, or iPadOS 27 or later. The App Store lists the price for your region.</p>
-          <p class="fine-print">The Mac download is free to try: your 20 largest items, 3 compressions and 3 deletes. A one-time license key unlocks everything on up to 3 Macs. <a class="ph-no-capture" data-store="polar" href="https://buy.polar.sh/polar_cl_vYaqYpoBNeO2xRDSGnyJQtA9qr0NlWBEd8S3w1Oq6m9">Buy a license key · $9.49</a>. It doesn’t unlock the iPhone or iPad app.</p>
           <p class="c-jump"><a href="#save-space">Save space</a><a href="#features">Features</a><a href="help/">How to use it</a><a href="#support">Support</a></p>
         </div>
         <figure class="c-hero-media">
@@ -148,8 +153,8 @@
           <p>On the App Store for iPhone, iPad, and Mac, or as a free download for Mac. A one-time license key unlocks the Mac download: <a class="ph-no-capture" data-store="polar" href="https://buy.polar.sh/polar_cl_vYaqYpoBNeO2xRDSGnyJQtA9qr0NlWBEd8S3w1Oq6m9">buy a license key · $9.49</a>.</p>
         </div>
         <div class="c-actions">
-          <a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/cloud-media-shrinker/id6824383256">Download on the App Store</a>
-            <a class="button button-outline ph-no-capture" data-store="direct" href="https://github.com/danielyaa5/cloud-media-shrinker/releases/download/v1.2.3/Cloud-Media-Shrinker-1.2.3.zip">Download free for Mac</a>
+          <a class="button ph-no-capture" data-store="app_store" href="https://apps.apple.com/app/cloud-media-shrinker/id6824383256">Try free on App Store</a>
+          <a class="button button-outline ph-no-capture" data-store="direct" href="https://github.com/danielyaa5/cloud-media-shrinker/releases/download/v1.2.3/Cloud-Media-Shrinker-1.2.3.zip">Download Direct</a>
         </div>
       </aside>
       <aside class="c-more c-more-row" aria-labelledby="more-title-row">

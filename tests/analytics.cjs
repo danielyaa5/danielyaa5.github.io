@@ -421,7 +421,6 @@ const events = request => {
       const start = captured.length;
       await app.locator('.c-hero-copy [data-store="app_store"]').click();
       await app.locator('.c-hero-copy [data-store="direct"]').click({ button: 'middle' });
-      await app.locator('.c-hero-copy [data-store="polar"]').click();
       await app.locator('.c-jump a', { hasText: 'Features' }).click();
       await app.locator('.c-cta [data-store="direct"]').click();
       await app.locator('.c-cta [data-store="polar"]').click();
@@ -429,15 +428,14 @@ const events = request => {
       const autoMoreApps = () => captured.slice(start).filter(e => e.event === '$autocapture' && /ct=cms_more_apps/.test(e.properties.$elements_chain || ''));
       for (let i = 0; i < 40 && !autoMoreApps().length; i += 1) await app.waitForTimeout(200);
       await app.waitForTimeout(500);
-      const polar = await app.locator('.c-hero-copy [data-store="polar"]').getAttribute('href');
+      const polar = await app.locator('.c-cta [data-store="polar"]').getAttribute('href');
       const direct = await app.locator('.c-hero-copy [data-store="direct"]').getAttribute('href');
       const store = await app.locator('.c-hero-copy [data-store="app_store"]').getAttribute('href');
       const sent = captured.slice(start).filter(e => e.event === 'app_download_click').map(e => e.properties);
       assert.deepEqual(sent.map(({ app: name, store: where, placement, link_text, destination }) => ({ name, where, placement, link_text, destination })), [
-        { name: 'cloud-media-shrinker', where: 'app_store', placement: 'hero', link_text: 'Download on the App Store', destination: store },
-        { name: 'cloud-media-shrinker', where: 'direct', placement: 'hero', link_text: 'Download free for Mac', destination: direct },
-        { name: 'cloud-media-shrinker', where: 'polar', placement: 'hero', link_text: 'Buy a license key · $9.49', destination: polar },
-        { name: 'cloud-media-shrinker', where: 'direct', placement: 'end', link_text: 'Download free for Mac', destination: direct },
+        { name: 'cloud-media-shrinker', where: 'app_store', placement: 'hero', link_text: 'Try free on App Store', destination: store },
+        { name: 'cloud-media-shrinker', where: 'direct', placement: 'hero', link_text: 'Download Direct', destination: direct },
+        { name: 'cloud-media-shrinker', where: 'direct', placement: 'end', link_text: 'Download Direct', destination: direct },
         { name: 'cloud-media-shrinker', where: 'polar', placement: 'end', link_text: 'buy a license key · $9.49', destination: polar },
       ], `download clicks at ${width}px; other links send none`);
       assert.ok(sent.every(props => props.$cookieless_mode === true && props.$current_url === `${site}/cloud-media-shrinker/`), `cookieless download clicks at ${width}px`);
